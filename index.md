@@ -7,7 +7,7 @@ nav_order: 1
 
 # Start hacking
 
-![Brilliant Monocle Image](/images/monocle-splash.png)
+![Brilliant Monocle Image](/images/monocle-exploded.png)
 
 Monocle was designed by hackers, for hackers. Learn briefly about the hardware [here](/monocle/monocle), and once you're ready to dive in. Try out the [MicroPython interface](/micropython/micropython), and start building your AR application.
 
