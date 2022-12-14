@@ -1,0 +1,20 @@
+---
+title: Welcome
+description: Technical documentation for Brilliant products.
+image: /images/monocle-splash.png
+nav_order: 1
+---
+
+# Start hacking
+
+![Brilliant Monocle Image](/images/monocle-splash.png)
+
+Monocle was designed by hackers, for hackers. Learn briefly about the hardware [here](/monocle/hardware), and once you're ready to dive in. Try out the [MicroPython interface](/micropython/micropython), and start building your AR application.
+
+## Join the community
+
+See what others are building.
+
+Our Discord server is open to all, and it's the perfect place to get help with all your tinkering.
+
+[Join the Server](https://discord.com/invite/vDS9X7gdwg){: .btn .btn-purple}
