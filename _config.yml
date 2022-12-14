@@ -1,0 +1,64 @@
+# Site settings
+title: Brilliant Docs
+description: Technical documentation for all the Brilliant products.
+logo: /images/logo.png
+remote_theme: just-the-docs/just-the-docs
+permalink: pretty
+heading_anchors: true
+url: https://docs.brilliantmonocle.com
+
+# Plugins
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Header
+search_enabled: true
+aux_links_new_tab: true
+aux_links:
+  GitHub:
+    - https://github.com/Itsbrilliantlabs
+  Discord:
+    - https://discord.com/invite/vDS9X7gdwg
+  Homepage:
+    - https://www.brilliantmonocle.com
+
+# Footer
+footer_content: Copyright &copy; 2022 <a href="https://www.brilliantmonocle.com">Brilliant Labs Ltd.</a>
+last_edit_timestamp: true
+last_edit_time_format: "%b %e %Y"
+
+# Mermaid diagrams
+mermaid:
+  version: "9.2.2" # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
+
+# SEO settings
+twitter:
+  username: opensourceeyes
+  # card:
+social:
+  name: Brilliant Labs
+  links:
+    - https://twitter.com/opensourceeyes
+    - https://www.instagram.com/opensourceeyes/
+    - https://discord.com/invite/vDS9X7gdwg
+
+# Google analytics
+# ga_tracking: UA-162687810-2
+# ga_tracking_anonymize_ip: true # Use GDPR compliant Google Analytics settings
+
+# Exclude files
+exclude:
+  - CNAME
+  - Gemfile
+  - README.md
+  - LICENSE.md
+
+# Optimizations
+compress_html:
+  clippings: all
+  comments: all
+  endings: all
+  startings: []
+  blanklines: false
+  profile: false
