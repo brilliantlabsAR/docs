@@ -29,5 +29,4 @@ If you'd like to do some extensive editing, you can also fork/clone this reposit
     bundle exec jekyll serve --livereload --open-url
     ```
 
-
 That's it! As you edit the pages. The website will automatically refresh. Be sure to keep an eye on your terminal to spot any error messages while you're developing.
