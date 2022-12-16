@@ -14,3 +14,7 @@ node_modules
 
 # VSCode files
 .vscode/settings.json
+
+# Diagrams.net backup and temp files
+images/*.bkp
+images/*.dtmp
