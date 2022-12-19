@@ -3,6 +3,7 @@ title: MicroPython
 description: A guide on how to use MicroPython to drive your Monocle hardware.
 image: /images/monocle-micropython.png
 nav_order: 3
+has_children: true
 ---
 
 # MicroPython API
@@ -12,11 +13,9 @@ MicroPython lets you prototype and build you applications fast without having to
 
 The [MicroPython firmware for Monocle](https://github.com/Itsbrilliantlabs/monocle-micropython) is a customized port which is largely based on the [upstream MicroPython](https://github.com/micropython/micropython) project. It has a large and growing user base, so we're frequently able to update features from the upstream project as they becoming available.
 
-## Contents
-{: .no_toc }
+The majority of the MiroPython language is documented on the [MicroPython docs](https://docs.micropython.org/en/latest/index.html). The supported subset of libraries are shown in the [table below](#supported-modules).
 
-1. TOC
-{:toc}
+The `machine` module is customized specifically for the Monocle hardware, and allows access to the specific hardware of Monocle. View the documentation [here](/micropython/machine).
 
 ## Quick start
 
@@ -36,10 +35,16 @@ fbuf.text('MicroPython!', 0, 0, 0xffff)
 
 machine.Display.show(fbuf)
 ```
+## Mobile app
 
-You can also try the mobile app on iOS or Android which we're gradually adding more features to. It's also a great place to start if you'd like to make your own mobile app for Monocle.
+You can also try the mobile app on iOS or Android which we're gradually adding more features to. It's also a great place to start if you'd like to [make your own mobile app]() for Monocle.
 
-## API status
+<div style="text-align:center" markdown="1">
+[<img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Apple App Store badge" width="175"/>]()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[<img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play Store badge" width="175"/>]()
+</div>
+
+## Supported modules
 
 | Status                                     | Module & class                                                     | Description |
 |:------------------------------------------:|:-------------------------------------------------------------------|:------------|
@@ -58,14 +63,14 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 | <span style="color:orange">Planned</span>  | framebuf **module**                                                | Frame drawing functions are supported
 | <span style="color:orange">Planned</span>  | gc **module**                                                      | Garbage collection functions are supported
 | <span style="color:orange">Planned</span>  | machine.Battery.level() **function**                               | Returns the current battery level as a percentage
-| <span style="color:orange">Planned</span>  | machine.Camera.capture(*url*) **function**                         | Sends the last captured image over Bluetooth
+| <span style="color:orange">Planned</span>  | machine.Camera.capture() **function**                              | Sends the last captured image over Bluetooth
 | <span style="color:orange">Planned</span>  | machine.Camera.stop() **function**                                 | Stops any ongoing image stream or capture currently in progress
 | <span style="color:orange">Planned</span>  | machine.Display.show(framebuffer) **function**                     | Pushes a framebuffer object to the FPGA for drawing onto the display
-| <span style="color:orange">Planned</span>  | machine.FPGA.download(url) **function**                            | Downloads and reboots the FPGA with the bitstream from the url provided. If a url is not provided, the bitstream is requested over bluetooth. Automatically powers up the FPGA if it was powered down
+| <span style="color:orange">Planned</span>  | machine.FPGA.download() **function**                               | Downloads and reboots the FPGA with a bitstream provided over Bluetooth. Automatically powers up the FPGA if it was powered down
 | <span style="color:orange">Planned</span>  | machine.FPGA.spi_read(cmd, addr, bytes) **function**               | Reads n bytes from the FPGA with a given command and address. Returns a byte array
 | <span style="color:orange">Planned</span>  | machine.FPGA.spi_write(cmd, addr, bytes, buffer) **function**      | Writes n bytes from buffer to the FPGA with a given command and address. 
 | <span style="color:orange">Planned</span>  | machine.FPGA.status() **function**                                 | Returns the current status of the FPGA
-| <span style="color:orange">Planned</span>  | machine.Microphone.stream(*url*) **function**                      | Starts streaming audio data over Bluetooth
+| <span style="color:orange">Planned</span>  | machine.Microphone.stream() **function**                           | Starts streaming audio data over Bluetooth
 | <span style="color:orange">Planned</span>  | machine.Microphone.stop() **function**                             | Stops any ongoing audio stream
 | <span style="color:orange">Planned</span>  | machine.Power.hibernate(enable) **function**                       | Enables or disables all the high power devices. Networking remains active. Upon re-enabling the FPGA will remain in reset until booted using FPGA.boot()
 | <span style="color:orange">Planned</span>  | machine.Power.reset() **function**                                 | Resets the device

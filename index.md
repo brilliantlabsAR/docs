@@ -1,12 +1,12 @@
 ---
 title: Welcome
-description: Technical documentation for Brilliant products.
+description: Technical documentation for Brilliant's AR devices.
 image: /images/monocle-splash.png
 nav_order: 1
 ---
 
 
-![Brilliant Monocle use cases](/images/monocle/splash.png)
+![Brilliant Monocle use cases](/images/monocle-splash.png)
 
 # Technical documentation
 
