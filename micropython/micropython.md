@@ -29,11 +29,12 @@ Once you're connected, try running this code:
 from machine import *
 import framebuf
 
-fbuf = framebuf.FrameBuffer(bytearray(640 * 400 * 2), 640, 400, framebuf.RGB565)
+buf = bytearray(640 * 400 * 2)
+fbuf = framebuf.FrameBuffer(buf, 640, 400, framebuf.RGB565)
 fbuf.fill(0)
 fbuf.text('MicroPython!', 0, 0, 0xffff)
 
-machine.Display.show(fbuf)
+machine.Display.show(buf)
 ```
 ## Mobile app
 
