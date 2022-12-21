@@ -8,7 +8,7 @@ heading_anchors: true
 url: https://docs.brilliantmonocle.com
 
 # Plugins
-plugins:
+plugins: 
   - jekyll-seo-tag
   - jekyll-sitemap
 
