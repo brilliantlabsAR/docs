@@ -16,5 +16,5 @@ node_modules
 .vscode/settings.json
 
 # Diagrams.net backup and temp files
-images/*.bkp
-images/*.dtmp
+*.bkp
+*.dtmp

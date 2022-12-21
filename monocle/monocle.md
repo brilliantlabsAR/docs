@@ -5,8 +5,10 @@ image: /images/monocle-splash.png
 nav_order: 2
 ---
 
-# Monocle Hardware
+# Monocle Hardware Manual
 {: .no_toc }
+
+---
 
 ![Monocle exploded view](/monocle/images/monocle-exploded-view.png)
 
@@ -92,7 +94,7 @@ The RAM devices used are the [AP Memory APS256XXN](https://www.apmemory.com/wp-c
 
 The display used inside Monocle is a Sony [ECX336CN](https://www.panelook.com/ECX336CN_Sony_0.23_OLED_overview_51733.html) OLED. It features **640x400 RGB pixels**, and is permanently bonded to the optical housing which reflects the image using a prism for the user to see. The result is a floating heads up display with a **20° field of view**. About the size of a table display at arms length.
 
-![Diagram of the Monocle display FOV](/monocle/images/monocle-display-fov.png)
+![Diagram of the Monocle display light path](/monocle/images/monocle-display-fov.png)
 
 Much of the operation and configuration is kept private by Sony, however we include a working configuration within our [FPGA code](https://github.com/Itsbrilliantlabs/monocle-fpga) which is used to drive the display.
 
@@ -106,9 +108,13 @@ Much of the operation and configuration is kept private by Sony, however we incl
 
 ## Microphone
 
+![Annotation of the Monocle microphone](/monocle/images/monocle-microphone.png)
+
 ## Power
 
 ## Charging case
+
+![Annotation of the Monocle charging case](/monocle/images/monocle-charging-case.png)
 
 ## Developing custom firmware
 
