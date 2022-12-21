@@ -301,12 +301,14 @@ Monocle is intended for consumer and R&D applications. It is not verified for us
 
 ### Lithium batteries
 
-Lithium batteries can be dangerous if mishandled. Do not expose Monocle, or related hardware to excess temperatures, fire or liquids. Do not try to remove the battery as the wires can become shorted and result in the battery overheating or catching fire. Once the product reaches the end of it's life, dispose it safely according to your local regulations, such as ewaste collection points where any volatile components can be properly contained and handled.
+Lithium batteries can be dangerous if mishandled. Do not expose Monocle, or related hardware to excess temperatures, fire or liquids. Do not try to remove the battery as the wires can become shorted and result in the battery overheating or catching fire. Once the product reaches the end of it's life, dispose it safely according to your local regulations, such as e-waste collection points where any volatile components can be properly contained and handled.
 
 ### Limitation of liability
 
-Brilliant Labs Ltd. take no responsibility for the performance or non-performance of any of the provided hardware, software or services around the product. This includes, but is not limited to, loss or unintended exposure data or loss of profits or business.
+Brilliant Labs Ltd. provides technical data, including design resources, examples, applications, design advice, tools, safety information and other resources "as is" and disclaims all warranties, express and implied, including without limitation any implied warranties or merchantability, fitness for a particular purpose or non-infringement of third party intellectual property rights. 
+
+These resources are intended for skilled developers. You are solely responsible for selecting the appropriate products for your application, designing, validating and testing your application, and ensuring your application meets applicable standards, and other safety, security, regulatory or other requirements.
 
 Brilliant Labs Ltd. reserves the right to change the circuitry and specifications without notice at any time. The parametric values quoted in this manual are provided for guidance only.
 
-Check our website for the full [terms and conditions](https://www.brilliantmonocle.com/terms), as well as our [privacy policy](https://www.brilliantmonocle.com/privacy).
+The resources and products are provided subject to our [terms and conditions](https://www.brilliantmonocle.com/terms).
