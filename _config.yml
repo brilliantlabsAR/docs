@@ -32,7 +32,7 @@ last_edit_time_format: "%b %e %Y"
 mermaid:
   version: "9.2.2" # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
 
-# Call-outs
+# Call-outs 
 callouts:
   warning:
     title: Caution
