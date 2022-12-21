@@ -1,7 +1,7 @@
 ---
 title: Monocle
 description: A brief overview of how Monocle works under the hood.
-image: /images/monocle-splash.png
+image: /monocle/images/monocle-exploded-view.png
 nav_order: 2
 ---
 
@@ -308,3 +308,5 @@ Lithium batteries can be dangerous if mishandled. Do not expose Monocle, or rela
 Brilliant Labs Ltd. take no responsibility for the performance or non-performance of any of the provided hardware, software or services around the product. This includes, but is not limited to, loss or unintended exposure data or loss of profits or business.
 
 Brilliant Labs Ltd. reserves the right to change the circuitry and specifications without notice at any time. The parametric values quoted in this manual are provided for guidance only.
+
+Check our website for the full [terms and conditions](https://www.brilliantmonocle.com/terms), as well as our [privacy policy](https://www.brilliantmonocle.com/privacy).
