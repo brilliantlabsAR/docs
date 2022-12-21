@@ -7,7 +7,8 @@ has_children: true
 ---
 
 # MicroPython API
-{: .no_toc }
+
+---
 
 MicroPython lets you prototype and build you applications fast without having to dive deep into any C development. With a few lines of Python you can draw to the display, access the camera, and even offload processing to the FPGA when needed. Of course you get all the other benefits of Python too. Best of all, it's completely wireless, and you can access the Python REPL simply over Bluetooth.
 
@@ -15,7 +16,9 @@ The [MicroPython firmware for Monocle](https://github.com/Itsbrilliantlabs/monoc
 
 The majority of the MiroPython language is documented on the [MicroPython docs](https://docs.micropython.org/en/latest/index.html). The supported subset of libraries are shown in the [table below](#supported-modules).
 
-The `machine` module is customized specifically for the Monocle hardware, and allows access to the specific hardware of Monocle. View the documentation [here](/micropython/machine).
+The additional modules listed under this page are specifically designed to allow access to the Monocle hardware. Check their pages to view the API.
+
+---
 
 ## Quick start
 
@@ -26,16 +29,23 @@ Go to [this page](repl.siliconwitchery.com) using Google Chrome, and connect to 
 Once you're connected, try running this code:
 
 ```python
-from machine import *
-import framebuf
+import touch
+import display
 
-buf = bytearray(640 * 400 * 2)
-fbuf = framebuf.FrameBuffer(buf, 640, 400, framebuf.RGB565)
-fbuf.fill(0)
-fbuf.text('MicroPython!', 0, 0, 0xffff)
+fn change_text():
+    display.fill(0)
+    display.text("touched!", 0, 0, 0xffffff)
+    display.show()
 
-machine.Display.show(buf)
+touch.bind(touch.A, touch.TAP, change_text)
+
+display.fill(0)
+display.text("tap touch A", 0, 0, 0xffffff)
+display.show
 ```
+
+---
+
 ## Mobile app
 
 You can also try the mobile app on iOS or Android which we're gradually adding more features to. It's also a great place to start if you'd like to [make your own mobile app]() for Monocle.
@@ -44,6 +54,8 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 [<img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Apple App Store badge" width="175"/>](https://apps.apple.com/us/app/monocle-by-brilliant/id1632203938)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [<img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play Store badge" width="175"/>](https://play.google.com/store/apps/details?id=com.brilliantmonocle)
 </div>
+
+---
 
 ## Supported modules
 
@@ -106,3 +118,7 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 | <span style="color:orange">Planned</span>  | utime.sleep_us(usecs) **function**                                 | Sleep for a given number of microseconds
 | <span style="color:orange">Planned</span>  | utime.ticks_ms() **function**                                      | Returns the time in ms since power on
 | <span style="color:orange">Planned</span>  | utime.ticks_us() **function**                                      | Returns the time in us since power on
+
+---
+
+## API reference
