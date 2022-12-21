@@ -66,13 +66,13 @@ Over the air updates can be performed via Nordic's nRFConnect software either on
 
 ## FPGA
 
-the FPGA used is a [Gowin GW1N-LV9MG100C6/I5](https://www.mouser.se/datasheet/2/1033/GW1N_series_of_FPGA_Products_Data_Sheet-1830682.pdf). It contains **7k LUTs**, **468kb of block RAM**, as well as **608kb of Flash** memory which is perfect for storing the FPGA bitstream.
-
-**The FPGA can also be booted from the external [8Mb SPI Flash IC](#flash) which is also included within the Monocle.**
+the FPGA used is a [Gowin GW1N-LV9MG100C6/I5](https://www.mouser.se/datasheet/2/1033/GW1N_series_of_FPGA_Products_Data_Sheet-1830682.pdf). It contains **7k LUTs**, **468kb of block RAM**, as well as **608kb of Flash** memory which is perfect for storing the FPGA bitstream. The FPGA can also be booted from the external [8Mb SPI Flash IC](#flash) which is included onboard the Monocle.
 
 By default, the FPGA comes pre-loaded our [Graphics & Camera Accelerator IP](https://github.com/Itsbrilliantlabs/monocle-fpga) and is driven by a custom MicroPython driver over SPI from the nRF52. It's a perfect starting point if you decide to [create your own IP](#developing-for-the-fpga) for applications such as AI inferencing, or computer vision.
 
 **The latest release for the FPGA IP can be updated via a [MicroPython command](/micropython/machine-fpga#update). It is also checked periodically if you are using the [Brilliant App](/mobile-app/mobile-app)**
+
+To save power, the FPGA can be shutdown along with the camera and display when not needed. See the [power](#power) section for details. 
 
 ---
 
@@ -98,23 +98,83 @@ The display used inside Monocle is a Sony [ECX336CN](https://www.panelook.com/EC
 
 Much of the operation and configuration is kept private by Sony, however we include a working configuration within our [FPGA code](https://github.com/Itsbrilliantlabs/monocle-fpga) which is used to drive the display.
 
+To save power, the display can be shutdown along with the camera and fpga when not needed. See the [power](#power) section for details.
+
+---
+
 ## Camera
+
+The front facing camera on Monocle is the [Omnivision OV5640](https://cdn.sparkfun.com/datasheets/Sensors/LightImaging/OV5640_datasheet.pdf). It is a 5MP color sensor and features numerous convince features such as automatic exposure control, and automatic white balance.
+
+The sensor is wired directly to the FPGA via a fast MIPI CSI-2 interface, so can be used for computer vision applications, as well as machine learning applications.
 
 ![Annotation of the Monocle camera](/monocle/images/monocle-camera.png)
 
+To save power, the camera can be shutdown along with the fpga and display when not needed. See the [power](#power) section for details. 
+
+---
+
 ## Touch interface
+
+Monocle features two capacitive touch buttons which are fed into an [Azoteq IQS620A](https://www.azoteq.com/images/stories/pdf/iqs620_datasheet.pdf) touch controller. Each button can detect close proximity as well as touch events. With further software processing, double taps, long presses and other gestures can be detected. The touch controller is connected to the Blueooth MCU via I<sup>2</sup>C and an interrupt line to flag pending touch events.
 
 ![Annotation of the Monocle touch interface](/monocle/images/monocle-touch-interface.png)
 
+---
+
 ## Microphone
+
+A [TDK/InvenSense ICS-41351](http://invensense.wpenginepowered.com/wp-content/uploads/2020/07/DS-000157-ICS-41351-v1.4.pdf) microphone is directly  connected to the FPGA, and can be used to record audio, or in voice recognition algorithms.
+
+The audio port is located on the back of the monocle, so is perfect for receiving the wearers voice, while avoiding background sounds.
 
 ![Annotation of the Monocle microphone](/monocle/images/monocle-microphone.png)
 
+The microphone is connected via a PDM interface, and is on the same power domain as the FPGA.
+
+---
+
 ## Power
+
+Monocle operates on the four power domains as shown below. The colored domains may be powered down by command of the Bluetooth MCU. If the FPGA is shutdown, all the connected peripherals including the display and camera will shutdown also. 
+
+Alternatively, the analog supplies of the camera (2.7V) and display (10V) may be powered down independently of the FPGA. This method, while not being the most aggressive power saving method, allows for faster startup of the camera or display as the digital registers do not need to be reconfigured.
+
+![Power supply diagram of the Monocle](/monocle/images/monocle-power-diagram.drawio.png)
+
+### Regulation
+
+The [Maxim MAX77654 PMIC](https://www.analog.com/media/en/technical-documentation/data-sheets/max77654.pdf) is an efficient and low power management controller. Each rail is highly configurable and can be tuned for efficiency, stability or noise performance. Each rail can additionally be current limited to avoid overloading the battery.
+
+The PMIC communicates solely with the Bluetooth MCU over I<sup>2</sub>C.
+
+{: .warning }
+> It's possible to damage the Monocle hardware by misconfiguring the power supply controller, and setting the voltages too high. We recommend that you avoid diverging from the settings found in the Brilliant provided firmware, to prevent damage to your Monocle.
+
+### Battery charging
+
+The PMIC also includes an integrated battery charger. Charge regulation voltage and current can be configured, as well as various timings. The battery level, and charge current can also be read via an analog pin provided from the PMIC to the Bluetooth MCU.
+
+{: .warning }
+> It's possible to damage the Monocle battery by misconfiguring the charge voltage and current. We recommend that you avoid diverging from the settings found in the Brilliant provided firmware, to prevent fire or serious damage to the Monocle battery.
+
+### LEDs
+
+The PMIC provides two LEDs (green and red) connected under GPIOs that are accessible from the PMICs registers.
+
+![Annotation of the Monocle LEDs](/monocle/images/monocle-leds.png)
+
+---
 
 ## Charging case
 
+Monocle ships with a charging/storage case which can charge and protect your Monocle. When inserted into the case, Monocle will begin to recharge from the case battery. The case battery can provide several full charges of the Monocle and itself be recharged from a standard 500mA USB Type-C plug.
+
 ![Annotation of the Monocle charging case](/monocle/images/monocle-charging-case.png)
+
+When placed into the charger, the PMIC, and thus the Bluetooth MCU will detect the charge voltage and be able to shut down the peripherals to efficiently charge. Upon removal from the case, the Bluetooth MCU firmware will restore the Monocle into a normal power mode.
+
+---
 
 ## Developing custom firmware
 
@@ -183,14 +243,15 @@ Generally it's convenient to use the [MicroPython FPGA module](/micropython/mach
     openFPGALoader --cable ft2232 --fpga-part 0x0100481b --write-flash bitstream.fs
     ```
 
-## Schematics
+---
 
-TODO: Venkat to generate latest schematics
+## Schematics
 
 [Download the PDF schematics for Monocle](/monocle/monocle-schematics.pdf)
 
 [Download the PDF schematics for the charging case](/monocle/monocle-cc-schematics.pdf)
 
+---
 
 ## Mechanical
 
@@ -200,10 +261,50 @@ TODO: Ben to provide mechanical drawings
 
 ### Charging case
 
+---
+
 ## Device characteristics
 
+Typical and absolute device characteristics are shown below. To get the best lifetime of your Monocle, it's recommended to keep within these limits.
 
+### Typical characteristics
 
-## Safety
+|                           | Min    | Typ | Max   |
+|:--------------------------|:------:|:---:|:-----:|
+| Monocle charge current    | -      | -   | 77mA  |
+| Case USB charge current   | -      | -   | 500mA |
+| Bluetooth radio power     | -20dBm | -   | 4dBm  |
+| Bluetooth sensitivity     | -96dBm | -   | -     |
+|  |     |     |     |
 
-## Legal
+### Maximum ratings
+
+|                           | Min   | Typ  | Max  |
+|:--------------------------|:-----:|:----:|:----:|
+| Case USB charging voltage | -0.3V | 5.1V | 30V  |
+| Monocle charging voltage  | -0.3V | 5.1V | 28V  |
+| Operating temperature     | 0°C   | -    | 45°C |
+| Storage temperature       | -20°C | -    | 60°C |
+|  |     |     |     |
+
+---
+
+## Safety & limitation of liability
+
+### Safety
+
+Monocle can obscure your vision and should not be used while driving or operating dangerous equipment. Additionally long periods of use may cause eye strain, headaches and motion sickness. Monocle can also display bright flashing images so may not be suitable for those susceptible to epileptic effects.
+
+### Critical applications
+
+Monocle is intended for consumer and R&D applications. It is not verified for use where performance and accuracy would be critical to human health, safety or mission critical infrastructure.
+
+### Lithium batteries
+
+Lithium batteries can be dangerous if mishandled. Do not expose Monocle, or related hardware to excess temperatures, fire or liquids. Do not try to remove the battery as the wires can become shorted and result in the battery overheating or catching fire. Once the product reaches the end of it's life, dispose it safely according to your local regulations, such as ewaste collection points where any volatile components can be properly contained and handled.
+
+### Limitation of liability
+
+Brilliant Labs Ltd. take no responsibility for the performance or non-performance of any of the provided hardware, software or services around the product. This includes, but is not limited to, loss or unintended exposure data or loss of profits or business.
+
+Brilliant Labs Ltd. reserves the right to change the circuitry and specifications without notice at any time. The parametric values quoted in this manual are provided for guidance only.
