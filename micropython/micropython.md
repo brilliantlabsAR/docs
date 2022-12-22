@@ -1,12 +1,12 @@
 ---
 title: MicroPython
-description: A guide on how to use MicroPython to drive your Monocle hardware.
-image: /images/monocle-micropython.png
+description: A guide on how to use MicroPython on your Monocle AR device.
+image: /micropython/images/monocle-micropython.png
 nav_order: 3
-has_children: true
 ---
 
 # MicroPython API
+{: .no_toc }
 
 ---
 
@@ -21,6 +21,7 @@ The additional modules listed under this page are specifically designed to allow
 ---
 
 ## Quick start
+{: .no_toc }
 
 Go to [this page](repl.siliconwitchery.com) using Google Chrome, and connect to your Monocle using the Web Bluetooth API.
 
@@ -47,6 +48,7 @@ display.show
 ---
 
 ## Mobile app
+{: .no_toc }
 
 You can also try the mobile app on iOS or Android which we're gradually adding more features to. It's also a great place to start if you'd like to [make your own mobile app]() for Monocle.
 
@@ -57,68 +59,223 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 
 ---
 
-## Supported modules
+## Library reference
+{: .no_toc }
 
-| Status                                     | Module & class                                                     | Description |
-|:------------------------------------------:|:-------------------------------------------------------------------|:------------|
-| <span style="color:green">Supported</span> | builtins **module**                                                | There are many default built-in functions enabled. Only differences in the base feature set are listed here
-| <span style="color:green">Supported</span> | builtins.bytearray **class**                                       | Byte arrays are supported
-| <span style="color:red">Not planned</span> | builtins.complex **class**                                         | Complex numbers are not supported
-| <span style="color:green">Supported</span> | builtins.dict **class**                                            | All MicroPython dictionary functions including dict.fromkeys() are supported
-| <span style="color:green">Supported</span> | builtins.enumerate **class**                                       | Enumerate loops are supported
-| <span style="color:green">Supported</span> | builtins.float **class**                                           | Floating point numbers are supported
-| <span style="color:green">Supported</span> | builtins.max **function**                                          | Max is supported
-| <span style="color:green">Supported</span> | builtins.min **function**                                          | Min is supported
-| <span style="color:green">Supported</span> | builtins.reversed **class**                                        | Reversing lists are supported
-| <span style="color:green">Supported</span> | builtins.set **class**                                             | Sets are supported
-| <span style="color:green">Supported</span> | builtins.slice **class**                                           | Slices are supported
-| <span style="color:green">Supported</span> | builtins.str **class**                                             | Unicode support, and extra string functions are supported
-| <span style="color:green">Supported</span> | framebuf **module**                                                | Frame drawing functions are supported
-| <span style="color:green">Supported</span> | gc **module**                                                      | Garbage collection functions are supported
-| <span style="color:green">Supported</span> | machine.Battery.level() **function**                               | Returns the current battery level as a percentage
-| <span style="color:orange">Planned</span>  | machine.Camera.capture() **function**                              | Sends the last captured image over Bluetooth
-| <span style="color:orange">Planned</span>  | machine.Camera.stop() **function**                                 | Stops any ongoing image stream or capture currently in progress
-| <span style="color:orange">Planned</span>  | machine.Display.show(framebuffer) **function**                     | Pushes a framebuffer object to the FPGA for drawing onto the display
-| <span style="color:orange">Planned</span>  | machine.FPGA.download() **function**                               | Downloads and reboots the FPGA with a bitstream provided over Bluetooth. Automatically powers up the FPGA if it was powered down
-| <span style="color:orange">Planned</span>  | machine.FPGA.spi_read(cmd, addr, bytes) **function**               | Reads n bytes from the FPGA with a given command and address. Returns a byte array
-| <span style="color:green">Supported</span> | machine.FPGA.spi_write(cmd, addr, bytes, buffer) **function**      | Writes n bytes from buffer to the FPGA with a given command and address. 
-| <span style="color:orange">Planned</span>  | machine.FPGA.status() **function**                                 | Returns the current status of the FPGA
-| <span style="color:orange">Planned</span>  | machine.Microphone.stream() **function**                           | Starts streaming audio data over Bluetooth
-| <span style="color:orange">Planned</span>  | machine.Microphone.stop() **function**                             | Stops any ongoing audio stream
-| <span style="color:orange">Planned</span>  | machine.Power.hibernate(enable) **function**                       | Enables or disables all the high power devices. Networking remains active. Upon re-enabling the FPGA will remain in reset until booted using FPGA.boot()
-| <span style="color:green">Supported</span> | machine.Power.reset() **function**                                 | Resets the device
-| <span style="color:green">Supported</span> | machine.Power.reset_cause() **function**                           | Returns the reason for the previous reset or startup state
-| <span style="color:green">Supported</span> | machine.Power.shutdown(timeout) **function**                       | Places the device into deep-sleep and powers down all high power devices. If a timeout is given, the device will wake up again after that many seconds, otherwise the device will only wake up upon inserting, and removing from the case. Upon wakeup, the device will reset, and the cause can be seen using the Power.reset_cause() function
-| <span style="color:green">Supported</span> | machine.Timer.Timer(id, period, callback, oneshot) **constructor** | Creates a new Timer object on timer id with the period in milliseconds and a given callback handler. The oneshot value can optionally be set to true if only a single trigger is required. By default the timer is repeating
-| <span style="color:green">Supported</span> | machine.Timer.value() **function**                                 | Returns the current count value of the timer in milliseconds
-| <span style="color:green">Supported</span> | machine.Timer.deinit() **function**                                | De-initializes the timer and stops any callbacks
-| <span style="color:green">Supported</span> | machine.Touch **class**                                            | Configure a callback function for reacting with touch events.
-| <span style="color:green">Supported</span> | machine.mac_address() **function**                                 | Returns the 48bit MAC address of the device as a 17 character string. Each byte is delimited with a colon
-| <span style="color:green">Supported</span> | machine.update(start) **function**                                 | Checks for firmware updates and returns True if it is available. If start is set to True, the update process is begun, and the device will enter the bootloader state
-| <span style="color:green">Supported</span> | machine.board_name **string**                                      | Returns the device name as a string
-| <span style="color:green">Supported</span> | machine.git_tag **string**                                         | Returns the firmware build git tag as a string
-| <span style="color:green">Supported</span> | machine.mcu_name **string**                                        | Returns the device's main MCU name as a string
-| <span style="color:green">Supported</span> | machine.version **string**                                         | Returns the firmware version number as a string
-| <span style="color:green">Supported</span> | math **module**                                                    | Math functions are supported
-| <span style="color:green">Supported</span> | micropython **module**                                             | There are many default micropython functions enabled. Only differences in the base feature set are listed here
-| <span style="color:green">Supported</span> | ubinascii **module**                                               | Binary to ASCII encodings are supported
-| <span style="color:green">Supported</span> | uerrno **module**                                                  | System error codes are supported
-| <span style="color:red">Not planned</span> | uio.open(file, mode) **function**                                  | File opening is not supported (yet)
-| <span style="color:green">Supported</span> | uio.                                                               | String and Byte IO streams are supported
-| <span style="color:green">Supported</span> | ujson **module**                                                   | JSON handling functions are supported
-| <span style="color:green">Supported</span> | urandom **module**                                                 | Additional random number functions are supported
-| <span style="color:green">Supported</span> | ure **module**                                                     | Regular expression handling functions are supported
-| <span style="color:orange">Planned</span>  | utime.gmtime(epoch) **function**                                   | Returns a tuple containing the time and data according to GMT. If the epoch argument is provided, the epoch timestamp is used, other the internal time of the device
-| <span style="color:orange">Planned</span>  | utime.localtime(epoch) **function**                                | Returns a tuple containing the time and data according to local time. If the epoch argument is provided, the epoch timestamp is used, other the internal time of the device
-| <span style="color:orange">Planned</span>  | utime.mktime(tuple) **function**                                   | The inverse of gmtime(). Returns an epoch seconds value from the 9-tuple given
-| <span style="color:orange">Planned</span>  | utime.time() **function**                                          | Returns the number of seconds since the epoch. If the true time hasn't been set, this will be the number of seconds since power on
-| <span style="color:orange">Planned</span>  | utime.set_time(secs) **function**                                  | Set the real time clock to a given value in seconds from the epoch
-| <span style="color:orange">Planned</span>  | utime.sleep(secs) **function**                                     | Sleep for a given number of seconds
-| <span style="color:orange">Planned</span>  | utime.sleep_ms(msecs) **function**                                 | Sleep for a given number of milliseconds
-| <span style="color:orange">Planned</span>  | utime.sleep_us(usecs) **function**                                 | Sleep for a given number of microseconds
-| <span style="color:orange">Planned</span>  | utime.ticks_ms() **function**                                      | Returns the time in ms since power on
-| <span style="color:orange">Planned</span>  | utime.ticks_us() **function**                                      | Returns the time in us since power on
+{: .note }
+> The Monocle MicroPython API below is a work in progress. The ❌ icon signifies a feature which is not implemented yet, but is planned.
+
+1. TOC
+{:toc}
 
 ---
 
-## API reference
+### `builtins`
+
+> Minimal MicroPython [builtin functions and exceptions](https://docs.micropython.org/en/latest/library/gc.html) are supported along with the subset listed below. 
+
+| Members | Description |
+|:--------|:------------|
+| `bytearray` **class** | Byte arrays are supported
+| `dict` **class**      | Dictionaries are fully supported
+| `enumerate` **class** | Enumerate loops are supported
+| `float` **class**     | Floating point numbers are supported
+| `max()` **function**  | The max function is supported
+| `min()` **function**  | The min function is supported
+| `reversed` **class**  | Reversing lists are supported
+| `set` **class**       | Sets are supported
+| `slice` **class**     | Slices are supported
+| `str` **class**       | Unicode and string handling is supported
+
+---
+
+### `gc`
+
+> Standard MicroPython [garbage collection](https://docs.micropython.org/en/latest/library/gc.html) is supported.
+
+---
+
+### `device` – Monocle specific
+
+> Device contains general information about the Monocle's hardware and firmware, as well as power options and firmware updating.
+
+| Members | Description |
+|:--------|:------------|
+| `NAME` **constant** ❌                          | Constant which holds `'monocle'` as a **string**
+| `mac_address()` **function**                   | Returns the 48-bit MAC address as a 17 character **string**
+| `VERSION` **constant**                         | Constant containing the firmware version as a **string**. E.g. `'v22.342.1252'`. The version string is based on the release date: YY.DDD.HHMM
+| `GIT_TAG` **constant**                         | Constant containing the build git tag as a 7 character **string**
+| `update_available()` **function** ❌            | Checks if a firmware update is available. Returns either `True` or `False`<br>See [firmware updates](#firmware-updates) to understand how the update process is done
+| `update()` **function** ❌                      | Starts a firmware update if there's one available. This will restart the device. If an update could not be done, a message will be displayed:<br>- `'IS_LATEST'` if there is no new update<br>- `'NO_CONNECTION'` if the device could not reach the update server<br>See [firmware updates](#firmware-updates) to understand how the update process is done
+| `battery_level()` **function** ❌               | Returns the battery level percentage as an **integer**
+| `reset()` **function**                         | Resets the device
+| `reset_cause()` **function**                   | Returns the reason for the previous reset or startup state. These can be either:<br>- `'POWERED_ON'` if the device was powered on normally<br>- `'SOFTWARE_RESET'` if `reset()` was used<br>- `'CRASHED'` if the device had crashed
+| `shutdown(component)`&nbsp;**function**&nbsp;❌ | Shuts down a particular component passed into the optional `component` parameter:<br>- `'DISPLAY'` shuts down only the display<br>- `'CAMERA'` shuts down only the camera<br>- If no argument is given the device is placed into the lowest power mode. Everything is shutdown including the FPGA. Only networking will remain active
+| `wakeup(component)` **function** ❌             | Wakes up a particular component passed into the optional `component` parameter:<br>- `'DISPLAY'` wakes up only the display<br>- `'CAMERA'` wakes up the camera<br>- If `wakeup('DISPLAY')` or `wakeup('CAMERA')` is called after `shutdown()`, the FPGA subsystem will automatically be powered up<br>- If no argument is given, all components are woken up
+| `DISPLAY` **constant** ❌                       | Constant value for use with the `shutdown()` or `wakeup()` functions
+| `CAMERA` **constant** ❌                        | Constant value for use with the `shutdown()` or `wakeup()` functions
+
+---
+
+### `led` – Monocle specific
+
+> The LED module contains functions to control the red and green LED on the front of Monocle.
+
+| Members | Description |
+|:--------|:------------|
+| `on(led)` **function** ❌            | Illuminates the led. `led` can be either `'RED'` or `'GREEN'`
+| `off(led)`&nbsp;**function**&nbsp;❌ | Turns off the led. `led` can be either `'RED'` or `'GREEN'`
+| `RED` **constant** ❌                | Enumeration of the red led which can be passed to `led.on()` or `led.off()`
+| `GREEN` **constant** ❌              | Enumeration of the green led which can be passed to `led.on()` or `led.off()`
+
+---
+
+### `fpga` – Monocle specific
+
+> The FPGA module allows for direct control of the FPGA, as well as the ability to update the bitstream.
+
+| Members | Description |
+|:--------|:------------|
+| `read(addr, n)` **function** ❌                | Reads `n` number of bytes from the 16-bit address `addr`, and returns a **byte array**
+| `write(addr,data[])`&nbsp;**function**&nbsp;❌ | Writes all bytes from a given byte array `bytes[]` to the 16-bit address `addr`
+| `update(url)` **function** ❌                  | Downloads and reboots the FPGA with a bitstream provided over Bluetooth. Automatically wakes up the FPGA if it was shutdown. Returns a status once completed:<br>- `'RUNNING'` if completed successfully<br>- `'NO_CONNECTION'` if the URL could not be reached. In this case, the update isn't performed, and the FPGA continues to run the existing bitstream<br>- `'INCOMPLETE_DOWNLOAD'` if the download wasn't successful. In this case, the update isn't performed, and the FPGA continues to run the existing bitstream<br>- `'BAD_BITSTREAM'` if the bitstream was written, but the FPGA didn't boot. In this case, the FPGA will be no longer be running as a valid image is not available. Another update must be performed<br>See [FPGA bitstreams](#fpga-bitstreams) to understand how the update process is done
+| `state()` **function** ❌                      | Returns the current state of the FPGA:<br>- `'RUNNING'` if the FPGA is running a valid bitstream.<br>- `'NOT_POWERED'` if the FPGA subsystem is not powered<br>- `'BAD_BITSTREAM'` if the FPGA can't run the bitstream stored in memory. An update must be performed.
+
+---
+
+### `camera` – Monocle specific
+
+> The camera module allows for capturing images and transferring them back to a module device.
+
+| Members | Description |
+|:--------|:------------|
+| `capture()`&nbsp;**function**&nbsp;❌ | Captures an image and returns it to the mobile device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are performed. Returns `'NOT_POWERED'` if the camera, or FPGA subsystem is not powered
+| `stop()` **function** ❌              | Stops any ongoing camera image transfer that is currently in progress
+
+---
+
+### `microphone` – Monocle specific
+
+> The microphone module allows for capturing audio and streaming it to a module device.
+
+| Members | Description |
+|:--------|:------------|
+| `capture(ms)`&nbsp;**function**&nbsp;❌ | Captures `ms` milliseconds worth of audio, and transfers it to the mobile device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are performed. Returns `'NOT_POWERED'` if the FPGA subsystem is not powered
+| `stop()` **function** ❌                | Stops any ongoing audio transfer that is currently in progress
+
+---
+
+### `display` – Monocle specific
+
+> The display module allows for drawing to the micro OLED display of Monocle.
+
+| Members | Description |
+|:--------|:------------|
+| `fill(color)` **function** ❌                        | 
+| `pixel(x, y, color)` **function** ❌                 | 
+| `hline(x,y,width,color)` **function** ❌             | 
+| `vline(x,y,height,color)` **function** ❌            | 
+| `vline(x1,y1,x2,y2,color)`&nbsp;**function**&nbsp;❌ | 
+| `text("string",x,y,color)` **function** ❌           | 
+| `show()` **function** ❌                             | . Returns `'NOT_POWERED'` if the display, or FPGA subsystem is not powered
+
+---
+
+### `touch` – Monocle specific
+
+> The touch module allows for reacting to touch events when the user touches the buttons on top of Monocle.
+
+| Members | Description |
+|:--------|:------------|
+| `bind(pad,action,callback)`&nbsp;**function**&nbsp;❌ | 
+| `state(pad)` **function** ❌                          |
+| `A` **constant** ❌                                   |
+| `B` **constant** ❌                                   |
+| `TAP` **constant** ❌                                 |
+| `DOUBLE_TAP` **constant** ❌                          |
+| `LONG_PRESS` **constant** ❌                          |
+| `SLIDE` **constant** ❌                               |
+
+---
+
+### `time` – Monocle specific
+
+> The timer module allows for getting/setting the time and date, adding delays into your programs, as well as triggering events on regular intervals.
+
+| Members | Description |
+|:--------|:------------|
+| `gmtime(epoch)` **function**    | Returns a tuple containing the time and data according to GMT. If the epoch argument is provided, the epoch timestamp is used, other the internal time of the device
+| `localtime(epoch)` **function** | Returns a tuple containing the time and data according to local time. If the epoch argument is provided, the epoch timestamp is used, other the internal time of the device
+| `mktime(tuple)` **function**    | The inverse of gmtime(). Returns an epoch seconds value from the 9-tuple given
+| `time()` **function**           | Returns the number of seconds since the epoch. If the true time hasn't been set, this will be the number of seconds since power on
+| `set_time(secs)` **function**   | Set the real time clock to a given value in seconds from the epoch
+| `sleep(secs)` **function**      | Sleep for a given number of seconds
+| `sleep_ms(msecs)` **function**  | Sleep for a given number of milliseconds
+| `ticks_ms()` **function**       | Returns the time in ms since power on
+
+---
+
+### `math`
+
+> Standard MicroPython [math](https://docs.micropython.org/en/latest/library/math.html) functions are supported.
+
+---
+
+### `micropython`
+
+> Standard MicroPython [internals](https://docs.micropython.org/en/latest/library/micropython.html) are supported.
+
+---
+
+### `ubinascii`
+
+> Standard MicroPython [binary/ASCII conversions](https://docs.micropython.org/en/latest/library/binascii.html) are supported.
+
+---
+
+---
+
+### `uerrno`
+
+> Standard MicroPython [system error codes](https://docs.micropython.org/en/latest/library/errno.html) are supported.
+
+---
+
+### `uio`
+
+> Standard MicroPython [IO streams](https://docs.micropython.org/en/latest/library/io.html) **except** for `FileIO` are supported.
+
+---
+
+### `ujson`
+
+> Standard MicroPython [JSON handling](https://docs.micropython.org/en/latest/library/json.html) is supported.
+
+---
+
+### `urandom`
+
+> Standard MicroPython [random number generation](https://docs.micropython.org/en/latest/library/random.html) is supported.
+
+---
+
+### `ure`
+
+> Standard MicroPython [regular expressions](https://docs.micropython.org/en/latest/library/re.html) are supported.
+
+---
+
+## Under the hood
+{: .no_toc }
+
+### Communication
+{: .no_toc }
+
+### Downloading media
+{: .no_toc }
+
+### Firmware updates
+{: .no_toc }
+
+### FPGA bitstreams
+{: .no_toc }
