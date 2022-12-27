@@ -249,17 +249,19 @@ Generally it's convenient to use the [MicroPython FPGA module](/micropython/mach
 
 [Download the PDF schematics for Monocle](/monocle/monocle-schematics.pdf)
 
-[Download the PDF schematics for the charging case](/monocle/monocle-cc-schematics.pdf)
+[Download the PDF schematics for the Monocle charging case](/monocle/monocle-cc-schematics.pdf)
 
 ---
 
 ## Mechanical
 
-TODO: Ben to provide mechanical drawings
-
 ### Monocle
 
+[![PDF mechanical dimensions for Monocle](/monocle/images/monocle-dimensions.png)](/monocle/monocle-dimensions.pdf)
+
 ### Charging case
+
+[![PDF mechanical dimensions for the Monocle charging case](/monocle/images/monocle-cc-dimensions.png)](/monocle/monocle-cc-dimensions.pdf)
 
 ---
 
