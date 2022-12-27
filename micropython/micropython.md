@@ -149,7 +149,7 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 
 | Members | Description |
 |:--------|:------------|
-| `capture()`&nbsp;**function**&nbsp;❌ | Captures an image and returns it to the mobile device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are performed. Returns `'NOT_POWERED'` if the camera, or FPGA subsystem is not powered
+| `capture()`&nbsp;**function**&nbsp;❌ | Captures an image and returns it to the mobile device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are performed. Returns:<br>- `'NOT_POWERED'` if the camera, or FPGA subsystem is not powered<br>- `'ALREADY_ONGOING'` if a capture is still ongoing
 | `stop()` **function** ❌              | Stops any ongoing camera image transfer that is currently in progress
 
 ---
@@ -160,8 +160,8 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 
 | Members | Description |
 |:--------|:------------|
-| `capture(ms)`&nbsp;**function**&nbsp;❌ | Captures `ms` milliseconds worth of audio, and transfers it to the mobile device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are performed. Returns `'NOT_POWERED'` if the FPGA subsystem is not powered
-| `stop()` **function** ❌                | Stops any ongoing audio transfer that is currently in progress
+| `stream()`&nbsp;**function**&nbsp;❌ | Streams audio from the microphone to the mobile device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are performed. Returns:<br>- `'NOT_POWERED'` if the FPGA subsystem is not powered<br>- `'ALREADY_ONGOING'` if a stream is already ongoing
+| `stop()` **function** ❌             | Stops any ongoing audio transfer that is currently in progress
 
 ---
 
@@ -171,13 +171,13 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 
 | Members | Description |
 |:--------|:------------|
-| `fill(color)` **function** ❌                        | 
-| `pixel(x, y, color)` **function** ❌                 | 
-| `hline(x,y,width,color)` **function** ❌             | 
-| `vline(x,y,height,color)` **function** ❌            | 
-| `vline(x1,y1,x2,y2,color)`&nbsp;**function**&nbsp;❌ | 
-| `text("string",x,y,color)` **function** ❌           | 
-| `show()` **function** ❌                             | . Returns `'NOT_POWERED'` if the display, or FPGA subsystem is not powered
+| `fill(color)` **function** ❌                       | 
+| `pixel(x, y, color)` **function** ❌                | 
+| `hline(x,y,width,color)` **function** ❌            | 
+| `vline(x,y,height,color)` **function** ❌           | 
+| `line(x1,y1,x2,y2,color)`&nbsp;**function**&nbsp;❌ | 
+| `text("string",x,y,color)` **function** ❌          | 
+| `show()` **function** ❌                            | . Returns `'NOT_POWERED'` if the display, or FPGA subsystem is not powered
 
 ---
 
