@@ -102,10 +102,10 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 | Members | Description |
 |:--------|:------------|
 | `NAME` **constant** ❌                          | Constant which holds `'monocle'` as a **string**
-| `mac_address()` **function**                   | Returns the 48-bit MAC address as a 17 character **string**
+| `mac_address()` **function**                   | Returns the 48-bit MAC address as a 17 character **string** in the format `xx:xx:xx:xx:xx:xx`, where each `xx` is a byte in lowercase hex format
 | `VERSION` **constant**                         | Constant containing the firmware version as a **string**. E.g. `'v22.342.1252'`. The version string is based on the release date: YY.DDD.HHMM
 | `GIT_TAG` **constant**                         | Constant containing the build git tag as a 7 character **string**
-| `update_available()` **function** ❌            | Checks if a firmware update is available. Returns either `True` or `False`<br>See [firmware updates](#firmware-updates) to understand how the update process is done
+| `update_available()` **function** ❌            | Checks if a new firmware update is available. Returns either `True` or `False`, or `NO_CONNECTION` if the device could not reach the update server<br>See [firmware updates](#firmware-updates) to understand how the update process is done
 | `update()` **function** ❌                      | Starts a firmware update if there's one available. This will restart the device. If an update could not be done, a message will be displayed:<br>- `'IS_LATEST'` if there is no new update<br>- `'NO_CONNECTION'` if the device could not reach the update server<br>See [firmware updates](#firmware-updates) to understand how the update process is done
 | `battery_level()` **function** ❌               | Returns the battery level percentage as an **integer**
 | `reset()` **function**                         | Resets the device
@@ -136,9 +136,9 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 
 | Members | Description |
 |:--------|:------------|
-| `read(addr, n)` **function** ❌                | Reads `n` number of bytes from the 16-bit address `addr`, and returns a **byte array**
-| `write(addr,data[])`&nbsp;**function**&nbsp;❌ | Writes all bytes from a given byte array `bytes[]` to the 16-bit address `addr`
-| `update(url)` **function** ❌                  | Downloads and reboots the FPGA with a bitstream provided over Bluetooth. Automatically wakes up the FPGA if it was shutdown. Returns a status once completed:<br>- `'RUNNING'` if completed successfully<br>- `'NO_CONNECTION'` if the URL could not be reached. In this case, the update isn't performed, and the FPGA continues to run the existing bitstream<br>- `'INCOMPLETE_DOWNLOAD'` if the download wasn't successful. In this case, the update isn't performed, and the FPGA continues to run the existing bitstream<br>- `'BAD_BITSTREAM'` if the bitstream was written, but the FPGA didn't boot. In this case, the FPGA will be no longer be running as a valid image is not available. Another update must be performed<br>See [FPGA bitstreams](#fpga-bitstreams) to understand how the update process is done
+| `read(addr, n)` **function** ❌                | Reads `n` number of bytes from the 16-bit address `addr`, and returns a **list** of bytes
+| `write(addr,data[])`&nbsp;**function**&nbsp;❌ | Writes all bytes from a given list `bytes[]` to the 16-bit address `addr`
+| `update(url)` **function** ❌                  | Downloads and reboots the FPGA with a bitstream provided over Bluetooth. Automatically wakes up the FPGA if it was shutdown. Returns a status once completed:<br>- `'DONE'` if completed successfully<br>- `'NO_CONNECTION'` if the URL could not be reached. In this case, the update isn't performed, and the FPGA continues to run the existing bitstream<br>- `'INCOMPLETE_DOWNLOAD'` if the download wasn't successful. In this case, the update isn't performed, and the FPGA continues to run the existing bitstream<br>- `'BAD_BITSTREAM'` if the bitstream was written, but the FPGA didn't boot. In this case, the FPGA will be no longer be running as a valid image is not available. Another update must be performed<br>See [FPGA bitstreams](#fpga-bitstreams) to understand how the update process is done
 | `state()` **function** ❌                      | Returns the current state of the FPGA:<br>- `'RUNNING'` if the FPGA is running a valid bitstream.<br>- `'NOT_POWERED'` if the FPGA subsystem is not powered<br>- `'BAD_BITSTREAM'` if the FPGA can't run the bitstream stored in memory. An update must be performed.
 
 ---
