@@ -72,12 +72,12 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 
 ### `builtins`
 
-> Minimal MicroPython [builtin functions and exceptions](https://docs.micropython.org/en/latest/library/gc.html) are supported along with the subset listed below. 
+> Minimal MicroPython [built in functions](https://docs.micropython.org/en/latest/library/gc.html) are supported along with the additional features listed below. 
 
 | Members | Description |
 |:--------|:------------|
 | `bytearray` **class** | Byte arrays are supported
-| `dict` **class**      | Dictionaries are fully supported
+| `dict` **class**      | Dictionaries are supported
 | `enumerate` **class** | Enumerate loops are supported
 | `float` **class**     | Floating point numbers are supported
 | `max()` **function**  | The max function is supported
@@ -97,23 +97,18 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 
 ### `device` – Monocle specific
 
-> Device contains general information about the Monocle's hardware and firmware, as well as power options and firmware updating.
+> The device class contains general information about the Monocle's hardware and firmware, along with battery state and firmware updating.
 
 | Members | Description |
 |:--------|:------------|
-| `NAME` **constant** ❌                          | Constant which holds `'monocle'` as a **string**
-| `mac_address()` **function**                   | Returns the 48-bit MAC address as a 17 character **string** in the format `xx:xx:xx:xx:xx:xx`, where each `xx` is a byte in lowercase hex format
-| `VERSION` **constant**                         | Constant containing the firmware version as a **string**. E.g. `'v22.342.1252'`. The version string is based on the release date: YY.DDD.HHMM
-| `GIT_TAG` **constant**                         | Constant containing the build git tag as a 7 character **string**
-| `update_available()` **function** ❌            | Checks if a new firmware update is available. Returns either `True` or `False`, or `NO_CONNECTION` if the device could not reach the update server<br>See [firmware updates](#firmware-updates) to understand how the update process is done
-| `update()` **function** ❌                      | Starts a firmware update if there's one available. This will restart the device. If an update could not be done, a message will be displayed:<br>- `'IS_LATEST'` if there is no new update<br>- `'NO_CONNECTION'` if the device could not reach the update server<br>See [firmware updates](#firmware-updates) to understand how the update process is done
-| `battery_level()` **function** ❌               | Returns the battery level percentage as an **integer**
-| `reset()` **function**                         | Resets the device
-| `reset_cause()` **function**                   | Returns the reason for the previous reset or startup state. These can be either:<br>- `'POWERED_ON'` if the device was powered on normally<br>- `'SOFTWARE_RESET'` if `reset()` was used<br>- `'CRASHED'` if the device had crashed
-| `shutdown(component)`&nbsp;**function**&nbsp;❌ | Shuts down a particular component passed into the optional `component` parameter:<br>- `'DISPLAY'` shuts down only the display<br>- `'CAMERA'` shuts down only the camera<br>- If no argument is given the device is placed into the lowest power mode. Everything is shutdown including the FPGA. Only networking will remain active
-| `wakeup(component)` **function** ❌             | Wakes up a particular component passed into the optional `component` parameter:<br>- `'DISPLAY'` wakes up only the display<br>- `'CAMERA'` wakes up the camera<br>- If `wakeup('DISPLAY')` or `wakeup('CAMERA')` is called after `shutdown()`, the FPGA subsystem will automatically be powered up<br>- If no argument is given, all components are woken up
-| `DISPLAY` **constant** ❌                       | Constant value for use with the `shutdown()` or `wakeup()` functions
-| `CAMERA` **constant** ❌                        | Constant value for use with the `shutdown()` or `wakeup()` functions
+| `NAME` **constant** ❌                         | Constant which holds `'monocle'` as a **string**
+| `mac_address()` **function**                  | Returns the 48-bit MAC address as a 17 character **string** in the format `xx:xx:xx:xx:xx:xx`, where each `xx` is a byte in lowercase hex format
+| `VERSION` **constant**                        | Constant containing the firmware version as a **string**. E.g. `'monocle-firmware-v22.342.1252'`.
+| `GIT_TAG` **constant**                        | Constant containing the build git tag as a 7 character **string**
+| `update(url, start)`&nbsp;**function**&nbsp;❌ | Checks the given URL for a firmware update file. If `start` was provided as `True` the update will be started automatically. Otherwise returns:<br>- `AVAILABLE` if an update is available, but `start` was not given or was set to `False`<br>- `'IS_LATEST'` if there is no new update<br>- `'NO_CONNECTION'` if the device could not reach the update server<br>See [firmware updates](#firmware-updates) to understand how the update process is done
+| `battery_level()` **function** ❌              | Returns the battery level percentage as an **integer**
+| `reset()` **function**                        | Resets the device
+| `reset_cause()` **function**                  | Returns the reason for the previous reset or startup state. These can be either:<br>- `'POWERED_ON'` if the device was powered on normally<br>- `'SOFTWARE_RESET'` if `reset()` or `update()` was used<br>- `'CRASHED'` if the device had crashed
 
 ---
 
@@ -138,8 +133,11 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 |:--------|:------------|
 | `read(addr, n)` **function** ❌                | Reads `n` number of bytes from the 16-bit address `addr`, and returns a **list** of bytes
 | `write(addr,data[])`&nbsp;**function**&nbsp;❌ | Writes all bytes from a given list `bytes[]` to the 16-bit address `addr`
-| `update(url)` **function** ❌                  | Downloads and reboots the FPGA with a bitstream provided over Bluetooth. Automatically wakes up the FPGA if it was shutdown. Returns a status once completed:<br>- `'DONE'` if completed successfully<br>- `'NO_CONNECTION'` if the URL could not be reached. In this case, the update isn't performed, and the FPGA continues to run the existing bitstream<br>- `'INCOMPLETE_DOWNLOAD'` if the download wasn't successful. In this case, the update isn't performed, and the FPGA continues to run the existing bitstream<br>- `'BAD_BITSTREAM'` if the bitstream was written, but the FPGA didn't boot. In this case, the FPGA will be no longer be running as a valid image is not available. Another update must be performed<br>See [FPGA bitstreams](#fpga-bitstreams) to understand how the update process is done
-| `state()` **function** ❌                      | Returns the current state of the FPGA:<br>- `'RUNNING'` if the FPGA is running a valid bitstream.<br>- `'NOT_POWERED'` if the FPGA subsystem is not powered<br>- `'BAD_BITSTREAM'` if the FPGA can't run the bitstream stored in memory. An update must be performed.
+| `power(power_on)` **function** ❌              | Powers up the FPGA if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the FPGA is returned
+| `update(url)` **function** ❌                  | Downloads and reboots the FPGA with a bitstream provided from the `url`. Automatically wakes up the FPGA if it was shutdown. Returns a status once completed:<br>- `'DONE'` if completed successfully<br>- `'NO_CONNECTION'` if the URL could not be reached. In this case, the update isn't performed, and the FPGA continues to run the existing bitstream<br>- `'INCOMPLETE_DOWNLOAD'` if the download wasn't successful. In this case, the update isn't performed, and the FPGA continues to run the existing bitstream<br>- `'BAD_BITSTREAM'` if the bitstream was written, but the FPGA didn't boot. In this case, the FPGA will be no longer be running as a valid image is not available. Another update must be performed<br>See [FPGA bitstreams](#fpga-bitstreams) to understand how the update process is done
+| `state()` **function** ❌                      | Returns the current state of the FPGA:<br>- `'RUNNING'` if the FPGA is running a valid bitstream.<br>- `'NOT_POWERED'` if the FPGA is not powered<br>- `'BAD_BITSTREAM'` if the FPGA can't run the bitstream stored in memory. Another `update()` must be performed.
+| `ON` **constant** ❌                           | Equal to `True`. For use with `fpga.power()`. Used to turn the FPGA on.
+| `OFF` **constant** ❌                          | Equal to `False`. For use with `fpga.power()`. Used to turn the FPGA off.
 
 ---
 
@@ -149,8 +147,11 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 
 | Members | Description |
 |:--------|:------------|
-| `capture()`&nbsp;**function**&nbsp;❌ | Captures an image and returns it to the mobile device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are performed. Returns:<br>- `'NOT_POWERED'` if the camera, or FPGA subsystem is not powered<br>- `'ALREADY_ONGOING'` if a capture is still ongoing
-| `stop()` **function** ❌              | Stops any ongoing camera image transfer that is currently in progress
+| `capture()` **function** ❌                 | Captures an image and returns it to the mobile device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are performed. Returns:<br>- `'NOT_POWERED'` if the camera, or FPGA subsystem is not powered<br>- `'ALREADY_ONGOING'` if a capture is still ongoing
+| `stop()` **function** ❌                    | Stops any ongoing camera image transfer that is currently in progress
+| `power(power_on)`&nbsp;**function**&nbsp;❌ | Powers up the camera if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the camera is returned
+| `ON` **constant** ❌                        | Equal to `True`. For use with `camera.power()`. Used to turn the camera on.
+| `OFF` **constant** ❌                       | Equal to `False`. For use with `camera.power()`. Used to turn the camera off.
 
 ---
 
@@ -177,7 +178,10 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 | `vline(x,y,height,color)` **function** ❌           | 
 | `line(x1,y1,x2,y2,color)`&nbsp;**function**&nbsp;❌ | 
 | `text("string",x,y,color)` **function** ❌          | 
-| `show()` **function** ❌                            | . Returns `'NOT_POWERED'` if the display, or FPGA subsystem is not powered
+| `show()` **function** ❌                            | . Returns `'NOT_POWERED'` if the display, or FPGA is not powered
+| `power(power_on)` **function** ❌                   | Powers up the display if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the display is returned
+| `ON` **constant** ❌                                | Equal to `True`. For use with `display.power()`. Used to turn the display on.
+| `OFF` **constant** ❌                               | Equal to `False`. For use with `display.power()`. Used to turn the display off.
 
 ---
 
