@@ -89,12 +89,6 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 
 ---
 
-### `gc`
-
-> Standard MicroPython [garbage collection](https://docs.micropython.org/en/latest/library/gc.html) is supported.
-
----
-
 ### `device` – Monocle specific
 
 > The device class contains general information about the Monocle's hardware and firmware, along with battery state and firmware updating.
@@ -219,49 +213,37 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 
 ---
 
+### `gc`
+
+> Standard MicroPython [garbage collection](https://docs.micropython.org/en/latest/library/gc.html) is supported.
+
 ### `math`
 
 > Standard MicroPython [math](https://docs.micropython.org/en/latest/library/math.html) functions are supported.
-
----
 
 ### `micropython`
 
 > Standard MicroPython [internals](https://docs.micropython.org/en/latest/library/micropython.html) are supported.
 
----
-
 ### `ubinascii`
 
 > Standard MicroPython [binary/ASCII conversions](https://docs.micropython.org/en/latest/library/binascii.html) are supported.
-
----
-
----
 
 ### `uerrno`
 
 > Standard MicroPython [system error codes](https://docs.micropython.org/en/latest/library/errno.html) are supported.
 
----
-
 ### `uio`
 
 > Standard MicroPython [IO streams](https://docs.micropython.org/en/latest/library/io.html) **except** for `FileIO` are supported.
-
----
 
 ### `ujson`
 
 > Standard MicroPython [JSON handling](https://docs.micropython.org/en/latest/library/json.html) is supported.
 
----
-
 ### `urandom`
 
 > Standard MicroPython [random number generation](https://docs.micropython.org/en/latest/library/random.html) is supported.
-
----
 
 ### `ure`
 
