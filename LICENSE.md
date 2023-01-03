@@ -1,6 +1,6 @@
 ISC License
 
-Copyright © 2022 Brilliant Labs Ltd.
+Copyright © 2023 Brilliant Labs Ltd.
 
 Permission to use, copy, modify, and/or distribute this software for any purpose 
 with or without fee is hereby granted, provided that the above copyright notice 
