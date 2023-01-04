@@ -46,7 +46,7 @@ This page describes the hardware design of Monocle, as well as how you can use i
 
 This diagram shows a general overview of the Monocle architecture.
 
-![Monocle block diagram](/monocle/images/monocle-hw-block-diagram.drawio.png)
+![Monocle block diagram](/monocle/images/monocle-hw-block-diagram.svg)
 
 ---
 
@@ -140,7 +140,7 @@ Monocle operates on the four power domains as shown below. The colored domains m
 
 Alternatively, the analog supplies of the camera (2.7V) and display (10V) may be powered down independently of the FPGA. This method, while not being the most aggressive power saving method, allows for faster startup of the camera or display as the digital registers do not need to be reconfigured.
 
-![Power supply diagram of the Monocle](/monocle/images/monocle-power-diagram.drawio.png)
+<img src="/monocle/images/monocle-power-diagram.svg" alt="Power supply diagram of the Monocle" width="100%"/>
 
 ### Regulation
 

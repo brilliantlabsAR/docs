@@ -269,7 +269,7 @@ The RX characteristic is *write* only, and transports serial string data from th
 
 Each characteristic transports string data of any length up to the negotiated *MTU size - 3 bytes*. Longer strings must be chopped up and will automatically be rejoined on the receiving side by Monocle. Likewise if Monocle wishes to send longer responses than can fit into a single MTU payload, the data will arrive sequentially, and can be concatenated by the central Bluetooth app. The diagram below describes how communication operates between Monocle and a central device.
 
-![Sequence diagram of the Monocle serial data service]()
+![Sequence diagram of the Monocle serial data service](/micropython/images/bluetooth-serial-service-sequence-diagram.svg)
 
 A secondary Bluetooth *Service*, again containing two *Characteristics*, is used to transport raw data such as image, audio and firmware update data. The format for the raw data service is similar to the serial data service, aside from the fact that `null` or `0` characters may also be included within the payload.
 
