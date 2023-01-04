@@ -12,20 +12,19 @@ nav_order: 2
 
 ![Monocle exploded view](/monocle/images/monocle-exploded-view.png)
 
-Monocle is a tiny heads up display which simply clips onto your glasses. It's packed full of powerful hardware which is perfect for when you're on the go, and connects to your mobile phone over Bluetooth. It also contains a few handy sensors such as touch, camera and microphone, which will help you navigate your journey into the world of AR.
-
-This page describes the hardware design of Monocle, as well as how you can use it's features. If you wish to go deeper, the full open source schematics are linked [below](#schematics).
+Monocle is a tiny heads-up display which clips onto your existing eyewear. It's packed full of powerful hardware which is perfect for when you're on the go. It connects to your mobile phone over Bluetooth, and includes a few handy sensors such as touch buttons, camera and microphone. The included FPGA is perfect for computer vision, AI or graphics acceleration directly on the device. Monocle runs open source software and provides an easy way to get started using [MicroPython](/micropython/micropython). You can also write your own firmware from scratch using these docs as guidance.
 
 ## Key features:
 {: .no_toc }
 - 640x400 color OLED display
 - 20° FOV optical body
-- 5MP camera & microphone
+- 5MP camera
+- Microphone
 - FPGA based acceleration for ML/CV
 - Bluetooth 5.2
 - 70mAh internal battery
 - Touch buttons
-- Wireless MicroPython based OS
+- Full featured MicroPython based OS
 - Charging case with USB & 450mAh battery
 
 ## Example uses:
@@ -52,25 +51,25 @@ This diagram shows a general overview of the Monocle architecture.
 
 ## Bluetooth MCU
 
-The Bluetooth MCU used is a [Nordic nRF52832](https://infocenter.nordicsemi.com/pdf/nRF52832_PS_v1.8.pdf) with **512KB of Flash** memory, and **64KB of RAM**. It supports **Bluetooth 5.2**, up to 2Mb/s.
+The Bluetooth MCU serves as the main processor for Monocle. It handles the majority of control over the device, and is used for networking and scripting. The MCU used is a [Nordic nRF52832](https://infocenter.nordicsemi.com/pdf/nRF52832_PS_v1.8.pdf) with **512KB of Flash** memory, and **64KB of RAM**. It supports **Bluetooth 5.2**, up to 2Mb/s.
 
-By default, the nRF comes preloaded with our [MicroPython](/micropython/micropython) firmware, however you are able to deploy your own [custom firmware](#developing-for-the-bluetooth-mcu) if you wish to do so.
+By default, the nRF comes preloaded with our [MicroPython](/micropython/micropython) firmware, however you are able to deploy your own [custom firmware](#developing-custom-firmware) if you wish to do so.
 
 ### Updating firmware over-the-air
 
 Over the air updates can be performed via Nordic's nRFConnect software either on [Desktop](https://www.nordicsemi.com/Products/Development-tools/nrf-connect-for-desktop), or on Mobile ([iOS](https://apps.apple.com/se/app/nrf-connect-for-mobile/id1054362403)/[Android](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjbtevyrf77AhUncPEDHfjiBSEQFnoECBIQAQ&url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dno.nordicsemi.android.mcp%26hl%3Den%26gl%3DUS&usg=AOvVaw26fnMv6YUhCDOx-ZZHre94)). nRFConnect requires a `.zip` DFU file to perform the update.
 
-**The latest MicroPython release for Monocle can be found on our [GitHub](https://github.com/Itsbrilliantlabs/monocle-micropython/releases) page.**
+**The latest MicroPython release for Monocle can be found on our [GitHub](https://github.com/Itsbrilliantlabs/monocle-micropython/releases) releases page.**
 
 ---
 
 ## FPGA
 
-the FPGA used is a [Gowin GW1N-LV9MG100C6/I5](https://www.mouser.se/datasheet/2/1033/GW1N_series_of_FPGA_Products_Data_Sheet-1830682.pdf). It contains **7k LUTs**, **468kb of block RAM**, as well as **608kb of Flash** memory which is perfect for storing the FPGA bitstream. The FPGA can also be booted from the external [8Mb SPI Flash IC](#flash) which is included onboard the Monocle.
+The FPGA is used for graphics acceleration, as well as image processing of the 5MP camera. It's perfect for computer vision and AI tasks which can make direct use of the camera and microphone as inputs. The FPGA IC used is a [Gowin GW1N-LV9MG100C6/I5](https://www.mouser.se/datasheet/2/1033/GW1N_series_of_FPGA_Products_Data_Sheet-1830682.pdf). It contains **7k LUTs**, **468kb of block RAM**, as well as **608kb of Flash** memory. An additional [8Mb SPI Flash IC](#flash) is also included in Monocle, and either flash space may be used for booting up the FPGA, or storing user data.
 
-By default, the FPGA comes pre-loaded our [Graphics & Camera Accelerator IP](https://github.com/Itsbrilliantlabs/monocle-fpga) and is driven by a custom MicroPython driver over SPI from the nRF52. It's a perfect starting point if you decide to [create your own IP](#developing-for-the-fpga) for applications such as AI inferencing, or computer vision.
+By default, the FPGA comes pre-loaded our [Graphics & Camera Accelerator IP](https://github.com/Itsbrilliantlabs/monocle-fpga) and can be accessed using MicroPython commands. Our IP is a perfect starting point if you wish to [create your own FPGA application](#developing-for-the-fpga).
 
-**The latest release for the FPGA IP can be updated via a [MicroPython command](/micropython/machine-fpga#update). It is also checked periodically if you are using the [Brilliant App](/mobile-app/mobile-app)**
+**The latest release for the FPGA IP can be updated via the Micropython [`fpga.update()`](/micropython/micropython#fpga--monocle-specific) command. It is also checked periodically if you are using the Brilliant App**
 
 To save power, the FPGA can be shutdown along with the camera and display when not needed. See the [power](#power) section for details. 
 
@@ -78,25 +77,23 @@ To save power, the FPGA can be shutdown along with the camera and display when n
 
 ## Memory
 
-Aside from the built-in memories of the Bluetooth MCU and the FPGA, Monocle contains three additional memory ICs. One for flash, and two for RAM. The RAM is accessible by the FPGA, and is great for storing frame-buffers, buffering camera data, or working data for AI algorithms. The Flash meanwhile, is great as a secondary source for loading FPGA bitstreams, logging data, and is accessible by both the nRF52, as well as the FPGA.
+Aside from the built-in memories of the Bluetooth MCU and the FPGA, Monocle contains three additional memory ICs. One for flash, and two for RAM. The RAM is accessible by the FPGA, and is great for storing display buffers, camera data, or working data for AI algorithms. The flash meanwhile, is great as a secondary source for loading FPGA bitstreams, logging data, and is accessible by both the Bluetooth MCU and FPGA.
 
 ### Flash
 
-The Flash device used is the [Winbond W25Q80EWUXIE](https://www.winbond.com/hq/support/documentation/levelOne.jsp?__locale=en&DocNo=DA00-W25Q80EW). It's an 8Mb serial Flash and is connected to the FPGA and nRF52 via an SPI bus. 
+The Flash IC used is the [Winbond W25Q80EWUXIE](https://www.winbond.com/hq/support/documentation/levelOne.jsp?__locale=en&DocNo=DA00-W25Q80EW). It's an 8Mb serial Flash and is connected to the FPGA and nRF52 via an SPI bus. 
 
 ### RAM
 
-The RAM devices used are the [AP Memory APS256XXN](https://www.apmemory.com/wp-content/uploads/APM_PSRAM_OPI_Xccela-APS256XXN-OBRx-v1.0-PKG.pdf). A total of 512Mb of memory is addressable, and can be accessed at up to 800Mb/s in DDR mode.
+The RAM ICs used are the [AP Memory APS256XXN](https://www.apmemory.com/wp-content/uploads/APM_PSRAM_OPI_Xccela-APS256XXN-OBRx-v1.0-PKG.pdf). A total of 512Mb of memory is addressable, and can be accessed at up to 800Mb/s in DDR mode.
 
 ---
 
 ## Display
 
-The display used inside Monocle is a Sony [ECX336CN](https://www.panelook.com/ECX336CN_Sony_0.23_OLED_overview_51733.html) OLED. It features **640x400 RGB pixels**, and is permanently bonded to the optical housing which reflects the image using a prism for the user to see. The result is a floating heads up display with a **20° field of view**. About the size of a table display at arms length.
+The display used in Monocle is a Sony [ECX336CN](https://www.panelook.com/ECX336CN_Sony_0.23_OLED_overview_51733.html) micro OLED. It features **640x400 RGB pixels**, and is optically bonded to the main housing which directs the image into the users eye. The result is a transparent floating display with a **20° field of view**. About the size of a table display at arms length.
 
 ![Diagram of the Monocle display light path](/monocle/images/monocle-display-fov.png)
-
-Much of the operation and configuration is kept private by Sony, however we include a working configuration within our [FPGA code](https://github.com/Itsbrilliantlabs/monocle-fpga) which is used to drive the display.
 
 To save power, the display can be shutdown along with the camera and fpga when not needed. See the [power](#power) section for details.
 
@@ -104,9 +101,7 @@ To save power, the display can be shutdown along with the camera and fpga when n
 
 ## Camera
 
-The front facing camera on Monocle is the [Omnivision OV5640](https://cdn.sparkfun.com/datasheets/Sensors/LightImaging/OV5640_datasheet.pdf). It is a 5MP color sensor and features numerous convince features such as automatic exposure control, and automatic white balance.
-
-The sensor is wired directly to the FPGA via a fast MIPI CSI-2 interface, so can be used for computer vision applications, as well as machine learning applications.
+The front facing camera on Monocle is an [Omnivision OV5640](https://cdn.sparkfun.com/datasheets/Sensors/LightImaging/OV5640_datasheet.pdf). It is a 5MP color sensor and features numerous convince features such as automatic exposure control, and automatic white balance. It is connected directly to the FPGA over a high speed MIPI CSI-2 interface. 
 
 ![Annotation of the Monocle camera](/monocle/images/monocle-camera.png)
 
@@ -116,7 +111,7 @@ To save power, the camera can be shutdown along with the fpga and display when n
 
 ## Touch interface
 
-Monocle features two capacitive touch buttons which are fed into an [Azoteq IQS620A](https://www.azoteq.com/images/stories/pdf/iqs620_datasheet.pdf) touch controller. Each button can detect close proximity as well as touch events. With further software processing, double taps, long presses and other gestures can be detected. The touch controller is connected to the Blueooth MCU via I<sup>2</sup>C and an interrupt line to flag pending touch events.
+Monocle features two capacitive touch buttons which are fed into an [Azoteq IQS620A](https://www.azoteq.com/images/stories/pdf/iqs620_datasheet.pdf) touch controller. Each button can detect close proximity as well as touch events. With further software processing, double taps, long presses and other gestures can be detected. The touch controller is connected to the Blueooth MCU via I<sup>2</sup>C and an interrupt line to flag pending touch events. Our MicroPython firmware contains a built in library to access various types of touch events, and trigger actions when pressed.
 
 ![Annotation of the Monocle touch interface](/monocle/images/monocle-touch-interface.png)
 
@@ -124,9 +119,9 @@ Monocle features two capacitive touch buttons which are fed into an [Azoteq IQS6
 
 ## Microphone
 
-A [TDK/InvenSense ICS-41351](http://invensense.wpenginepowered.com/wp-content/uploads/2020/07/DS-000157-ICS-41351-v1.4.pdf) microphone is directly  connected to the FPGA, and can be used to record audio, or in voice recognition algorithms.
+A [TDK/InvenSense ICS-41351](http://invensense.wpenginepowered.com/wp-content/uploads/2020/07/DS-000157-ICS-41351-v1.4.pdf) microphone is directly connected to the FPGA, and can be used to record audio, or for voice recognition algorithms.
 
-The audio port is located on the back of the monocle, so is perfect for receiving the wearers voice, while avoiding background sounds.
+The audio port is located on the back side of Monocle, so is perfect for receiving the wearers voice, while avoiding excessive background sounds.
 
 ![Annotation of the Monocle microphone](/monocle/images/monocle-microphone.png)
 
@@ -144,23 +139,23 @@ Alternatively, the analog supplies of the camera (2.7V) and display (10V) may be
 
 ### Regulation
 
-The [Maxim MAX77654 PMIC](https://www.analog.com/media/en/technical-documentation/data-sheets/max77654.pdf) is an efficient and low power management controller. Each rail is highly configurable and can be tuned for efficiency, stability or noise performance. Each rail can additionally be current limited to avoid overloading the battery.
+The [Maxim MAX77654 PMIC](https://www.analog.com/media/en/technical-documentation/data-sheets/max77654.pdf) is an efficient and low power management controller. Each rail is configurable and can be tuned for efficiency, stability or noise performance. Each rail can additionally be current limited to avoid overloading the battery.
 
-The PMIC communicates solely with the Bluetooth MCU over I<sup>2</sub>C.
+The PMIC communicates solely with the Bluetooth MCU over I<sup>2</sup>C.
 
 {: .warning }
-> It's possible to damage the Monocle hardware by misconfiguring the power supply controller, and setting the voltages too high. We recommend that you avoid diverging from the settings found in the Brilliant provided firmware, to prevent damage to your Monocle.
+> It's possible to damage the Monocle hardware by setting the voltages levels too high. We recommend that you avoid diverging from the settings found in the Brilliant provided firmware, to prevent damaging your Monocle.
 
 ### Battery charging
 
 The PMIC also includes an integrated battery charger. Charge regulation voltage and current can be configured, as well as various timings. The battery level, and charge current can also be read via an analog pin provided from the PMIC to the Bluetooth MCU.
 
 {: .warning }
-> It's possible to damage the Monocle battery by misconfiguring the charge voltage and current. We recommend that you avoid diverging from the settings found in the Brilliant provided firmware, to prevent fire or serious damage to the Monocle battery.
+> It's possible to damage the Monocle battery by misconfiguring the charge voltage or current. We recommend that you avoid diverging from the settings found in the Brilliant provided firmware and to prevent fire or damage to the Monocle battery.
 
 ### LEDs
 
-The PMIC provides two LEDs (green and red) connected under GPIOs that are accessible from the PMICs registers.
+Monocle contains two LEDs (green and red) connected to GPIOs on the PMIC. They are easily accesible via PMIC registers from the Bluetooth MCU.
 
 ![Annotation of the Monocle LEDs](/monocle/images/monocle-leds.png)
 
@@ -168,7 +163,7 @@ The PMIC provides two LEDs (green and red) connected under GPIOs that are access
 
 ## Charging case
 
-Monocle ships with a charging/storage case which can charge and protect your Monocle. When inserted into the case, Monocle will begin to recharge from the case battery. The case battery can provide several full charges of the Monocle and itself be recharged from a standard 500mA USB Type-C plug.
+Monocle is provided with a compact charging case for taking on the go. When inserted into the case, Monocle will begin to recharge from the charging case battery. The case battery can provide several full charges of the Monocle and be itself recharged from a standard 500mA USB Type-C jack.
 
 ![Annotation of the Monocle charging case](/monocle/images/monocle-charging-case.png)
 
@@ -183,24 +178,24 @@ When placed into the charger, the PMIC, and thus the Bluetooth MCU will detect t
 {: .warning }
 > It's possible to damage the Monocle hardware by misconfiguring the power supply controller. We recommend that you avoid changing any of those settings as we've already fine tuned them for you.
 
-A good place to start writing your custom nRF applications is the [Monocle MicroPython repository](https://github.com/Itsbrilliantlabs/monocle-micropython). All the hardware drivers can be found here and you can follow the `main()` flow to understand how the firmware is built.
+A good place to start writing your custom nRF applications is the [Monocle MicroPython repository](https://github.com/Itsbrilliantlabs/monocle-micropython). All the hardware drivers can be found here and you can follow the `main()` flow to understand how Monocle is booted.
 
-For compiling projects, you will need to download the latest [ARM GCC compiler](https://developer.arm.com/downloads/-/gnu-rm). For Bluetooth connectivity, you will also need to download a compatible Bluetooth stack, aka the [Softdevice](https://www.nordicsemi.com/Products/Development-software/nrf5-sdk/download). The Softdevice is a proprietary library from Nordic, and is not directly included within the Monocle MicroPython repository. You will need to download it manually for your application to build. The MicroPython codebase calls the Softdevice for all Bluetooth related functions, and is well documented within the code.
+For compiling projects, you will need to download the latest [ARM GCC compiler](https://developer.arm.com/downloads/-/gnu-rm). For Bluetooth connectivity, you will also need to download a compatible Bluetooth stack from Nordic (aka the [Softdevice](https://www.nordicsemi.com/Products/Development-software/nrf5-sdk/download)). This is a proprietary library from Nordic, so is not directly included within the Monocle MicroPython repository, however is free to download and use.
 
 ### Creating custom OTA (over-the-air) update packages
 
 {: .warning }
-> It's recommended that your application is well tested and can reliably return back into OTA mode after programming. If you flash a broken application, you'll have to dismantle your Monocle and manually flash it using a programmer.
+> It's recommended that your application is well tested and can reliably return back into OTA mode after programming. If you flash a bad application, you'll have to dismantle your Monocle and manually reprogram it using a programmer.
 
-To generate the `.zip` file, you'll need to use the [nRP Util](https://www.nordicsemi.com/Products/Development-tools/nrf-util) command line application. You can read how to generate files [here](https://infocenter.nordicsemi.com/index.jsp?topic=%2Fug_nrfutils%2FUG%2Fnrfutils%2Fnrfutil_intro.html), however you will need to use the [Brilliant OTA private key](https://github.com/Itsbrilliantlabs/monocle-micropython/blob/main/bootloader/published_privkey.pem) in order to generate a compatible image. If you wish to change this key, you can create a new keypair, and add the public key within your [bootloader code](https://github.com/Itsbrilliantlabs/monocle-micropython/blob/main/bootloader/dfu_public_key.c). Subsequent updates will then require your new private key. **Note: without the key, it's not possible to do over-the-air updates, and you will need to revert to manual programming.**
+To generate the `.zip` file, you'll need to use the [nRF Util](https://www.nordicsemi.com/Products/Development-tools/nrf-util) command line application. You can read how to generate files [here](https://infocenter.nordicsemi.com/index.jsp?topic=%2Fug_nrfutils%2FUG%2Fnrfutils%2Fnrfutil_intro.html). You will need to use the [Brilliant OTA key](https://github.com/Itsbrilliantlabs/monocle-micropython/blob/main/bootloader/published_privkey.pem) in order to generate a compatible image. If you wish to change this key, you can create a new keypair, and add the public key within your [bootloader code](https://github.com/Itsbrilliantlabs/monocle-micropython/blob/main/bootloader/dfu_public_key.c). Subsequent updates will then require your new private key. **Note: without the key, it's not possible to do over-the-air updates, and you will need to revert to manual programming.**
 
 ### Developing for the FPGA
 
-[GoWin's EDA](https://www.gowinsemi.com/en/support/download_eda/) can be used to develop RTL for the FPGA. You can request a free licence [here](https://www.gowinsemi.com/en/support/license/).
+[GoWin's EDA](https://www.gowinsemi.com/en/support/download_eda/) can be used to develop applications for the FPGA. You can request a free licence [here](https://www.gowinsemi.com/en/support/license/).
 
 We recommend having a look at our [Graphics & Camera Accelerator IP](https://github.com/Itsbrilliantlabs/monocle-fpga) to see how an FPGA project is set up and built.
 
-Generally it's convenient to use the [MicroPython FPGA module](/micropython/machine-fpga) to wirelessly program the FPGA. However this method does not allow for JTAG debugging, and can be a slow process for iterative development. It's therefore also possible to program the FPGA manually using a programmer. 
+Generally it's convenient to use the [MicroPython FPGA module](/micropython/micropython/#fpga--monocle-specific) to wirelessly program the FPGA. However this method does not allow for JTAG debugging, and can be a slow process for iterative development. It's therefore also possible to program the FPGA manually using a programmer. 
 
 ### Manually programming
 
@@ -217,9 +212,9 @@ Generally it's convenient to use the [MicroPython FPGA module](/micropython/mach
 
     ![Enabling Monocle ship mode](/monocle/images/monocle-ship-mode.png)
 
-1. Your device should now be off, but **note the battery pins will still be live**. If you remove any components, **take note of which way they were inserted into the connector**. Re-inserting the OLED cable or the camera module backwards will permanently damage them.
+1. Your device should now be off, but **note the battery pins will still be live**. If you remove any components, **take note of which way they were inserted into the connectors**. Re-inserting the OLED cable or the camera module backwards will permanently damage them.
 
-1. The programming pins for the Bluetooth MCU are shown below. It's recommended to use a J-Link compatible programmer such as the [nRF52DK](https://www.nordicsemi.com/Products/Development-hardware/nrf52-dk) as Nordic provide a helper utility which is correctly aware of important settings and flags when reprogramming. However other OpenOCD based SWD programmers may work with some careful tweaking.
+1. The programming pins for the Bluetooth MCU are shown below. It's recommended to use a J-Link compatible programmer such as the [nRF52 DK](https://www.nordicsemi.com/Products/Development-hardware/nrf52-dk). Nordic provide a helper utility which is correctly aware of important settings and flags when reprogramming. However other OpenOCD based SWD programmers may work with some careful tweaking.
 
     ![Monocle main board FPGA JTAG diagram](/monocle/images/monocle-swd.png)
 
@@ -227,7 +222,7 @@ Generally it's convenient to use the [MicroPython FPGA module](/micropython/mach
 
     ![Monocle main board FPGA JTAG diagram](/monocle/images/monocle-jtag.png)
 
-1. To re-power the device. Apply 5V to the charging pads.
+1. To power the device, reassemble and apply 5V to the charging pads.
 
     ![Monocle charging pads](/monocle/images/monocle-charging-pads.png)
 
@@ -247,9 +242,9 @@ Generally it's convenient to use the [MicroPython FPGA module](/micropython/mach
 
 ## Schematics
 
-[Download the PDF schematics for Monocle](/monocle/monocle-schematics.pdf)
+[Download the PDF schematics for Monocle here](/monocle/monocle-schematics.pdf)
 
-[Download the PDF schematics for the Monocle charging case](/monocle/monocle-cc-schematics.pdf)
+[Download the PDF schematics for the Monocle charging case here](/monocle/monocle-cc-schematics.pdf)
 
 ---
 
@@ -273,11 +268,10 @@ Typical and absolute device characteristics are shown below. To get the best lif
 
 |                           | Min    | Typ | Max   |
 |:--------------------------|:------:|:---:|:-----:|
-| Monocle charge current    | -      | -   | 77mA  |
-| Case USB charge current   | -      | -   | 500mA |
+| Monocle charging current  | -      | -   | 77mA  |
+| Case USB charging current | -      | -   | 500mA |
 | Bluetooth radio power     | -20dBm | -   | 4dBm  |
 | Bluetooth sensitivity     | -96dBm | -   | -     |
-|  |     |     |     |
 
 ### Maximum ratings
 
@@ -287,7 +281,6 @@ Typical and absolute device characteristics are shown below. To get the best lif
 | Monocle charging voltage  | -0.3V | 5.1V | 28V  |
 | Operating temperature     | 0°C   | -    | 45°C |
 | Storage temperature       | -20°C | -    | 60°C |
-|  |     |     |     |
 
 ---
 
@@ -295,15 +288,15 @@ Typical and absolute device characteristics are shown below. To get the best lif
 
 ### Safety
 
-Monocle can obscure your vision and should not be used while driving or operating dangerous equipment. Additionally long periods of use may cause eye strain, headaches and motion sickness. Monocle can also display bright flashing images so may not be suitable for those susceptible to epileptic effects.
+Monocle can obscure your vision and should not be used while driving or operating dangerous equipment. Additionally long periods of use may cause eye strain, headaches and motion sickness. Monocle can also display bright flashing images so may not be suitable for those susceptible to light sensitivity.
 
 ### Critical applications
 
-Monocle is intended for consumer and R&D applications. It is not verified for use where performance and accuracy would be critical to human health, safety or mission critical infrastructure.
+Monocle is intended for consumer and R&D applications. It is not verified for use where performance and accuracy would be critical to human health, safety or mission critical use.
 
 ### Lithium batteries
 
-Lithium batteries can be dangerous if mishandled. Do not expose Monocle, or related hardware to excess temperatures, fire or liquids. Do not try to remove the battery as the wires can become shorted and result in the battery overheating or catching fire. Once the product reaches the end of it's life, dispose it safely according to your local regulations, such as e-waste collection points where any volatile components can be properly contained and handled.
+Lithium batteries can be dangerous if mishandled. Do not expose Monocle, or any related hardware to excess temperatures, fire or liquids. Do not try to remove the battery as the wires can become shorted and result in the battery overheating or fire risks. Once the product reaches the end of it's life, dispose it safely according to your local regulations, such as e-waste collection points where any volatile components can be properly contained and handled.
 
 ### Limitation of liability
 

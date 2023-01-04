@@ -291,5 +291,9 @@ The first payload includes metadata about the file such as filename (with a rele
 ### Firmware updates
 {: .no_toc }
 
+Details coming soon.
+
 ### FPGA bitstream updates
 {: .no_toc }
+
+Details coming soon.
