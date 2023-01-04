@@ -10,22 +10,23 @@ nav_order: 3
 
 ---
 
-MicroPython lets you prototype and build you applications fast without having to dive deep into any C development. With a few lines of Python you can draw to the display, access the camera, and even offload processing to the FPGA when needed. Of course you get all the other benefits of Python too. Best of all, it's completely wireless, and you can access the Python REPL simply over Bluetooth.
+MicroPython lets you prototype and build your applications quickly without having to dive into any low level programming. With a few lines of Python, you can draw to the display, access the camera, and offload processing to the FPGA. Of course you get all the other benefits of Python too. Best of all, it's completely wireless, and you can access the Python REPL fully over Bluetooth.
 
-The [MicroPython firmware for Monocle](https://github.com/Itsbrilliantlabs/monocle-micropython) is a customized port which is largely based on the [upstream MicroPython](https://github.com/micropython/micropython) project. It has a large and growing user base, so we're frequently able to update features from the upstream project as they becoming available.
+The [MicroPython firmware for Monocle](https://github.com/Itsbrilliantlabs/monocle-micropython) is a customized firmware which is largely based on the [upstream MicroPython](https://github.com/micropython/micropython) project. Thanks to the large MicroPython community, we're always updating to new features as they come out on the upstream project.
 
-The majority of the MiroPython language is documented on the [MicroPython docs](https://docs.micropython.org/en/latest/index.html). The supported subset of libraries are shown in the [table below](#supported-modules).
-
-The additional modules listed under this page are specifically designed to allow access to the Monocle hardware. Check their pages to view the API.
+A subset of the standard MicroPython libraries are currently supported, with more periodically being added. Additionally, some extra modules are included which let you easily interact with the Monocle hardware. Be sure to check out the [MicroPython docs site](https://docs.micropython.org/en/latest/index.html),  as well as the docs here to familiarize yourself with all the features.
 
 ---
 
 ## Quick start
 {: .no_toc }
 
-Go to [this page](repl.siliconwitchery.com) using Google Chrome, and connect to your Monocle using the Web Bluetooth API.
+{: .note }
+> **Check that you're on the [latest firmware](#firmware-updates).**
 
-![Accessing MicroPython on Monocle using the web REPL interface]()
+Get started by trying out the [Web Bluetooth REPL](https://repl.siliconwitchery.com) using Google Chrome on your PC, Mac, or Android, or use a Web Bluetooth compatible web browser on your iOS device such as [Bluefy](https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055).
+
+![Accessing MicroPython on Monocle using the web REPL interface](/micropython/images/micropython-web-repl.png)
 
 Once you're connected, try running this code:
 
@@ -50,7 +51,7 @@ display.show
 ## Mobile app
 {: .no_toc }
 
-You can also try the mobile app on iOS or Android which we're gradually adding more features to. It's also a great place to start if you'd like to [make your own mobile app]() for Monocle.
+We're gradually building our companion app along with some extra features to help you get the most out of Monocle. It's also a great place to start if you'd like to make your own app, and the source code is freely available on our [GitHub]().
 
 <div style="text-align:center" markdown="1">
 [<img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Apple App Store badge" width="175"/>](https://apps.apple.com/us/app/monocle-by-brilliant/id1632203938)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -63,7 +64,7 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 {: .no_toc }
 
 {: .note }
-> The Monocle MicroPython API below is a work in progress. The ❌ icon signifies a feature which is not implemented yet, but is planned.
+> MicroPython for Monocle is always being updated so be sure to check back frequently. The ❌ icon signifies a feature which is not implemented yet, but is planned.
 
 1. TOC
 {:toc}
@@ -72,7 +73,7 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 
 ### `builtins`
 
-> Minimal MicroPython [built in functions](https://docs.micropython.org/en/latest/library/gc.html) are supported along with the additional features listed below. 
+> The majority of [built in functions](https://docs.micropython.org/en/latest/library/builtins.html) are supported, along with some extended features below. Some less important features are not included to save on space for other things. If you feel we've missed something, [create an issue](https://github.com/Itsbrilliantlabs/monocle-micropython/issues) on our GitHub, and we'll try to add it.
 
 | Members | Description |
 |:--------|:------------|
@@ -91,16 +92,16 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 
 ### `device` – Monocle specific
 
-> The device class contains general information about the Monocle's hardware and firmware, along with battery state and firmware updating.
+> The device class contains general information about the Monocle's hardware and firmware.
 
 | Members | Description |
 |:--------|:------------|
-| `NAME` **constant** ❌                         | Constant which holds `'monocle'` as a **string**.
-| `mac_address()` **function**                  | Returns the 48-bit MAC address as a 17 character **string** in the format `xx:xx:xx:xx:xx:xx`, where each `xx` is a byte in lowercase hex format.
+| `NAME` **constant**                           | Constant which holds `'monocle'` as a **string**.
+| `mac_address()` **function**                  | Returns the 48-bit MAC address as a 17 character **string** in the format `'xx:xx:xx:xx:xx:xx'`, where each `xx` is a byte in lowercase hex format.
 | `VERSION` **constant**                        | Constant containing the firmware version as a **string**. E.g. `'monocle-firmware-v22.342.1252'`.
 | `GIT_TAG` **constant**                        | Constant containing the build git tag as a 7 character **string**.
-| `update(url,start)`&nbsp;**function**&nbsp;❌ | Checks the given URL for a firmware update file. If `start` was provided as `True` the update will be started automatically. Otherwise returns:<br>- `AVAILABLE` if an update is available, but `start` was not given or was set to `False`<br>- `'IS_LATEST'` if there is no new update<br>See [firmware updates](#firmware-updates) to understand how the update process is done.
-| `battery_level()` **function** ❌              | Returns the battery level percentage as an **integer**.
+| `update(url,start)`&nbsp;**function**&nbsp;❌ | Checks the given URL for a firmware update file. If `start` was provided as `True` the update will be started automatically. Otherwise returns:<br>- `'AVAILABLE'` if an update is available.<br>- `'IS_LATEST'` if there is no new update.<br>See [firmware updates](#firmware-updates) to understand how the update process is done.
+| `battery_level()` **function**                | Returns the battery level percentage as an **integer**.
 | `reset()` **function**                        | Resets the device.
 | `reset_cause()` **function**                  | Returns the reason for the previous reset or startup state. These can be either:<br>- `'POWERED_ON'` if the device was powered on normally<br>- `'SOFTWARE_RESET'` if `reset()` or `update()` was used<br>- `'CRASHED'` if the device had crashed.
 
@@ -112,10 +113,10 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 
 | Members | Description |
 |:--------|:------------|
-| `on(led)` **function** ❌            | Illuminates the led. `led` can be either `'RED'` or `'GREEN'`.
-| `off(led)`&nbsp;**function**&nbsp;❌ | Turns off the led. `led` can be either `'RED'` or `'GREEN'`.
-| `RED` **constant** ❌                | Enumeration of the red led which can be passed to `led.on()` or `led.off()`.
-| `GREEN` **constant** ❌              | Enumeration of the green led which can be passed to `led.on()` or `led.off()`.
+| `on(color)` **function**             | Illuminates an led. `color` can be either `led.RED` or `led.GREEN`.
+| `off(color)`&nbsp;**function**&nbsp; | Turns off an led. `color` can be either `led.RED` or `led.GREEN`.
+| `RED` **constant**                   | Enumeration of the red led which can be passed to `led.on()` or `led.off()`.
+| `GREEN` **constant**                 | Enumeration of the green led which can be passed to `led.on()` or `led.off()`.
 
 ---
 
@@ -125,24 +126,24 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 
 | Members | Description |
 |:--------|:------------|
-| `read(addr, n)` **function** ❌                | Reads `n` number of bytes from the 16-bit address `addr`, and returns a **list** of bytes.
-| `write(addr,data[])`&nbsp;**function**&nbsp;❌ | Writes all bytes from a given list `bytes[]` to the 16-bit address `addr`.
-| `power(power_on)` **function** ❌              | Powers up the FPGA if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the FPGA is returned.
-| `update(url)` **function** ❌                  | Downloads and reboots the FPGA with a bitstream provided from the `url`. Automatically wakes up the FPGA if it is shutdown. If the update is interrupted part way through, the FPGA will no longer be running a valid application, and must be updated again. See [FPGA bitstreams](#fpga-bitstreams) to understand how the update process is done.
-| `status()` **function** ❌                      | Returns the current status of the FPGA:<br>- `'RUNNING'` if the FPGA is running a valid bitstream.<br>- `'NOT_POWERED'` if the FPGA is not powered<br>- `'BAD_BITSTREAM'` if the FPGA can't run the bitstream stored in memory. Another `update()` must be performed.
-| `ON` **constant** ❌                           | Equal to `True`. For use with `fpga.power()`. Used to turn the FPGA on.
-| `OFF` **constant** ❌                          | Equal to `False`. For use with `fpga.power()`. Used to turn the FPGA off.
+| `read(addr, n)` **function**           | Reads `n` number of bytes from the 16-bit address `addr`, and returns a **list** of bytes.
+| `write(addr,data[])`&nbsp;**function** | Writes all bytes from a given list `bytes[]` to the 16-bit address `addr`.
+| `power(on)` **function** ❌              | Powers up the FPGA if `True` is given otherwise powers down with `False`. If no argument is given, the current power state of the FPGA is returned.
+| `update(url)` **function** ❌            | Downloads and reboots the FPGA with a bitstream provided from the `url`. Automatically wakes up the FPGA if it is shutdown. If the update is interrupted part way through, the FPGA will no longer be running a valid application, and must be updated again. See [FPGA bitstream updates](#fpga-bitstream-updates) to understand how the update process is done.
+| `status()` **function** ❌               | Returns the current status of the FPGA:<br>- `'RUNNING'` if the FPGA is running a valid bitstream.<br>- `'NOT_POWERED'` if the FPGA is not powered<br>- `'BAD_BITSTREAM'` if the FPGA cannot run the bitstream stored in memory. In this case, another `update()` must be performed.
+| `ON` **constant** ❌                     | Equal to `True`. For use with `fpga.power()`. Used to turn the FPGA on.
+| `OFF` **constant** ❌                    | Equal to `False`. For use with `fpga.power()`. Used to turn the FPGA off.
 
 ---
 
 ### `camera` – Monocle specific
 
-> The camera module allows for capturing images and transferring them back to a module device.
+> The camera module allows for capturing images and transferring them to another device over Bluetooth.
 
 | Members | Description |
 |:--------|:------------|
-| `capture()` **function** ❌                 | Captures an image and returns it to the mobile device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are performed.
-| `stop()` **function** ❌                    | Stops any ongoing camera image transfer that is currently in progress.
+| `capture()` **function** ❌                 | Captures an image and returns it to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are done.
+| `stop()` **function** ❌                    | Stops any ongoing image transfer that's currently in progress.
 | `power(power_on)`&nbsp;**function**&nbsp;❌ | Powers up the camera if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the camera is returned.
 | `ON` **constant** ❌                        | Equal to `True`. For use with `camera.power()`. Used to turn the camera on.
 | `OFF` **constant** ❌                       | Equal to `False`. For use with `camera.power()`. Used to turn the camera off.
@@ -151,18 +152,18 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 
 ### `microphone` – Monocle specific
 
-> The microphone module allows for capturing audio and streaming it to a module device.
+> The microphone module allows for capturing audio and streaming it to another device over Bluetooth.
 
 | Members | Description |
 |:--------|:------------|
-| `stream()`&nbsp;**function**&nbsp;❌ | Streams audio from the microphone to the mobile device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are performed.
-| `stop()` **function** ❌             | Stops any ongoing audio transfer that is currently in progress.
+| `stream()`&nbsp;**function**&nbsp;❌ | Streams audio from the microphone to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are performed.
+| `stop()` **function** ❌             | Stops any ongoing audio stream that's currently in progress.
 
 ---
 
 ### `display` – Monocle specific
 
-> The display module allows for drawing to the micro OLED display of Monocle. An image can be drawn using the various functions below, and then `show()` should be used to display the image to the display.
+> The display module allows for drawing to the micro OLED display. An image can be prepared using the functions below, and then `show()` can be used to print the image to the display.
 
 | Members | Description |
 |:--------|:------------|
@@ -170,7 +171,7 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 | `pixel(x, y, color)` **function** ❌                 | Draws a single pixel of color `color` at the position `x`, `y`.
 | `hline(x,y,width,color)` **function** ❌             | Draws a horizontal line from the position `x`, `y`, with a given `width` and `color`.
 | `vline(x,y,height,color)` **function** ❌            | Draws a vertical line from the position `x`, `y`, with a given `height` and `color`.
-| `line(x1,y1,x2,y2,color)` **function** ❌            | Draws a straight line from the position `x1`, `y1`, to the position `x1`, `y1`, with a given and `color`.
+| `line(x1,y1,x2,y2,color)` **function** ❌            | Draws a straight line from the position `x1`, `y1`, to the position `x2`, `y2`, with a given `color`.
 | `text("string",x,y,color)`&nbsp;**function**&nbsp;❌ | Draws text at the position `x`, `y`, with a given `color`.
 | `show()` **function** ❌                             | Prints the populated frame buffer to the display. After this call, another series of drawing functions may be called and `show()` can be used to print the next frame.
 | `power(power_on)` **function** ❌                    | Powers up the display if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the display is returned.
@@ -181,29 +182,29 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 
 ### `touch` – Monocle specific
 
-> The touch module allows for reacting to touch events when the user touches the buttons on top of Monocle.
+> The touch module allows for reacting to touch events from the capacitive touch pads on Monocle.
 
 | Members | Description |
 |:--------|:------------|
-| `bind(pad,action,callback)`&nbsp;**function**&nbsp;❌ | Attaches a touch action (either `TAP`,`DOUBLE_TAP`, `LONG_PRESS` or `SLIDE`) on a specific pad (`A`, or `B`) to a callback function. `callback` can be any python function or lambda function.
-| `state(pad)` **function** ❌                          | Returns the current touch state of the pad `A` or `B`. Returns `True` if the pad is pressed, otherwise returns `False`.
-| `A` **constant** ❌                                   | Enumeration which represents Pad A.
-| `B` **constant** ❌                                   | Enumeration which represents Pad B.
-| `TAP` **constant** ❌                                 | Enumeration which represents a single tap action.
-| `DOUBLE_TAP` **constant** ❌                          | Enumeration which represents a double tap action.
-| `LONG_PRESS` **constant** ❌                          | Enumeration which represents a long press or hold of 1 second.
-| `SLIDE` **constant** ❌                               | Enumeration which represents a slide action from A to B, or B to A. the `pad` argument in `bind()` is considered to be the starting pad.
+| `bind(pad,action,callback)`&nbsp;**function**&nbsp; | Attaches a touch action (either `TAP`, `DOUBLE_TAP`, `LONG_PRESS` or `SLIDE`) on a specific pad (`A`, or `B`) to a callback function. `callback` can be any python function or lambda function which will be triggered on the event.
+| `state(pad)` **function** ❌                          | Returns the current touch state of the pad `A` or `B`. Returns either `True` if the pad is pressed, otherwise returns `False`.
+| `A` **constant**                                    | Enumeration which represents Pad A.
+| `B` **constant**                                    | Enumeration which represents Pad B.
+| `TAP` **constant**                                  | Enumeration which represents a single tap action.
+| `DOUBLE_TAP` **constant**                           | Enumeration which represents a double tap action.
+| `LONG_PRESS` **constant**                           | Enumeration which represents a long press or hold of 1 second.
+| `SLIDE` **constant**                                | Enumeration which represents a slide action from A to B, or B to A. the `pad` argument in `bind()` is considered to be the starting pad.
 
 ---
 
 ### `time` – Monocle specific
 
-> The timer module allows for getting/setting the time and date, adding delays into your programs, as well as triggering events on regular intervals.
+> The time module allows for getting/setting the time and date as well as adding delays into your programs.
 
 | Members | Description |
 |:--------|:------------|
-| `epoch(secs)` **function** ❌               | Sets or gets the current system time in seconds. If `secs` is not provided, the current time is returned, otherwise the timer is set according to the value of `secs`.
-| `time(epoch)` **function** ❌               | Returns a dictionary containing a human readable date and time. If no argument is provided, the current system time is used, otherwise if `epoch` is provided that value will be used to generate the dictionary. The epoch should be referenced from midnight on the 1st of January 2000.
+| `epoch(secs)` **function** ❌               | Sets or gets the current system time in seconds. If `secs` is not provided, the current time is returned, otherwise the time is set according to the value of `secs`. `secs` should be referenced from midnight on the 1st of January 2000.
+| `time(epoch)` **function** ❌               | Returns a dictionary containing a human readable date and time. If no argument is provided, the current system time is used. If `epoch` is provided, that value will be used to generate the dictionary. The epoch should be referenced from midnight on the 1st of January 2000.
 | `mktime(dict)` **function** ❌              | The inverse of `time()`. Converts a dictionary provided into an epoch timestamp. The returned epoch value will be referenced from midnight on the 1st of January 2000.
 | `sleep(secs)` **function** ❌               | Sleep for a given number of seconds.
 | `sleep_ms(msecs)`&nbsp;**function**&nbsp;❌ | Sleep for a given number of milliseconds.
@@ -263,35 +264,45 @@ All MicroPython communication, i.e. the REPL interface, is accessed via a single
 - **Serial RX characteristic UUID**: 6e400002-b5a3-f393-e0a9-e50e24dcca9e
 - **Serial TX characteristic UUID**: 6e400003-b5a3-f393-e0a9-e50e24dcca9e
 
-The RX characteristic is *write* only, and transports serial string data from the central BLE device to Monocle. The TX characteristic on the other hand is *notification* only and delivers messages back from Monocle, to the central BLE device.
+The RX characteristic is *write* only, and transports serial string data from the central BLE device to Monocle. The TX characteristic is *notification* only and delivers messages back from Monocle, to the central BLE device.
 
-Each characteristic transports string data of any length up to the negotiated *MTU size - 3 bytes*. Longer strings must be chopped up and will automatically be rejoined on the receiving side by Monocle. Likewise if Monocle wishes to send longer responses than can fit into a single MTU payload, the data will arrive sequentially, and can be concatenated by the central Bluetooth app. The diagram below describes how communication operates between Monocle and a central device.
+Each characteristic transports string data of any length up to the negotiated *MTU size - 3 bytes*. Longer strings must be chopped up and will be automatically rejoined on the receiving side by Monocle. Likewise if Monocle wishes to send longer responses than can fit into a single MTU payload, the data will arrive sequentially, and can be concatenated by the central Bluetooth app. The diagram below describes how communication operates between Monocle and a central device.
 
 ![Sequence diagram of the Monocle serial data service](/micropython/images/bluetooth-serial-service-sequence-diagram.svg)
 
-A secondary Bluetooth *Service*, again containing two *Characteristics*, is used to transport raw data such as image, audio and firmware update data. The format for the raw data service is similar to the serial data service, aside from the fact that `null` or `0` characters may also be included within the payload.
+A secondary Bluetooth *Service*, again containing two *Characteristics*, is used to transport raw data such as image, audio and firmware update data. The mechanism for the raw data service is similar to the serial data service, aside from the fact that `null` or `0` characters may also be included within the payload.
 
 - **Raw data service UUID**: e5700001-7bac-429a-b4ce-57ff900f479d
 - **Raw data RX Characteristic UUID**: e5700002-7bac-429a-b4ce-57ff900f479d
 - **Raw data TX Characteristic UUID**: e5700003-7bac-429a-b4ce-57ff900f479d
 
-Raw data transfer may also often be bigger than a single MTU payload, so similarly to the serial data, it needs to be broken up into pieces. To help reconstruct the packets sent or received by Monocle, a flag is present at the start of each payload to determine if it's either a starting payload, middle payload, end payload, or a small single buffer payload. The exact mechanisms for different types of data transfer are outlined below.
+Raw data transfer may often be bigger than a single MTU payload. Similarly to the serial data, it may need to be broken up into pieces. To help reconstruct the packets sent or received by Monocle, a flag is present at the start of each payload to determine if it's either a starting payload, middle payload, end payload, or a small single buffer payload. The exact mechanisms for different types of data transfer are outlined below.
 
 ### Downloading media
 {: .no_toc }
 
 Media files such as audio and images may be downloaded from the Monocle using the raw data service mentioned in the [Communication section](#communication). Files may also be sent asynchronously by Monocle when they are ready.
 
-Due to the small payload size of Bluetooth packets, the file may be spit into many *chunks* which will need to be recombined by the receiving central device. A flag at the start of each payload indicates if it is the **START**, **MIDDLE** or **END** of the file. A very small file may also be transferred using the **SMALL** flag.
+Due to the small payload size of Bluetooth packets, the file may be spit into many *chunks* and need to be recombined by the receiving central device. A flag at the start of each payload indicates if it is the **START**, **MIDDLE** or **END** of the file. A very small file may also be transferred using the **SMALL** flag.
 
-The first payload includes metadata about the file such as filename (with a relevant extension) and the file size. The sequence diagram below describes how a file is broken into several parts and the data can simply be recombined to construct the full file: 
+The first payload includes metadata about the file such as the filename (with a relevant file extension) and the file size. The sequence diagram below describes how a file is broken into several parts and the data can be recombined to construct the full file: 
 
 ![Sequence diagram of the Monocle raw data service](/micropython/images/bluetooth-raw-data-service-sequence-diagram.svg)
 
 ### Firmware updates
 {: .no_toc }
 
-Details coming soon.
+Updates of the MicroPython firmware are handled using Nordic's over-the-air device firmware update process. 
+
+To perform an update:
+
+1. Check which version of the firmware you current have by entering `import device; device.VERSION`.
+
+1. Download the latest `monocle-vXX.XXX.XXXX.zip` package from our [GitHub releases](https://github.com/Itsbrilliantlabs/monocle-micropython/releases) page.
+
+1. Issue an update command over MicroPython using `import device; device.update()`. Monocle will now reboot into DFU mode.
+
+1. Using the nRF Connect App, for [desktop](https://www.nordicsemi.com/Products/Development-tools/nrf-connect-for-desktop), [Android](https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp&hl=en&gl=US), or [iOS](https://apps.apple.com/se/app/nrf-connect-for-mobile/id1054362403), you can reconnect to Monocle, select the downloaded `.zip` file, and update to the latest version.
 
 ### FPGA bitstream updates
 {: .no_toc }
