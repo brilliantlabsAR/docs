@@ -202,14 +202,12 @@ You can also try the mobile app on iOS or Android which we're gradually adding m
 
 | Members | Description |
 |:--------|:------------|
-| `gmtime(epoch)` **function**    | Returns a tuple containing the time and data according to GMT. If the epoch argument is provided, the epoch timestamp is used, other the internal time of the device.
-| `localtime(epoch)` **function** | Returns a tuple containing the time and data according to local time. If the epoch argument is provided, the epoch timestamp is used, other the internal time of the device.
-| `mktime(tuple)` **function**    | The inverse of gmtime(). Returns an epoch seconds value from the 9-tuple given.
-| `time()` **function**           | Returns the number of seconds since the epoch. If the true time hasn't been set, this will be the number of seconds since power on.
-| `set_time(secs)` **function**   | Set the real time clock to a given value in seconds from the epoch.
-| `sleep(secs)` **function**      | Sleep for a given number of seconds.
-| `sleep_ms(msecs)` **function**  | Sleep for a given number of milliseconds.
-| `ticks_ms()` **function**       | Returns the time in ms since power on.
+| `epoch(secs)` **function** ❌               | Sets or gets the current system time in seconds. If `secs` is not provided, the current time is returned, otherwise the timer is set according to the value of `secs`.
+| `time(epoch)` **function** ❌               | Returns a dictionary containing a human readable date and time. If no argument is provided, the current system time is used, otherwise if `epoch` is provided that value will be used to generate the dictionary. The epoch should be referenced from midnight on the 1st of January 2000.
+| `mktime(dict)` **function** ❌              | The inverse of `time()`. Converts a dictionary provided into an epoch timestamp. The returned epoch value will be referenced from midnight on the 1st of January 2000.
+| `sleep(secs)` **function** ❌               | Sleep for a given number of seconds.
+| `sleep_ms(msecs)`&nbsp;**function**&nbsp;❌ | Sleep for a given number of milliseconds.
+| `ticks_ms()` **function** ❌                | Returns a timestamp in milliseconds since power on.
 
 ---
 
@@ -282,7 +280,13 @@ Raw data transfer may also often be bigger than a single MTU payload, so similar
 ### Downloading media
 {: .no_toc }
 
+Media files such as audio and images may be downloaded from the Monocle using the raw data service mentioned in the [Communication section](#communication). Files may also be sent asynchronously by Monocle when they are ready.
 
+Due to the small payload size of Bluetooth packets, the file may be spit into many *chunks* which will need to be recombined by the receiving central device. A flag at the start of each payload indicates if it is the **START**, **MIDDLE** or **END** of the file. A very small file may also be transferred using the **SMALL** flag.
+
+The first payload includes metadata about the file such as filename (with a relevant extension) and the file size. The sequence diagram below describes how a file is broken into several parts and the data can simply be recombined to construct the full file: 
+
+![Sequence diagram of the Monocle raw data service](/micropython/images/bluetooth-raw-data-service-sequence-diagram.svg)
 
 ### Firmware updates
 {: .no_toc }
