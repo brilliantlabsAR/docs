@@ -12,7 +12,7 @@ nav_order: 3
 
 MicroPython lets you prototype and build your applications quickly without having to dive into any low level programming. With a few lines of Python, you can draw to the display, access the camera, and offload processing to the FPGA. Of course you get all the other benefits of Python too. Best of all, it's completely wireless, and you can access the Python REPL fully over Bluetooth.
 
-The [MicroPython firmware for Monocle](https://github.com/Itsbrilliantlabs/monocle-micropython) is a customized firmware which is largely based on the [upstream MicroPython](https://github.com/micropython/micropython) project. Thanks to the large MicroPython community, we're always updating to new features as they come out on the upstream project.
+The [MicroPython firmware for Monocle](https://github.com/brilliantlabsAR/monocle-micropython) is a customized firmware which is largely based on the [upstream MicroPython](https://github.com/micropython/micropython) project. Thanks to the large MicroPython community, we're always updating to new features as they come out on the upstream project.
 
 A subset of the standard MicroPython libraries are currently supported, with more periodically being added. Additionally, some extra modules are included which let you easily interact with the Monocle hardware. Be sure to check out the [MicroPython docs site](https://docs.micropython.org/en/latest/index.html),  as well as the docs here to familiarize yourself with all the features.
 
@@ -73,7 +73,7 @@ We're gradually building our companion app along with some extra features to hel
 
 ### `builtins`
 
-> The majority of [built in functions](https://docs.micropython.org/en/latest/library/builtins.html) are supported, along with some extended features below. Some less important features are not included to save on space for other things. If you feel we've missed something, [create an issue](https://github.com/Itsbrilliantlabs/monocle-micropython/issues) on our GitHub, and we'll try to add it.
+> The majority of [built in functions](https://docs.micropython.org/en/latest/library/builtins.html) are supported, along with some extended features below. Some less important features are not included to save on space for other things. If you feel we've missed something, [create an issue](https://github.com/brilliantlabsAR/monocle-micropython/issues) on our GitHub, and we'll try to add it.
 
 | Members | Description |
 |:--------|:------------|
@@ -298,7 +298,7 @@ To perform an update:
 
 1. Check which version of the firmware you current have by entering `import device; device.VERSION`.
 
-1. Download the latest `monocle-vXX.XXX.XXXX.zip` package from our [GitHub releases](https://github.com/Itsbrilliantlabs/monocle-micropython/releases) page.
+1. Download the latest `monocle-vXX.XXX.XXXX.zip` package from our [GitHub releases](https://github.com/brilliantlabsAR/monocle-micropython/releases) page.
 
 1. Issue an update command over MicroPython using `import device; device.update()`. Monocle will now reboot into DFU mode.
 

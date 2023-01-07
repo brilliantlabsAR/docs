@@ -2,7 +2,7 @@
 
 This site is built with [Jekyll](https://jekyllrb.com) and [Just the Docs](https://github.com/just-the-docs/just-the-docs). It's all hosted here on GitHub using the GitHub's [Pages](https://pages.github.com) feature.
 
-**If you spot any errors** in our documentation, feel free to make an [issue](https://github.com/Itsbrilliantlabs/docs/issues).
+**If you spot any errors** in our documentation, feel free to make an [issue](https://github.com/brilliantlabsAR/docs/issues).
 
 If you'd like to do some extensive editing, you can also fork/clone this repository and view the pages live editing.
 
@@ -13,7 +13,7 @@ If you'd like to do some extensive editing, you can also fork/clone this reposit
 1. Clone this repository:
 
     ```bash
-    git clone https://github.com/Itsbrilliantlabs/docs.git
+    git clone https://github.com/brilliantlabsAR/docs.git
     ```
 
 1. Set up the environment:

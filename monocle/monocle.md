@@ -59,7 +59,7 @@ By default, the nRF comes preloaded with our [MicroPython](/micropython/micropyt
 
 Over the air updates can be performed via Nordic's nRFConnect software either on [Desktop](https://www.nordicsemi.com/Products/Development-tools/nrf-connect-for-desktop), or on Mobile ([iOS](https://apps.apple.com/se/app/nrf-connect-for-mobile/id1054362403)/[Android](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjbtevyrf77AhUncPEDHfjiBSEQFnoECBIQAQ&url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dno.nordicsemi.android.mcp%26hl%3Den%26gl%3DUS&usg=AOvVaw26fnMv6YUhCDOx-ZZHre94)). nRFConnect requires a `.zip` DFU file to perform the update.
 
-**The latest MicroPython release for Monocle can be found on our [GitHub](https://github.com/Itsbrilliantlabs/monocle-micropython/releases) releases page.**
+**The latest MicroPython release for Monocle can be found on our [GitHub](https://github.com/brilliantlabsAR/monocle-micropython/releases) releases page.**
 
 ---
 
@@ -67,7 +67,7 @@ Over the air updates can be performed via Nordic's nRFConnect software either on
 
 The FPGA is used for graphics acceleration, as well as image processing of the 5MP camera. It's perfect for computer vision and AI tasks which can make direct use of the camera and microphone as inputs. The FPGA IC used is a [Gowin GW1N-LV9MG100C6/I5](https://www.mouser.se/datasheet/2/1033/GW1N_series_of_FPGA_Products_Data_Sheet-1830682.pdf). It contains **7k LUTs**, **468kb of block RAM**, as well as **608kb of Flash** memory. An additional [8Mb SPI Flash IC](#flash) is also included in Monocle, and either flash space may be used for booting up the FPGA, or storing user data.
 
-By default, the FPGA comes pre-loaded our [Graphics & Camera Accelerator IP](https://github.com/Itsbrilliantlabs/monocle-fpga) and can be accessed using MicroPython commands. Our IP is a perfect starting point if you wish to [create your own FPGA application](#developing-for-the-fpga).
+By default, the FPGA comes pre-loaded our [Graphics & Camera Accelerator IP](https://github.com/brilliantlabsAR/monocle-fpga) and can be accessed using MicroPython commands. Our IP is a perfect starting point if you wish to [create your own FPGA application](#developing-for-the-fpga).
 
 **The latest release for the FPGA IP can be updated via the Micropython [`fpga.update()`](/micropython/micropython#fpga--monocle-specific) command. It is also checked periodically if you are using the Brilliant App**
 
@@ -178,7 +178,7 @@ When placed into the charger, the PMIC, and thus the Bluetooth MCU will detect t
 {: .warning }
 > It's possible to damage the Monocle hardware by misconfiguring the power supply controller. We recommend that you avoid changing any of those settings as we've already fine tuned them for you.
 
-A good place to start writing your custom nRF applications is the [Monocle MicroPython repository](https://github.com/Itsbrilliantlabs/monocle-micropython). All the hardware drivers can be found here and you can follow the `main()` flow to understand how Monocle is booted.
+A good place to start writing your custom nRF applications is the [Monocle MicroPython repository](https://github.com/brilliantlabsAR/monocle-micropython). All the hardware drivers can be found here and you can follow the `main()` flow to understand how Monocle is booted.
 
 For compiling projects, you will need to download the latest [ARM GCC compiler](https://developer.arm.com/downloads/-/gnu-rm). For Bluetooth connectivity, you will also need to download a compatible Bluetooth stack from Nordic (aka the [Softdevice](https://www.nordicsemi.com/Products/Development-software/nrf5-sdk/download)). This is a proprietary library from Nordic, so is not directly included within the Monocle MicroPython repository, however is free to download and use.
 
@@ -187,13 +187,13 @@ For compiling projects, you will need to download the latest [ARM GCC compiler](
 {: .warning }
 > It's recommended that your application is well tested and can reliably return back into OTA mode after programming. If you flash a bad application, you'll have to dismantle your Monocle and manually reprogram it using a programmer.
 
-To generate the `.zip` file, you'll need to use the [nRF Util](https://www.nordicsemi.com/Products/Development-tools/nrf-util) command line application. You can read how to generate files [here](https://infocenter.nordicsemi.com/index.jsp?topic=%2Fug_nrfutils%2FUG%2Fnrfutils%2Fnrfutil_intro.html). You will need to use the [Brilliant OTA key](https://github.com/Itsbrilliantlabs/monocle-micropython/blob/main/bootloader/published_privkey.pem) in order to generate a compatible image. If you wish to change this key, you can create a new keypair, and add the public key within your [bootloader code](https://github.com/Itsbrilliantlabs/monocle-micropython/blob/main/bootloader/dfu_public_key.c). Subsequent updates will then require your new private key. **Note: without the key, it's not possible to do over-the-air updates, and you will need to revert to manual programming.**
+To generate the `.zip` file, you'll need to use the [nRF Util](https://www.nordicsemi.com/Products/Development-tools/nrf-util) command line application. You can read how to generate files [here](https://infocenter.nordicsemi.com/index.jsp?topic=%2Fug_nrfutils%2FUG%2Fnrfutils%2Fnrfutil_intro.html). You will need to use the [Brilliant OTA key](https://github.com/brilliantlabsAR/monocle-micropython/blob/main/bootloader/published_privkey.pem) in order to generate a compatible image. If you wish to change this key, you can create a new keypair, and add the public key within your [bootloader code](https://github.com/brilliantlabsAR/monocle-micropython/blob/main/bootloader/dfu_public_key.c). Subsequent updates will then require your new private key. **Note: without the key, it's not possible to do over-the-air updates, and you will need to revert to manual programming.**
 
 ### Developing for the FPGA
 
 [GoWin's EDA](https://www.gowinsemi.com/en/support/download_eda/) can be used to develop applications for the FPGA. You can request a free licence [here](https://www.gowinsemi.com/en/support/license/).
 
-We recommend having a look at our [Graphics & Camera Accelerator IP](https://github.com/Itsbrilliantlabs/monocle-fpga) to see how an FPGA project is set up and built.
+We recommend having a look at our [Graphics & Camera Accelerator IP](https://github.com/brilliantlabsAR/monocle-fpga) to see how an FPGA project is set up and built.
 
 Generally it's convenient to use the [MicroPython FPGA module](/micropython/micropython/#fpga--monocle-specific) to wirelessly program the FPGA. However this method does not allow for JTAG debugging, and can be a slow process for iterative development. It's therefore also possible to program the FPGA manually using a programmer. 
 
