@@ -203,12 +203,13 @@ We're gradually building our companion app along with some extra features to hel
 
 | Members | Description |
 |:--------|:------------|
-| `epoch(secs)` **function** ❌               | Sets or gets the current system time in seconds. If `secs` is not provided, the current time is returned, otherwise the time is set according to the value of `secs`. `secs` should be referenced from midnight on the 1st of January 1970.
-| `time(epoch)` **function** ❌               | Returns a dictionary containing a human readable date and time. If no argument is provided, the current system time is used. If `epoch` is provided, that value will be used to generate the dictionary. The epoch should be referenced from midnight on the 1st of January 1970.
-| `mktime(dict)` **function** ❌              | The inverse of `time()`. Converts a dictionary provided into an epoch timestamp. The returned epoch value will be referenced from midnight on the 1st of January 1970.
-| `sleep(secs)` **function** ❌               | Sleep for a given number of seconds.
-| `sleep_ms(msecs)`&nbsp;**function**&nbsp;❌ | Sleep for a given number of milliseconds.
-| `ticks_ms()` **function** ❌                | Returns a timestamp in milliseconds since power on.
+| `epoch(secs)` **function**                | Sets or gets the current system time in seconds. If `secs` is not provided, the current time is returned, otherwise the time is set according to the value of `secs`. `secs` should be referenced from midnight on the 1st of January 1970.
+| `zone(hour, min)` **function**            | Set the time zone offset from GMT in hours and minutes.
+| `time(epoch)` **function**                | Returns a dictionary containing a human readable date and time. If no argument is provided, the current system time is used. If `epoch` is provided, that value will be used to generate the dictionary. The epoch should be referenced from midnight on the 1st of January 1970.
+| `mktime(dict)` **function**               | The inverse of `time()`. Converts a dictionary provided into an epoch timestamp. The returned epoch value will be referenced from midnight on the 1st of January 1970.
+| `sleep(secs)` **function**                | Sleep for a given number of seconds.
+| `sleep_ms(msecs)` **function**            | Sleep for a given number of milliseconds.
+| `ticks_ms()` **function**                 | Returns a timestamp in milliseconds since power on.
 
 ---
 
