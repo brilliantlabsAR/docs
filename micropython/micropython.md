@@ -107,6 +107,67 @@ We're gradually building our companion app along with some extra features to hel
 
 ---
 
+### `display` – Monocle specific
+
+> The display module allows for drawing to the micro OLED display. An image can be prepared using the functions below, and then `show()` can be used to print the image to the display.
+
+| Members | Description |
+|:--------|:------------|
+| `fill(color)` **function** ❌                        | Fills the entire display with a color. `color` should be a 24-bit RGB value such as `0xAABBCC`.
+| `pixel(x, y, color)` **function** ❌                 | Draws a single pixel of color `color` at the position `x`, `y`.
+| `hline(x,y,width,color)` **function** ❌             | Draws a horizontal line from the position `x`, `y`, with a given `width` and `color`.
+| `vline(x,y,height,color)` **function** ❌            | Draws a vertical line from the position `x`, `y`, with a given `height` and `color`.
+| `line(x1,y1,x2,y2,color)` **function** ❌            | Draws a straight line from the position `x1`, `y1`, to the position `x2`, `y2`, with a given `color`.
+| `text("string",x,y,color)`&nbsp;**function**&nbsp;❌ | Draws text at the position `x`, `y`, with a given `color`.
+| `show()` **function** ❌                             | Prints the populated frame buffer to the display. After this call, another series of drawing functions may be called and `show()` can be used to print the next frame.
+| `power(power_on)` **function** ❌                    | Powers up the display if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the display is returned.
+| `ON` **constant** ❌                                 | Equal to `True`. For use with `display.power()`. Used to turn the display on.
+| `OFF` **constant** ❌                                | Equal to `False`. For use with `display.power()`. Used to turn the display off.
+
+---
+
+### `camera` – Monocle specific
+
+> The camera module allows for capturing images and transferring them to another device over Bluetooth.
+
+| Members | Description |
+|:--------|:------------|
+| `capture()` **function** ❌                 | Captures an image and returns it to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are done.
+| `stop()` **function** ❌                    | Stops any ongoing image transfer that's currently in progress.
+| `power(power_on)`&nbsp;**function**&nbsp;❌ | Powers up the camera if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the camera is returned.
+| `ON` **constant** ❌                        | Equal to `True`. For use with `camera.power()`. Used to turn the camera on.
+| `OFF` **constant** ❌                       | Equal to `False`. For use with `camera.power()`. Used to turn the camera off.
+
+---
+
+### `microphone` – Monocle specific
+
+> The microphone module allows for capturing audio and streaming it to another device over Bluetooth.
+
+| Members | Description |
+|:--------|:------------|
+| `stream()`&nbsp;**function**&nbsp;❌ | Streams audio from the microphone to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are performed.
+| `stop()` **function** ❌             | Stops any ongoing audio stream that's currently in progress.
+
+---
+
+### `touch` – Monocle specific
+
+> The touch module allows for reacting to touch events from the capacitive touch pads on Monocle.
+
+| Members | Description |
+|:--------|:------------|
+| `bind(pad,action,callback)`&nbsp;**function**&nbsp; | Attaches a touch action (either `TAP`, `DOUBLE_TAP`, `LONG_PRESS` or `SLIDE`) on a specific pad (`A`, or `B`) to a callback function. `callback` can be any python function or lambda function which will be triggered on the event.
+| `state(pad)` **function** ❌                          | Returns the current touch state of the pad `A` or `B`. Returns either `True` if the pad is pressed, otherwise returns `False`.
+| `A` **constant**                                    | Enumeration which represents Pad A.
+| `B` **constant**                                    | Enumeration which represents Pad B.
+| `TAP` **constant**                                  | Enumeration which represents a single tap action.
+| `DOUBLE_TAP` **constant**                           | Enumeration which represents a double tap action.
+| `LONG_PRESS` **constant**                           | Enumeration which represents a long press or hold of 1 second.
+| `SLIDE` **constant**                                | Enumeration which represents a slide action from A to B, or B to A. the `pad` argument in `bind()` is considered to be the starting pad.
+
+---
+
 ### `led` – Monocle specific
 
 > The LED module contains functions to control the red and green LED on the front of Monocle.
@@ -136,64 +197,26 @@ We're gradually building our companion app along with some extra features to hel
 
 ---
 
-### `camera` – Monocle specific
+### `storage` - Monocle specific
 
-> The camera module allows for capturing images and transferring them to another device over Bluetooth.
+> Storage can be used for storing and accessing user data. It is primarily used for firmware updating.
 
 | Members | Description |
 |:--------|:------------|
-| `capture()` **function** ❌                 | Captures an image and returns it to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are done.
-| `stop()` **function** ❌                    | Stops any ongoing image transfer that's currently in progress.
-| `power(power_on)`&nbsp;**function**&nbsp;❌ | Powers up the camera if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the camera is returned.
-| `ON` **constant** ❌                        | Equal to `True`. For use with `camera.power()`. Used to turn the camera on.
-| `OFF` **constant** ❌                       | Equal to `False`. For use with `camera.power()`. Used to turn the camera off.
+|`write(partition,offset,data[])`&nbsp;**function**&nbsp;❌ |
 
 ---
 
-### `microphone` – Monocle specific
+### `bluetooth` - Monocle specific
 
-> The microphone module allows for capturing audio and streaming it to another device over Bluetooth.
-
-| Members | Description |
-|:--------|:------------|
-| `stream()`&nbsp;**function**&nbsp;❌ | Streams audio from the microphone to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are performed.
-| `stop()` **function** ❌             | Stops any ongoing audio stream that's currently in progress.
-
----
-
-### `display` – Monocle specific
-
-> The display module allows for drawing to the micro OLED display. An image can be prepared using the functions below, and then `show()` can be used to print the image to the display.
+> The `bluetooth` module can be used to transfer byte data between Monocle and the host Bluetooth device. Bytes can contain any arbitrary data, and avoids having to pollute the REPL interface with printing data out as strings. The [raw data service](#communication) is used for all communications under the `bluetooth` module.
 
 | Members | Description |
 |:--------|:------------|
-| `fill(color)` **function** ❌                        | Fills the entire display with a color. `color` should be a 24-bit RGB value such as `0xAABBCC`.
-| `pixel(x, y, color)` **function** ❌                 | Draws a single pixel of color `color` at the position `x`, `y`.
-| `hline(x,y,width,color)` **function** ❌             | Draws a horizontal line from the position `x`, `y`, with a given `width` and `color`.
-| `vline(x,y,height,color)` **function** ❌            | Draws a vertical line from the position `x`, `y`, with a given `height` and `color`.
-| `line(x1,y1,x2,y2,color)` **function** ❌            | Draws a straight line from the position `x1`, `y1`, to the position `x2`, `y2`, with a given `color`.
-| `text("string",x,y,color)`&nbsp;**function**&nbsp;❌ | Draws text at the position `x`, `y`, with a given `color`.
-| `show()` **function** ❌                             | Prints the populated frame buffer to the display. After this call, another series of drawing functions may be called and `show()` can be used to print the next frame.
-| `power(power_on)` **function** ❌                    | Powers up the display if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the display is returned.
-| `ON` **constant** ❌                                 | Equal to `True`. For use with `display.power()`. Used to turn the display on.
-| `OFF` **constant** ❌                                | Equal to `False`. For use with `display.power()`. Used to turn the display off.
-
----
-
-### `touch` – Monocle specific
-
-> The touch module allows for reacting to touch events from the capacitive touch pads on Monocle.
-
-| Members | Description |
-|:--------|:------------|
-| `bind(pad,action,callback)`&nbsp;**function**&nbsp; | Attaches a touch action (either `TAP`, `DOUBLE_TAP`, `LONG_PRESS` or `SLIDE`) on a specific pad (`A`, or `B`) to a callback function. `callback` can be any python function or lambda function which will be triggered on the event.
-| `state(pad)` **function** ❌                          | Returns the current touch state of the pad `A` or `B`. Returns either `True` if the pad is pressed, otherwise returns `False`.
-| `A` **constant**                                    | Enumeration which represents Pad A.
-| `B` **constant**                                    | Enumeration which represents Pad B.
-| `TAP` **constant**                                  | Enumeration which represents a single tap action.
-| `DOUBLE_TAP` **constant**                           | Enumeration which represents a double tap action.
-| `LONG_PRESS` **constant**                           | Enumeration which represents a long press or hold of 1 second.
-| `SLIDE` **constant**                                | Enumeration which represents a slide action from A to B, or B to A. the `pad` argument in `bind()` is considered to be the starting pad.
+|`send(bytes[])`&nbsp;**function**&nbsp;❌ | Sends a list of bytes over Bluetooth using the [raw data service](#communication). The length of the list must be equal to or less than the MTU size - 3. This value can be retried using the `bluetooth.max_length()` function.
+|`receive()` **function**❌                | Receives a list of bytes over the [raw data service](#communication). 
+|`max_length()` **function** ❌            | Retrieves the maximum negotiated payload size for Bluetooth transfers.
+|`connected()` **function** ❌             | Returns `True` if the [raw data service](#communication) is connected, otherwise returns `False`.
 
 ---
 
@@ -203,13 +226,13 @@ We're gradually building our companion app along with some extra features to hel
 
 | Members | Description |
 |:--------|:------------|
-| `epoch(secs)` **function**                | Sets or gets the current system time in seconds. If `secs` is not provided, the current time is returned, otherwise the time is set according to the value of `secs`. `secs` should be referenced from midnight on the 1st of January 1970.
-| `zone(hour, min)` **function**            | Set the time zone offset from GMT in hours and minutes.
-| `time(epoch)` **function**                | Returns a dictionary containing a human readable date and time. If no argument is provided, the current system time is used. If `epoch` is provided, that value will be used to generate the dictionary. The epoch should be referenced from midnight on the 1st of January 1970.
-| `mktime(dict)` **function**               | The inverse of `time()`. Converts a dictionary provided into an epoch timestamp. The returned epoch value will be referenced from midnight on the 1st of January 1970.
-| `sleep(secs)` **function**                | Sleep for a given number of seconds.
-| `sleep_ms(msecs)` **function**            | Sleep for a given number of milliseconds.
-| `ticks_ms()` **function**                 | Returns a timestamp in milliseconds since power on.
+| `epoch(secs)` **function**          | Sets or gets the current system time in seconds. If `secs` is not provided, the current time is returned, otherwise the time is set according to the value of `secs`. `secs` should be referenced from midnight on the 1st of January 1970.
+| `zone(offset)` **function**      | Sets or gets the time zone offset from GMT as a **string**. If `offset` is provided, the timezone is set to the new value. `offset` must be provided as a string, eg *"8:00"*, or *"-06:30"*.
+| `time(epoch)` **function**          | Returns a dictionary containing a human readable date and time. If no argument is provided, the current system time is used. If `epoch` is provided, that value will be used to generate the dictionary. The epoch should be referenced from midnight on the 1st of January 1970.
+| `mktime(dict)` **function**         | The inverse of `time()`. Converts a dictionary provided into an epoch timestamp. The returned epoch value will be referenced from midnight on the 1st of January 1970.
+| `sleep(secs)` **function**          | Sleep for a given number of seconds.
+| `sleep_ms(msecs)`&nbsp;**function** | Sleep for a given number of milliseconds.
+| `ticks_ms()` **function**           | Returns a timestamp in milliseconds since power on.
 
 ---
 
@@ -224,6 +247,10 @@ We're gradually building our companion app along with some extra features to hel
 ### `micropython`
 
 > Standard MicroPython [internals](https://docs.micropython.org/en/latest/library/micropython.html) are supported.
+
+### `uasyncio`
+
+> Standard MicroPython [asynchronous scheduling](https://docs.micropython.org/en/latest/library/uasyncio.html) is supported.
 
 ### `ubinascii`
 
