@@ -51,7 +51,7 @@ display.show
 ## Mobile app
 {: .no_toc }
 
-We're gradually building our companion app along with some extra features to help you get the most out of Monocle. It's also a great place to start if you'd like to make your own app, and the source code is freely available on our [GitHub]().
+We're gradually building our companion app along with some extra features to help you get the most out of Monocle. It's also a great place to start if you'd like to make your own app, and the source code is freely available on our [GitHub](https://github.com/brilliantlabsAR/brilliant-mobile-app).
 
 <div style="text-align:center" markdown="1">
 [<img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Apple App Store badge" width="175"/>](https://apps.apple.com/us/app/monocle-by-brilliant/id1632203938)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
