@@ -100,64 +100,9 @@ We're gradually building our companion app along with some extra features to hel
 | `mac_address()` **function**                  | Returns the 48-bit MAC address as a 17 character **string** in the format `'xx:xx:xx:xx:xx:xx'`, where each `xx` is a byte in lowercase hex format.
 | `VERSION` **constant**                        | Constant containing the firmware version as a **string**. E.g. `'monocle-firmware-v22.342.1252'`.
 | `GIT_TAG` **constant**                        | Constant containing the build git tag as a 7 character **string**.
-| `update(url,start)`&nbsp;**function**&nbsp;❌ | Checks the given URL for a firmware update file. If `start` was provided as `True` the update will be started automatically. Otherwise returns:<br>- `'AVAILABLE'` if an update is available.<br>- `'IS_LATEST'` if there is no new update.<br>See [firmware updates](#firmware-updates) to understand how the update process is done.
-| `battery_level()` **function**                | Returns the battery level percentage as an **integer**.
+| `battery_level()`&nbsp;**function**           | Returns the battery level percentage as an **integer**.
 | `reset()` **function**                        | Resets the device.
 | `reset_cause()` **function**                  | Returns the reason for the previous reset or startup state. These can be either:<br>- `'POWERED_ON'` if the device was powered on normally<br>- `'SOFTWARE_RESET'` if `reset()` or `update()` was used<br>- `'CRASHED'` if the device had crashed.
-
----
-
-### `led` – Monocle specific
-
-> The LED module contains functions to control the red and green LED on the front of Monocle.
-
-| Members | Description |
-|:--------|:------------|
-| `on(color)` **function**             | Illuminates an led. `color` can be either `led.RED` or `led.GREEN`.
-| `off(color)`&nbsp;**function**&nbsp; | Turns off an led. `color` can be either `led.RED` or `led.GREEN`.
-| `RED` **constant**                   | Enumeration of the red led which can be passed to `led.on()` or `led.off()`.
-| `GREEN` **constant**                 | Enumeration of the green led which can be passed to `led.on()` or `led.off()`.
-
----
-
-### `fpga` – Monocle specific
-
-> The FPGA module allows for direct control of the FPGA, as well as the ability to update the bitstream.
-
-| Members | Description |
-|:--------|:------------|
-| `read(addr, n)` **function**           | Reads `n` number of bytes from the 16-bit address `addr`, and returns a **list** of bytes.
-| `write(addr,data[])`&nbsp;**function** | Writes all bytes from a given list `bytes[]` to the 16-bit address `addr`.
-| `power(on)` **function** ❌              | Powers up the FPGA if `True` is given otherwise powers down with `False`. If no argument is given, the current power state of the FPGA is returned.
-| `update(url)` **function** ❌            | Downloads and reboots the FPGA with a bitstream provided from the `url`. Automatically wakes up the FPGA if it is shutdown. If the update is interrupted part way through, the FPGA will no longer be running a valid application, and must be updated again. See [FPGA bitstream updates](#fpga-bitstream-updates) to understand how the update process is done.
-| `status()` **function** ❌               | Returns the current status of the FPGA:<br>- `'RUNNING'` if the FPGA is running a valid bitstream.<br>- `'NOT_POWERED'` if the FPGA is not powered<br>- `'BAD_BITSTREAM'` if the FPGA cannot run the bitstream stored in memory. In this case, another `update()` must be performed.
-| `ON` **constant** ❌                     | Equal to `True`. For use with `fpga.power()`. Used to turn the FPGA on.
-| `OFF` **constant** ❌                    | Equal to `False`. For use with `fpga.power()`. Used to turn the FPGA off.
-
----
-
-### `camera` – Monocle specific
-
-> The camera module allows for capturing images and transferring them to another device over Bluetooth.
-
-| Members | Description |
-|:--------|:------------|
-| `capture()` **function** ❌                 | Captures an image and returns it to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are done.
-| `stop()` **function** ❌                    | Stops any ongoing image transfer that's currently in progress.
-| `power(power_on)`&nbsp;**function**&nbsp;❌ | Powers up the camera if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the camera is returned.
-| `ON` **constant** ❌                        | Equal to `True`. For use with `camera.power()`. Used to turn the camera on.
-| `OFF` **constant** ❌                       | Equal to `False`. For use with `camera.power()`. Used to turn the camera off.
-
----
-
-### `microphone` – Monocle specific
-
-> The microphone module allows for capturing audio and streaming it to another device over Bluetooth.
-
-| Members | Description |
-|:--------|:------------|
-| `stream()`&nbsp;**function**&nbsp;❌ | Streams audio from the microphone to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are performed.
-| `stop()` **function** ❌             | Stops any ongoing audio stream that's currently in progress.
 
 ---
 
@@ -180,6 +125,29 @@ We're gradually building our companion app along with some extra features to hel
 
 ---
 
+### `camera` – Monocle specific
+
+> The camera module allows for capturing images and transferring them to another device over Bluetooth.
+
+| Members | Description |
+|:--------|:------------|
+| `capture()` **function** ❌                 | Captures an image and returns it to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are done.
+| `power(power_on)`&nbsp;**function**&nbsp;❌ | Powers up the camera if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the camera is returned.
+| `ON` **constant** ❌                        | Equal to `True`. For use with `camera.power()`. Used to turn the camera on.
+| `OFF` **constant** ❌                       | Equal to `False`. For use with `camera.power()`. Used to turn the camera off.
+
+---
+
+### `microphone` – Monocle specific
+
+> The microphone module allows for capturing audio and streaming it to another device over Bluetooth.
+
+| Members | Description |
+|:--------|:------------|
+| `stream()`&nbsp;**function**&nbsp;❌ | Streams audio from the microphone to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are performed.
+
+---
+
 ### `touch` – Monocle specific
 
 > The touch module allows for reacting to touch events from the capacitive touch pads on Monocle.
@@ -197,19 +165,76 @@ We're gradually building our companion app along with some extra features to hel
 
 ---
 
+### `led` – Monocle specific
+
+> The LED module contains functions to control the red and green LED on the front of Monocle.
+
+| Members | Description |
+|:--------|:------------|
+| `on(color)` **function**             | Illuminates an led. `color` can be either `led.RED` or `led.GREEN`.
+| `off(color)`&nbsp;**function**&nbsp; | Turns off an led. `color` can be either `led.RED` or `led.GREEN`.
+| `RED` **constant**                   | Enumeration of the red led which can be passed to `led.on()` or `led.off()`.
+| `GREEN` **constant**                 | Enumeration of the green led which can be passed to `led.on()` or `led.off()`.
+
+---
+
+### `fpga` – Monocle specific
+
+> The FPGA module allows for direct control of the FPGA, as well as the ability to update the bitstream.
+
+| Members | Description |
+|:--------|:------------|
+| `read(addr, n)` **function**            | Reads `n` number of bytes from the 16-bit address `addr`, and returns a **bytes object**.
+| `write(addr,bytes[])`&nbsp;**function** | Writes all bytes from a given **bytes object** `bytes[]` to the 16-bit address `addr`.
+| `power(on)` **function** ❌               | Powers up the FPGA if `True` is given otherwise powers down with `False`. If no argument is given, the current power state of the FPGA is returned.
+| `update(url)` **function** ❌             | Downloads and reboots the FPGA with a bitstream provided from the `url`. Automatically wakes up the FPGA if it is shutdown. If the update is interrupted part way through, the FPGA will no longer be running a valid application, and must be updated again. See [FPGA bitstream updates](#fpga-bitstream-updates) to understand how the update process is done.
+| `status()` **function** ❌                | Returns the current status of the FPGA:<br>- `'RUNNING'` if the FPGA is running a valid bitstream.<br>- `'NOT_POWERED'` if the FPGA is not powered<br>- `'BAD_BITSTREAM'` if the FPGA cannot run the bitstream stored in memory. In this case, another `update()` must be performed.
+| `ON` **constant** ❌                      | Equal to `True`. For use with `fpga.power()`. Used to turn the FPGA on.
+| `OFF` **constant** ❌                     | Equal to `False`. For use with `fpga.power()`. Used to turn the FPGA off.
+
+---
+
+### `storage` - Monocle specific
+
+> Storage can be used for reading or writing to files within the non-volatile storage. `"file"` can be any user defined string, however certain strings are reserved for special uses such as `"fpga-bitstream"` which is used to store the FPGA application.
+
+| Members | Description |
+|:--------|:------------|
+|`read("file",offset,length)`&nbsp;**function**&nbsp;❌ | Reads and returns a **bytes object** from a file within the non-volatile storage. `offset` is an optional position in bytes from the start of the file to read from. Optionally, passing `length` determines how many bytes to read out, otherwise the full file is returned.
+|`create("file", bytes[])` **function** ❌              | Creates a new file with name `"file"` and populates it with data from a **bytes object** `bytes[]`.
+|`append("file", bytes[])` **function** ❌              | Appends data from a **bytes object** `bytes[]` to the end of an existing file.
+|`delete("file")` **function** ❌                       | Deletes a file from the storage.
+|`list()` **function** ❌                               | Lists all files currently on the device.
+|`FPGA_BITSTREAM` **constant** ❌                       | A special filename which is used for storing the FPGA bitstream. This file can not be deleted, and must be populated for the FPGA to start up.
+
+---
+
+### `bluetooth` - Monocle specific
+
+> The `bluetooth` module can be used to transfer byte data between Monocle and the host Bluetooth device. Bytes can contain any arbitrary data, and avoids having to pollute the REPL interface with printing data out as strings. The [raw data service](#communication) is used for all communications under the `bluetooth` module.
+
+| Members | Description |
+|:--------|:------------|
+|`send(bytes[])`&nbsp;**function**&nbsp;❌ | Sends data from a **bytes object** `bytes[]` over Bluetooth using the [raw data service](#communication). The length of the bytearray must be equal to or less than the MTU size - 3. This value may be obtained using the `bluetooth.max_length()` function.
+|`receive()` **function**❌                | Receives data over the [raw data service](#communication) and returns a **bytes object**. 
+|`max_length()` **function** ❌            | Returns the maximum negotiated payload size for Bluetooth transfers.
+|`connected()` **function** ❌             | Returns `True` if the [raw data service](#communication) is connected, otherwise returns `False`.
+
+---
+
 ### `time` – Monocle specific
 
 > The time module allows for getting/setting the time and date as well as adding delays into your programs.
 
 | Members | Description |
 |:--------|:------------|
-| `epoch(secs)` **function**                | Sets or gets the current system time in seconds. If `secs` is not provided, the current time is returned, otherwise the time is set according to the value of `secs`. `secs` should be referenced from midnight on the 1st of January 1970.
-| `zone(hour, min)` **function**            | Set the time zone offset from GMT in hours and minutes.
-| `time(epoch)` **function**                | Returns a dictionary containing a human readable date and time. If no argument is provided, the current system time is used. If `epoch` is provided, that value will be used to generate the dictionary. The epoch should be referenced from midnight on the 1st of January 1970.
-| `mktime(dict)` **function**               | The inverse of `time()`. Converts a dictionary provided into an epoch timestamp. The returned epoch value will be referenced from midnight on the 1st of January 1970.
-| `sleep(secs)` **function**                | Sleep for a given number of seconds.
-| `sleep_ms(msecs)` **function**            | Sleep for a given number of milliseconds.
-| `ticks_ms()` **function**                 | Returns a timestamp in milliseconds since power on.
+| `epoch(secs)` **function**          | Sets or gets the current system time in seconds. If `secs` is not provided, the current time is returned, otherwise the time is set according to the value of `secs`. `secs` should be referenced from midnight on the 1st of January 1970.
+| `zone(offset)` **function**      | Sets or gets the time zone offset from GMT as a **string**. If `offset` is provided, the timezone is set to the new value. `offset` must be provided as a string, eg *"8:00"*, or *"-06:30"*.
+| `time(epoch)` **function**          | Returns a dictionary containing a human readable date and time. If no argument is provided, the current system time is used. If `epoch` is provided, that value will be used to generate the dictionary. The epoch should be referenced from midnight on the 1st of January 1970.
+| `mktime(dict)` **function**         | The inverse of `time()`. Converts a dictionary provided into an epoch timestamp. The returned epoch value will be referenced from midnight on the 1st of January 1970.
+| `sleep(secs)` **function**          | Sleep for a given number of seconds.
+| `sleep_ms(msecs)`&nbsp;**function** | Sleep for a given number of milliseconds.
+| `ticks_ms()` **function**           | Returns a timestamp in milliseconds since power on.
 
 ---
 
@@ -224,6 +249,10 @@ We're gradually building our companion app along with some extra features to hel
 ### `micropython`
 
 > Standard MicroPython [internals](https://docs.micropython.org/en/latest/library/micropython.html) are supported.
+
+### `uasyncio`
+
+> Standard MicroPython [asynchronous scheduling](https://docs.micropython.org/en/latest/library/uasyncio.html) is supported.
 
 ### `ubinascii`
 
