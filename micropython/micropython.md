@@ -119,12 +119,12 @@ We're gradually building our companion app along with some extra features to hel
 | `line(x1,y1,x2,y2,color)` **function**             | Draws a straight line from the position `x1`, `y1`, to the position `x2`, `y2`, with a given `color`.
 | `text("string",x,y,color)`&nbsp;**function**&nbsp; | Draws text at the position `x`, `y`, with a given `color`.
 | `show()` **function**                              | Prints the populated frame buffer to the display. After this call, another series of drawing functions may be called and `show()` can be used to print the next frame.
-| `brightness(level)` **function**                   | Sets the display's brightness level, either 0, 1, 2, 3, or 4.
+| `brightness(level)` **function**                   | Sets the display's brightness. `level` can be 0, 1, 2, 3, or 4.
 | `power(power_on)` **function** ❌                    | Powers up the display if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the display is returned.
 | `ON` **constant** ❌                                 | Equal to `True`. For use with `display.power()`. Used to turn the display on.
 | `OFF` **constant** ❌                                | Equal to `False`. For use with `display.power()`. Used to turn the display off.
-| `WIDTH` **constant**                               | The display width in pixel. Valid values are from `0` to `WIDTH - 1~.
-| `HEIGHT` **constant**                              | The display height in pixel. from `0` to `HEIGHT - 1~.
+| `WIDTH` **constant**                               | The display width in pixels.
+| `HEIGHT` **constant**                              | The display height in pixels.
 
 ---
 
