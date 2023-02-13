@@ -12,7 +12,7 @@ nav_order: 2
 
 ![Monocle exploded view](/monocle/images/monocle-exploded-view.png)
 
-Monocle is a tiny heads-up display which clips onto your existing eyewear. It's packed full of powerful hardware which is perfect for when you're on the go. It connects to your mobile phone over Bluetooth, and includes a few handy sensors such as touch buttons, camera and microphone. The included FPGA is perfect for computer vision, AI or graphics acceleration directly on the device. Monocle runs open source software and provides an easy way to get started using [MicroPython](/micropython/micropython). You can also write your own firmware from scratch using these docs as guidance.
+Monocle is a tiny heads-up display which clips onto your existing eye-wear. It's packed full of powerful hardware which is perfect for when you're on the go. It connects to your mobile phone over Bluetooth, and includes a few handy sensors such as touch buttons, camera and microphone. The included FPGA is perfect for computer vision, AI or graphics acceleration directly on the device. Monocle runs open source software and provides an easy way to get started using [MicroPython](/micropython/micropython). You can also write your own firmware from scratch using these docs as guidance.
 
 ## Key features:
 {: .no_toc }
@@ -253,6 +253,10 @@ Generally it's convenient to use the [MicroPython FPGA module](/micropython/micr
 ### Monocle
 
 [![PDF mechanical dimensions for Monocle](/monocle/images/monocle-dimensions.png)](/monocle/monocle-dimensions.pdf)
+
+[Download the 3D Model in STEP format](/monocle/monocle-body.step)
+
+[Download the 3D Model in STL format](/monocle/monocle-body.stl)
 
 ### Charging case
 
