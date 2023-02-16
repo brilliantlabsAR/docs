@@ -226,7 +226,7 @@ We're gradually building our companion app along with some extra features to hel
 
 ### `update` - Monocle specific
 
-> 
+> The update module allows for firmware upgrades of the MicroPython firmware, as well as the FPGA bitstream over bluetooth.
 
 | Members | Description |
 |:--------|:------------|
