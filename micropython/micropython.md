@@ -73,20 +73,7 @@ We're gradually building our companion app along with some extra features to hel
 
 ### `builtins`
 
-> The majority of [built in functions](https://docs.micropython.org/en/latest/library/builtins.html) are supported, along with some extended features below. Some less important features are not included to save on space for other things. If you feel we've missed something, [create an issue](https://github.com/brilliantlabsAR/monocle-micropython/issues) on our GitHub, and we'll try to add it.
-
-| Members | Description |
-|:--------|:------------|
-| `bytearray` **class** | Byte arrays are supported.
-| `dict` **class**      | Dictionaries are supported.
-| `enumerate` **class** | Enumerate loops are supported.
-| `float` **class**     | Floating point numbers are supported.
-| `max()` **function**  | The max function is supported.
-| `min()` **function**  | The min function is supported.
-| `reversed` **class**  | Reversing lists are supported.
-| `set` **class**       | Sets are supported.
-| `slice` **class**     | Slices are supported.
-| `str` **class**       | Unicode and string handling is supported.
+> Standard MicroPython [built in functions](https://docs.micropython.org/en/latest/library/builtins.html) are supported.
 
 ---
 
@@ -100,9 +87,10 @@ We're gradually building our companion app along with some extra features to hel
 | `mac_address()` **function**                  | Returns the 48-bit MAC address as a 17 character **string** in the format `'xx:xx:xx:xx:xx:xx'`, where each `xx` is a byte in lowercase hex format.
 | `VERSION` **constant**                        | Constant containing the firmware version as a **string**. E.g. `'monocle-firmware-v22.342.1252'`.
 | `GIT_TAG` **constant**                        | Constant containing the build git tag as a 7 character **string**.
-| `battery_level()`&nbsp;**function**           | Returns the battery level percentage as an **integer**.
+| `battery_level()` **function**                | Returns the battery level percentage as an **integer**.
 | `reset()` **function**                        | Resets the device.
 | `reset_cause()` **function**                  | Returns the reason for the previous reset or startup state. These can be either:<br>- `'POWERED_ON'` if the device was powered on normally<br>- `'SOFTWARE_RESET'` if `reset()` or `update()` was used<br>- `'CRASHED'` if the device had crashed.
+| `prevent_sleep(enable)`&nbsp;**function**     | Enables or disables sleeping of the device when put back into the charging case. Sleeping is enabled by default. If no argument is given. The currently set value is returned. **WARNING: Running monocle for prolonged periods may result in display burn in, as well as reduced lifetime of components.**
 
 ---
 
@@ -112,19 +100,19 @@ We're gradually building our companion app along with some extra features to hel
 
 | Members | Description |
 |:--------|:------------|
-| `fill(color)` **function**                         | Fills the entire display with a color. `color` should be a 24-bit RGB value such as `0xAABBCC`.
-| `pixel(x, y, color)` **function**                  | Draws a single pixel of color `color` at the position `x`, `y`.
-| `hline(x,y,width,color)` **function**              | Draws a horizontal line from the position `x`, `y`, with a given `width` and `color`.
-| `vline(x,y,height,color)` **function**             | Draws a vertical line from the position `x`, `y`, with a given `height` and `color`.
-| `line(x1,y1,x2,y2,color)` **function**             | Draws a straight line from the position `x1`, `y1`, to the position `x2`, `y2`, with a given `color`.
-| `text("string",x,y,color)`&nbsp;**function**&nbsp; | Draws text at the position `x`, `y`, with a given `color`.
-| `show()` **function**                              | Prints the populated frame buffer to the display. After this call, another series of drawing functions may be called and `show()` can be used to print the next frame.
-| `brightness(level)` **function**                   | Sets the display's brightness. `level` can be 0, 1, 2, 3, or 4.
-| `power(power_on)` **function** ❌                    | Powers up the display if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the display is returned.
-| `ON` **constant** ❌                                 | Equal to `True`. For use with `display.power()`. Used to turn the display on.
-| `OFF` **constant** ❌                                | Equal to `False`. For use with `display.power()`. Used to turn the display off.
-| `WIDTH` **constant**                               | The display width in pixels.
-| `HEIGHT` **constant**                              | The display height in pixels.
+| `fill(color)` **function**                   | Fills the entire display with a color. `color` should be a 24-bit RGB value such as `0xAABBCC`.
+| `pixel(x, y, color)` **function** ❌           | Draws a single pixel of color `color` at the position `x`, `y`.
+| `hline(x,y,width,color)` **function**        | Draws a horizontal line from the position `x`, `y`, with a given `width` and `color`.
+| `vline(x,y,height,color)` **function**       | Draws a vertical line from the position `x`, `y`, with a given `height` and `color`.
+| `line(x1,y1,x2,y2,color)` **function**       | Draws a straight line from the position `x1`, `y1`, to the position `x2`, `y2`, with a given `color`.
+| `text("string",x,y,color)`&nbsp;**function** | Draws text at the position `x`, `y`, with a given `color`.
+| `show()` **function**                         | Prints the populated frame buffer to the display. After this call, another series of drawing functions may be called and `show()` can be used to print the next frame.
+| `brightness(level)` **function**              | Sets the display's brightness. `level` can be 0, 1, 2, 3, or 4.
+| `power(power_on)` **function** ❌               | Powers up the display if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the display is returned.
+| `ON` **constant** ❌                            | Equal to `True`. For use with `display.power()`. Used to turn the display on.
+| `OFF` **constant** ❌                           | Equal to `False`. For use with `display.power()`. Used to turn the display off.
+| `WIDTH` **constant**                          | The display width in pixels. Equal to 640.
+| `HEIGHT` **constant**                         | The display height in pixels. Equal to 400.
 
 ---
 
@@ -134,10 +122,9 @@ We're gradually building our companion app along with some extra features to hel
 
 | Members | Description |
 |:--------|:------------|
-| `capture()` **function** ❌                 | Captures an image and returns it to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are done.
-| `power(power_on)`&nbsp;**function**&nbsp;❌ | Powers up the camera if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the camera is returned.
-| `ON` **constant** ❌                        | Equal to `True`. For use with `camera.power()`. Used to turn the camera on.
-| `OFF` **constant** ❌                       | Equal to `False`. For use with `camera.power()`. Used to turn the camera off.
+| `capture()` **function** ❌                  | Captures an image and returns it to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are done.
+| `zoom(multiplier)`&nbsp;**function**&nbsp;❌ | Sets the zoom level of the camera. Multiplier can be any floating point number between 1 and 8.
+| `overlay(enable)` **function**             | Enables or disables an overlay of what the camera is currently seeing onto the display.
 
 ---
 
@@ -190,7 +177,6 @@ We're gradually building our companion app along with some extra features to hel
 | `read(addr, n)` **function**            | Reads `n` number of bytes from the 16-bit address `addr`, and returns a **bytes object**.
 | `write(addr,bytes[])`&nbsp;**function** | Writes all bytes from a given **bytes object** `bytes[]` to the 16-bit address `addr`.
 | `power(on)` **function** ❌               | Powers up the FPGA if `True` is given otherwise powers down with `False`. If no argument is given, the current power state of the FPGA is returned.
-| `update(url)` **function** ❌             | Downloads and reboots the FPGA with a bitstream provided from the `url`. Automatically wakes up the FPGA if it is shutdown. If the update is interrupted part way through, the FPGA will no longer be running a valid application, and must be updated again. See [FPGA bitstream updates](#fpga-bitstream-updates) to understand how the update process is done.
 | `status()` **function** ❌                | Returns the current status of the FPGA:<br>- `'RUNNING'` if the FPGA is running a valid bitstream.<br>- `'NOT_POWERED'` if the FPGA is not powered<br>- `'BAD_BITSTREAM'` if the FPGA cannot run the bitstream stored in memory. In this case, another `update()` must be performed.
 | `ON` **constant** ❌                      | Equal to `True`. For use with `fpga.power()`. Used to turn the FPGA on.
 | `OFF` **constant** ❌                     | Equal to `False`. For use with `fpga.power()`. Used to turn the FPGA off.
@@ -218,10 +204,9 @@ We're gradually building our companion app along with some extra features to hel
 
 | Members | Description |
 |:--------|:------------|
-|`send(bytes[])`&nbsp;**function**&nbsp;❌ | Sends data from a **bytes object** `bytes[]` over Bluetooth using the [raw data service](#communication). The length of the bytearray must be equal to or less than the MTU size - 3. This value may be obtained using the `bluetooth.max_length()` function.
-|`receive()` **function**❌                | Receives data over the [raw data service](#communication) and returns a **bytes object**. 
-|`max_length()` **function** ❌            | Returns the maximum negotiated payload size for Bluetooth transfers.
-|`connected()` **function** ❌             | Returns `True` if the [raw data service](#communication) is connected, otherwise returns `False`.
+|`send(bytes[])`&nbsp;**function** | Sends data from a **bytes object** `bytes[]` over Bluetooth using the [raw data service](#communication). The length of the bytearray must be equal to or less than the MTU size - 3. This value may be obtained using the `bluetooth.max_length()` function.
+|`receive()` **function** ❌         | Receives data over the [raw data service](#communication) and returns a **bytes object**. 
+|`connected()` **function**        | Returns `True` if the [raw data service](#communication) is connected, otherwise returns `False`.
 
 ---
 
@@ -231,13 +216,26 @@ We're gradually building our companion app along with some extra features to hel
 
 | Members | Description |
 |:--------|:------------|
-| `epoch(secs)` **function**          | Sets or gets the current system time in seconds. If `secs` is not provided, the current time is returned, otherwise the time is set according to the value of `secs`. `secs` should be referenced from midnight on the 1st of January 1970.
-| `zone(offset)` **function**      | Sets or gets the time zone offset from GMT as a **string**. If `offset` is provided, the timezone is set to the new value. `offset` must be provided as a string, eg *"8:00"*, or *"-06:30"*.
-| `time(epoch)` **function**          | Returns a dictionary containing a human readable date and time. If no argument is provided, the current system time is used. If `epoch` is provided, that value will be used to generate the dictionary. The epoch should be referenced from midnight on the 1st of January 1970.
-| `mktime(dict)` **function**         | The inverse of `time()`. Converts a dictionary provided into an epoch timestamp. The returned epoch value will be referenced from midnight on the 1st of January 1970.
-| `sleep(secs)` **function**          | Sleep for a given number of seconds.
-| `sleep_ms(msecs)`&nbsp;**function** | Sleep for a given number of milliseconds.
-| `ticks_ms()` **function**           | Returns a timestamp in milliseconds since power on.
+| `time(secs)` **function**                      | Sets or gets the current system time in seconds. If `secs` is not provided, the current time is returned, otherwise the time is set according to the value of `secs`. `secs` should be referenced from midnight on the 1st of January 1970.
+| `now(epoch)` **function**                      | Returns a dictionary containing a human readable date and time. If no argument is provided, the current system time is used. If `epoch` is provided, that value will be used to generate the dictionary. The epoch should be referenced from midnight on the 1st of January 1970.
+| `zone(offset)` **function**                    | Sets or gets the time zone offset from GMT as a **string**. If `offset` is provided, the timezone is set to the new value. `offset` must be provided as a string, eg *"8:00"*, or *"-06:30"*.
+| `mktime(dict)` **function**                    | The inverse of `now()`. Converts a dictionary provided into an epoch timestamp. The returned epoch value will be referenced from midnight on the 1st of January 1970.
+| `sleep(secs)` **function**                     | Sleep for a given number of seconds.
+| `sleep_ms(msecs)` **function**                 | Sleep for a given number of milliseconds.
+| `ticks_ms()` **function**                      | Returns a timestamp in milliseconds since power on.
+| `ticks_add(ticks, delta)` **function**         | Offsets a timestamp value by a given number. Can be positive or negative.
+| `ticks_diff(ticks1,ticks2)`&nbsp;**function** | Returns the difference between two timestamps. i.e. `ticks1 - ticks2`, but takes into consideration if the numbers wrap around.
+
+---
+
+### `update` - Monocle specific
+
+> 
+
+| Members | Description |
+|:--------|:------------|
+| `micropython()` **function** | Puts the device into over-the-air device firmware update mode. The device will stay in DFU mode for 5 minutes or until an update is finished being performed. The device will then restart with an updated MicroPython firmware.
+| `foga(url)`&nbsp;**function**&nbsp;❌ | Downloads and reboots the FPGA with a bitstream provided from the `url`. Automatically wakes up the FPGA if it is shutdown. If the update is interrupted part way through, the FPGA will no longer be running a valid application, and must be updated again. See [FPGA bitstream updates](#fpga-bitstream-updates) to understand how the update process is done.
 
 ---
 
@@ -253,6 +251,10 @@ We're gradually building our companion app along with some extra features to hel
 
 > Standard MicroPython [internals](https://docs.micropython.org/en/latest/library/micropython.html) are supported.
 
+### `uarray`
+
+> Standard MicroPython [arrays](https://docs.micropython.org/en/latest/library/array.html) are supported.
+
 ### `uasyncio`
 
 > Standard MicroPython [asynchronous scheduling](https://docs.micropython.org/en/latest/library/uasyncio.html) is supported.
@@ -261,9 +263,17 @@ We're gradually building our companion app along with some extra features to hel
 
 > Standard MicroPython [binary/ASCII conversions](https://docs.micropython.org/en/latest/library/binascii.html) are supported.
 
+### `ucollections`
+
+> Standard MicroPython [collection and container types](https://docs.micropython.org/en/latest/library/collections.html) are supported.
+
 ### `uerrno`
 
 > Standard MicroPython [system error codes](https://docs.micropython.org/en/latest/library/errno.html) are supported.
+
+### `uhashlib`
+
+> Standard MicroPython [hashing algorithms](https://docs.micropython.org/en/latest/library/hashlib.html) are supported.
 
 ### `uio`
 
@@ -280,6 +290,18 @@ We're gradually building our companion app along with some extra features to hel
 ### `ure`
 
 > Standard MicroPython [regular expressions](https://docs.micropython.org/en/latest/library/re.html) are supported.
+
+### `uselect`
+
+> Standard MicroPython [stream event waiting](https://docs.micropython.org/en/latest/library/select.html) is supported.
+
+### `ustruct`
+
+> Standard MicroPython [struct primitives](https://docs.micropython.org/en/latest/library/struct.html) are supported.
+
+### `usys`
+
+> Standard MicroPython [system specific functions](https://docs.micropython.org/en/latest/library/sys.html) are supported.
 
 ---
 
