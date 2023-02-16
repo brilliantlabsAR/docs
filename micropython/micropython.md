@@ -108,9 +108,7 @@ We're gradually building our companion app along with some extra features to hel
 | `text("string",x,y,color)`&nbsp;**function** | Draws text at the position `x`, `y`, with a given `color`.
 | `show()` **function**                         | Prints the populated frame buffer to the display. After this call, another series of drawing functions may be called and `show()` can be used to print the next frame.
 | `brightness(level)` **function**              | Sets the display's brightness. `level` can be 0, 1, 2, 3, or 4.
-| `power(power_on)` **function** ❌               | Powers up the display if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the display is returned.
-| `ON` **constant** ❌                            | Equal to `True`. For use with `display.power()`. Used to turn the display on.
-| `OFF` **constant** ❌                           | Equal to `False`. For use with `display.power()`. Used to turn the display off.
+| `power(enable)` **function** ❌               | Powers up the display if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the display is returned.
 | `WIDTH` **constant**                          | The display width in pixels. Equal to 640.
 | `HEIGHT` **constant**                         | The display height in pixels. Equal to 400.
 
@@ -144,14 +142,14 @@ We're gradually building our companion app along with some extra features to hel
 
 | Members | Description |
 |:--------|:------------|
-| `bind(pad,action,callback)`&nbsp;**function**&nbsp; | Attaches a touch action (either `TAP`, `DOUBLE_TAP`, `LONG_PRESS` or `SLIDE`) on a specific pad (`A`, or `B`) to a callback function. `callback` can be any python function or lambda function which will be triggered on the event.
-| `state(pad)` **function** ❌                          | Returns the current touch state of the pad `A` or `B`. Returns either `True` if the pad is pressed, otherwise returns `False`.
+| `bind(pad,action,callback)`&nbsp;**function**&nbsp; | Attaches a touch action (either `TOUCH`, `DEEP_TOUCH` or `PROXIMITY`) on a specific pad (`A`, or `B`) to a callback function. `callback` can be any python function or lambda function which will be triggered on the event.
+| `unbind(pad)`&nbsp;**function**&nbsp;               | Unbinds a bound pad from its callback.
+| `state(pad)` **function** ❌                          | Returns the current touch state of the pad `A` or `B`. Returns either `True` if the finger is present, otherwise returns `False`.
 | `A` **constant**                                    | Enumeration which represents Pad A.
 | `B` **constant**                                    | Enumeration which represents Pad B.
-| `TAP` **constant**                                  | Enumeration which represents a single tap action.
-| `DOUBLE_TAP` **constant**                           | Enumeration which represents a double tap action.
-| `LONG_PRESS` **constant**                           | Enumeration which represents a long press or hold of 1 second.
-| `SLIDE` **constant**                                | Enumeration which represents a slide action from A to B, or B to A. the `pad` argument in `bind()` is considered to be the starting pad.
+| `TOUCH` **constant**                                | Enumeration which represents a touch action.
+| `DEEP_TOUCH` **constant**                           | Enumeration which represents a deep touch action.
+| `PROXIMITY` **constant**                            | Enumeration which represents proximity of the fingertip.
 
 ---
 
@@ -176,10 +174,8 @@ We're gradually building our companion app along with some extra features to hel
 |:--------|:------------|
 | `read(addr, n)` **function**            | Reads `n` number of bytes from the 16-bit address `addr`, and returns a **bytes object**.
 | `write(addr,bytes[])`&nbsp;**function** | Writes all bytes from a given **bytes object** `bytes[]` to the 16-bit address `addr`.
-| `power(on)` **function** ❌               | Powers up the FPGA if `True` is given otherwise powers down with `False`. If no argument is given, the current power state of the FPGA is returned.
+| `power(enable)` **function** ❌           | Powers up the FPGA if `True` is given otherwise powers down with `False`. If no argument is given, the current power state of the FPGA is returned.
 | `status()` **function** ❌                | Returns the current status of the FPGA:<br>- `'RUNNING'` if the FPGA is running a valid bitstream.<br>- `'NOT_POWERED'` if the FPGA is not powered<br>- `'BAD_BITSTREAM'` if the FPGA cannot run the bitstream stored in memory. In this case, another `update()` must be performed.
-| `ON` **constant** ❌                      | Equal to `True`. For use with `fpga.power()`. Used to turn the FPGA on.
-| `OFF` **constant** ❌                     | Equal to `False`. For use with `fpga.power()`. Used to turn the FPGA off.
 
 ---
 
