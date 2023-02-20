@@ -34,16 +34,16 @@ Once you're connected, try running this code:
 import touch
 import display
 
-fn change_text():
+def change_text(button):
     display.fill(0)
-    display.text("touched!", 0, 0, 0xffffff)
+    display.text(f"Button {button} touched!", 0, 0, 0xffffff)
     display.show()
 
-touch.bind(touch.A, touch.TAP, change_text)
+touch.callback(touch.BOTH, change_text)
 
 display.fill(0)
-display.text("tap touch A", 0, 0, 0xffffff)
-display.show
+display.text("Tab a touch button", 0, 0, 0xffffff)
+display.show()
 ```
 
 ---
