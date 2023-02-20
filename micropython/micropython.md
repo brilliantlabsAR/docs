@@ -90,8 +90,9 @@ We're gradually building our companion app along with some extra features to hel
 | `GIT_REPO` **constant**                       | Constant containing the project git repo as a **string**.
 | `battery_level()` **function**                | Returns the battery level percentage as an **integer**.
 | `reset()` **function**                        | Resets the device.
-| `reset_cause()` **function**                  | Returns the reason for the previous reset or startup state. These can be either:<br>- `'POWERED_ON'` if the device was powered on normally<br>- `'SOFTWARE_RESET'` if `reset()` or `update()` was used<br>- `'CRASHED'` if the device had crashed.
+| `reset_cause()` **function** ❌                 | Returns the reason for the previous reset or startup state. These can be either:<br>- `'POWERED_ON'` if the device was powered on normally<br>- `'SOFTWARE_RESET'` if `reset()` or `update()` was used<br>- `'CRASHED'` if the device had crashed.
 | `prevent_sleep(enable)`&nbsp;**function**     | Enables or disables sleeping of the device when put back into the charging case. Sleeping is enabled by default. If no argument is given. The currently set value is returned. **WARNING: Running monocle for prolonged periods may result in display burn in, as well as reduced lifetime of components.**
+| `force_sleep()` **function** ❌                 | Puts the device to sleep. All hardware components are shut down, and Bluetooth is disconnected. Upon touching either of the touch pads, the device will wake up, and reset.
 
 ---
 
@@ -107,11 +108,11 @@ We're gradually building our companion app along with some extra features to hel
 | `vline(x,y,height,color)` **function**       | Draws a vertical line from the position `x`, `y`, with a given `height` and `color`.
 | `line(x1,y1,x2,y2,color)` **function**       | Draws a straight line from the position `x1`, `y1`, to the position `x2`, `y2`, with a given `color`.
 | `text("string",x,y,color)`&nbsp;**function** | Draws text at the position `x`, `y`, with a given `color`.
-| `show()` **function**                         | Prints the populated frame buffer to the display. After this call, another series of drawing functions may be called and `show()` can be used to print the next frame.
-| `brightness(level)` **function**              | Sets the display's brightness. `level` can be 0, 1, 2, 3, or 4.
-| `power(enable)` **function** ❌               | Powers up the display if `True` is given otherwise powers down with `False`. If no argument is given, the current powered state of the display is returned.
-| `WIDTH` **constant**                          | The display width in pixels. Equal to 640.
-| `HEIGHT` **constant**                         | The display height in pixels. Equal to 400.
+| `show()` **function**                        | Prints the populated frame buffer to the display. After this call, another series of drawing functions may be called and `show()` can be used to print the next frame.
+| `clear()` **function** ❌                       | Clears the display and puts it into a low power state.
+| `brightness(level)` **function**             | Sets the display's brightness. `level` can be 0, 1, 2, 3, or 4.
+| `WIDTH` **constant**                         | The display width in pixels. Equal to 640.
+| `HEIGHT` **constant**                        | The display height in pixels. Equal to 400.
 
 ---
 
@@ -143,14 +144,11 @@ We're gradually building our companion app along with some extra features to hel
 
 | Members | Description |
 |:--------|:------------|
-| `bind(pad,action,callback)`&nbsp;**function**&nbsp; | Attaches a touch action (either `TOUCH`, `DEEP_TOUCH` or `PROXIMITY`) on a specific pad (`A`, or `B`) to a callback function. `callback` can be any python function or lambda function which will be triggered on the event.
-| `unbind(pad)`&nbsp;**function**&nbsp;               | Unbinds a bound pad from its callback.
-| `state(pad)` **function** ❌                          | Returns the current touch state of the pad `A` or `B`. Returns either `True` if the finger is present, otherwise returns `False`.
-| `A` **constant**                                    | Enumeration which represents Pad A.
-| `B` **constant**                                    | Enumeration which represents Pad B.
-| `TOUCH` **constant**                                | Enumeration which represents a touch action.
-| `DEEP_TOUCH` **constant**                           | Enumeration which represents a deep touch action.
-| `PROXIMITY` **constant**                            | Enumeration which represents proximity of the fingertip.
+| `callback(pad,callback)`&nbsp;**function** | Attaches a callback handler to one or both of the touch pads. If `pad` is given as `touch.BOTH`, a single callback will be used to capture both touch events. Otherwise `touch.A` or `touch.B` can be used to assign separate callback functions if desired. `callback` should be a predefined function taking one argument. This argument will equal the pad which triggered the callback. To unassign a callback, issue `touch.callback()` with `None` in the `callback` argument. To view the currently assigned callback, issue `touch.callback()` without the `callback` argument.
+| `state(pad)` **function**                  | Returns the current touch state of the touch pads. If `pad` is not specified, either `'A'`, `'B'`, `'BOTH'` or `None` will be returned depending on which pads are currently touched. If `pad` is specified, then `True` or `False` will be returned for the touch state of that pad.
+| `A` **constant**                           | String constant which represents Pad A.
+| `B` **constant**                           | String constant which represents Pad B.
+| `BOTH` **constant**                        | String constant which represents both pads.
 
 ---
 
@@ -201,9 +199,10 @@ We're gradually building our companion app along with some extra features to hel
 
 | Members | Description |
 |:--------|:------------|
-|`send(bytes[])`&nbsp;**function** | Sends data from a **bytes object** `bytes[]` over Bluetooth using the [raw data service](#communication). The length of the bytearray must be equal to or less than the MTU size - 3. This value may be obtained using the `bluetooth.max_length()` function.
-|`receive()` **function** ❌         | Receives data over the [raw data service](#communication) and returns a **bytes object**. 
-|`connected()` **function**        | Returns `True` if the [raw data service](#communication) is connected, otherwise returns `False`.
+|`send(bytes[])` **function**                   | Sends data from a **bytes object** `bytes[]` over Bluetooth using the [raw data service](#communication). The length of `bytes[]` must be equal to or less than the value returned by the `bluetooth.max_length()` function.
+|`receive_callback(callback)`&nbsp;**function** | Assigns a callback to receive data over the [raw data service](#communication). `callback` must be a predefined function taking one argument. The value of the argument will be a **bytes object** `bytes[]` containing the received data. To unbind the callback, issue this function with `callback` set as `None`. If `callback` isn't given when issuing this function, the currently set callback will be returned if it is set.
+|`connected()` **function**                     | Returns `True` if the [raw data service](#communication) is connected, otherwise returns `False`.
+|`max_length()` **function**                    | Returns the maximum data size the Bluetooth host allows for single transfers.
 
 ---
 
