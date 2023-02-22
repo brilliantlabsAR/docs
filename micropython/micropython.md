@@ -42,7 +42,7 @@ def change_text(button):
 touch.callback(touch.BOTH, change_text)
 
 display.fill(0)
-display.text("Tab a touch button", 0, 0, 0xffffff)
+display.text("Tap a touch button", 0, 0, 0xffffff)
 display.show()
 ```
 
