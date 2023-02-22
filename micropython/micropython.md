@@ -121,9 +121,13 @@ We're gradually building our companion app along with some extra features to hel
 
 | Members | Description |
 |:--------|:------------|
-| `capture()` **function** ❌                  | Captures an image and returns it to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are done.
-| `zoom(multiplier)`&nbsp;**function**&nbsp;❌ | Sets the zoom level of the camera. Multiplier can be any floating point number between 1 and 8.
-| `overlay(enable)` **function**             | Enables or disables an overlay of what the camera is currently seeing onto the display.
+| `capture()` **function** ❌                    | Captures an image and returns it to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are done.
+| `overlay(enable)` **function**               | Enables or disables an overlay of what the camera is currently seeing onto the display.
+| `output(x,y,format)`&nbsp;**function**&nbsp;❌ | Set the output resolution and format. `x` and `y` represent the output resolution in pixels. `format` can be either `RGB`, `'YUV'` or `'JPEG'`. The default output settings are `camera.output(640, 400, 'YUV')`.
+| `zoom(multiplier)` **function** ❌             | Sets the zoom level of the camera. Multiplier can be any floating point number between 1 and 8.
+| `RGB` ❌ **constant**                          | String constant which represents a RGB565 output format.
+| `YUV` ❌ **constant**                          | String constant which represents a YUV422 output format.
+| `JPEG` ❌ **constant**                         | String constant which represents a jpeg output format.
 
 ---
 
@@ -159,8 +163,8 @@ We're gradually building our companion app along with some extra features to hel
 |:--------|:------------|
 | `on(color)` **function**             | Illuminates an led. `color` can be either `led.RED` or `led.GREEN`.
 | `off(color)`&nbsp;**function**&nbsp; | Turns off an led. `color` can be either `led.RED` or `led.GREEN`.
-| `RED` **constant**                   | Enumeration of the red led which can be passed to `led.on()` or `led.off()`.
-| `GREEN` **constant**                 | Enumeration of the green led which can be passed to `led.on()` or `led.off()`.
+| `RED` **constant**                   | String constant which represents the red led.
+| `GREEN` **constant**                 | String constant which represents the green led.
 
 ---
 
@@ -172,7 +176,6 @@ We're gradually building our companion app along with some extra features to hel
 |:--------|:------------|
 | `read(addr, n)` **function**            | Reads `n` number of bytes from the 16-bit address `addr`, and returns a **bytes object**.
 | `write(addr,bytes[])`&nbsp;**function** | Writes all bytes from a given **bytes object** `bytes[]` to the 16-bit address `addr`.
-| `status()` **function** ❌                | Returns the current status of the FPGA:<br>- `'RUNNING'` if the FPGA is running a valid bitstream.<br>- `'BAD_BITSTREAM'` if the FPGA cannot run the bitstream stored in memory. In this case, another `update.fpga()` must be performed.
 
 ---
 
@@ -228,8 +231,8 @@ We're gradually building our companion app along with some extra features to hel
 
 | Members | Description |
 |:--------|:------------|
-| `micropython()` **function** | Puts the device into over-the-air device firmware update mode. The device will stay in DFU mode for 5 minutes or until an update is finished being performed. The device will then restart with an updated MicroPython firmware.
-| `fpga(url)`&nbsp;**function**&nbsp;❌ | Downloads and reboots the FPGA with a bitstream provided from the `url`. Automatically wakes up the FPGA if it is shutdown. If the update is interrupted part way through, the FPGA will no longer be running a valid application, and must be updated again. See [FPGA bitstream updates](#fpga-bitstream-updates) to understand how the update process is done.
+| `micropython()`&nbsp;**function** | Puts the device into over-the-air device firmware update mode. The device will stay in DFU mode for 5 minutes or until an update is finished being performed. The device will then restart with an updated MicroPython firmware.
+| `fpga(url)` **function** ❌ | Downloads and reboots the FPGA with a bitstream provided from the `url`. If the update is interrupted part way through, the FPGA will no longer be running a valid application, and must be updated again. See [FPGA bitstream updates](#fpga-bitstream-updates) to understand how the update process is done.
 
 ---
 

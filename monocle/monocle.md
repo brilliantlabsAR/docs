@@ -69,7 +69,7 @@ The FPGA is used for graphics acceleration, as well as image processing of the 5
 
 By default, the FPGA comes pre-loaded our [Graphics & Camera Accelerator IP](https://github.com/brilliantlabsAR/monocle-fpga) and can be accessed using MicroPython commands. Our IP is a perfect starting point if you wish to [create your own FPGA application](#developing-for-the-fpga).
 
-**The latest release for the FPGA IP can be updated via the Micropython [`fpga.update()`](/micropython/micropython#fpga--monocle-specific) command. It is also checked periodically if you are using the Brilliant App**
+**The latest release for the FPGA IP can be updated via the Micropython [`update.fpga()`](/micropython/micropython#fpga--monocle-specific) command. It is also checked periodically if you are using the Brilliant App**
 
 To save power, the FPGA can be shutdown along with the camera and display when not needed. See the [power](#power) section for details. 
 
