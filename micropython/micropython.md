@@ -24,7 +24,7 @@ A subset of the standard MicroPython libraries are currently supported, with mor
 {: .note }
 > **Check that you're on the [latest firmware](#firmware-updates).**
 
-Get started by trying out the [Web Bluetooth REPL](https://repl.siliconwitchery.com) using Google Chrome on your PC, Mac, or Android, or use a Web Bluetooth compatible web browser on your iOS device such as [Bluefy](https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055).
+Get started by trying out the [Web Bluetooth REPL](https://repl.brilliant.xyz) using Google Chrome on your PC, Mac, or Android, or use a Web Bluetooth compatible web browser on your iOS device such as [Bluefy](https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055).
 
 ![Accessing MicroPython on Monocle using the web REPL interface](/micropython/images/micropython-web-repl.png)
 
