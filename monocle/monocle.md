@@ -222,7 +222,7 @@ Generally it's convenient to use the [MicroPython FPGA module](/micropython/micr
 
     ![Monocle main board FPGA JTAG diagram](/monocle/images/monocle-jtag.png)
 
-1. To power the device, reassemble and apply 5V to the charging pads.
+1. To power the device, apply 5V to the charging pads.
 
     ![Monocle charging pads](/monocle/images/monocle-charging-pads.png)
 
