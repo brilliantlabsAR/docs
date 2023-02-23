@@ -185,12 +185,11 @@ We're gradually building our companion app along with some extra features to hel
 
 | Members | Description |
 |:--------|:------------|
-|`read("file",offset,length)`&nbsp;**function**&nbsp;❌ | Reads and returns a **bytes object** from a file within the non-volatile storage. `offset` is an optional position in bytes from the start of the file to read from. Optionally, passing `length` determines how many bytes to read out, otherwise the full file is returned.
-|`create("file", bytes[])` **function** ❌              | Creates a new file with name `"file"` and populates it with data from a **bytes object** `bytes[]`.
-|`append("file", bytes[])` **function** ❌              | Appends data from a **bytes object** `bytes[]` to the end of an existing file.
+|`read("file",length,offset)`&nbsp;**function**&nbsp;❌ | Reads and returns a **bytes object** of length `length` from a file `file` within the non-volatile storage. `offset` is an optional position in bytes from the start of the file to read from.
+|`append("file", bytes[])` **function** ❌              | Appends data from a **bytes object** `bytes[]` to the end of a file within. If the file doesn't exist, then it's created.
 |`delete("file")` **function** ❌                       | Deletes a file from the storage.
-|`list()` **function** ❌                               | Lists all files currently on the device.
-|`FPGA_BITSTREAM` **constant** ❌                       | A special filename which is used for storing the FPGA bitstream. This file can not be deleted, and must be populated for the FPGA to start up.
+|`list()` **function** ❌                               | Lists all files within the storage.
+|`FPGA_BITSTREAM` **constant** ❌                       | A special filename which is used for storing the FPGA bitstream. It is used by the `update.fpga()` function to update the FPGA application.
 
 ---
 
