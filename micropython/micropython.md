@@ -35,13 +35,11 @@ import touch
 import display
 
 def change_text(button):
-    display.fill(0)
     display.text(f"Button {button} touched!", 0, 0, 0xffffff)
     display.show()
 
 touch.callback(touch.BOTH, change_text)
 
-display.fill(0)
 display.text("Tap a touch button", 0, 0, 0xffffff)
 display.show()
 ```
@@ -108,7 +106,7 @@ We're gradually building our companion app along with some extra features to hel
 | `vline(x,y,height,color)` **function**       | Draws a vertical line from the position `x`, `y`, with a given `height` and `color`.
 | `line(x1,y1,x2,y2,color)` **function**       | Draws a straight line from the position `x1`, `y1`, to the position `x2`, `y2`, with a given `color`.
 | `text("string",x,y,color)`&nbsp;**function** | Draws text at the position `x`, `y`, with a given `color`.
-| `show()` **function**                        | Prints the populated frame buffer to the display. After this call, another series of drawing functions may be called and `show()` can be used to print the next frame.
+| `show()` **function**                        | Prints the populated frame buffer to the display. After this call, another series of drawing functions may be called and `show()` can be used to print the next frame. This also clears the display.
 | `brightness(level)` **function**             | Sets the display's brightness. `level` can be 0, 1, 2, 3, or 4.
 | `WIDTH` **constant**                         | The display width in pixels. Equal to 640.
 | `HEIGHT` **constant**                        | The display height in pixels. Equal to 400.
@@ -351,7 +349,7 @@ To perform an update:
 
 1. Download the latest `monocle-vXX.XXX.XXXX.zip` package from our [GitHub releases](https://github.com/brilliantlabsAR/monocle-micropython/releases) page.
 
-1. Issue an update command over MicroPython using `import device; device.update()`. Monocle will now reboot into DFU mode.
+1. Issue an update command over MicroPython using `import update; update.micropython()`. Monocle will now reboot into DFU mode.
 
 1. Using the nRF Connect App, for [desktop](https://www.nordicsemi.com/Products/Development-tools/nrf-connect-for-desktop), [Android](https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp&hl=en&gl=US), or [iOS](https://apps.apple.com/se/app/nrf-connect-for-mobile/id1054362403), you can reconnect to Monocle, select the downloaded `.zip` file, and update to the latest version.
 
