@@ -351,9 +351,9 @@ To perform an update:
 
 1. Download the latest `monocle-vXX.XXX.XXXX.zip` package from our [GitHub releases](https://github.com/brilliantlabsAR/monocle-micropython/releases) page.
 
-1. Issue an update command over MicroPython using `import device; device.update()`. Monocle will now reboot into DFU mode.
+2. Issue an update command over MicroPython using `import update; update.micropython()`. Monocle will now reboot into DFU mode.
 
-1. Using the nRF Connect App, for [desktop](https://www.nordicsemi.com/Products/Development-tools/nrf-connect-for-desktop), [Android](https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp&hl=en&gl=US), or [iOS](https://apps.apple.com/se/app/nrf-connect-for-mobile/id1054362403), you can reconnect to Monocle, select the downloaded `.zip` file, and update to the latest version.
+3. Using the nRF Connect App, for [desktop](https://www.nordicsemi.com/Products/Development-tools/nrf-connect-for-desktop), [Android](https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp&hl=en&gl=US), or [iOS](https://apps.apple.com/se/app/nrf-connect-for-mobile/id1054362403), you can reconnect to Monocle, select the downloaded `.zip` file, and update to the latest version.
 
 ### FPGA bitstream updates
 {: .no_toc }
