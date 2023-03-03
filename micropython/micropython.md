@@ -351,7 +351,7 @@ Within the Web REPL, firmware updates should show up automatically, and you'll b
 
 ---
 
-Under the hood, the update `.zip` file is obtained from the [releases page](https://github.com/brilliantlabsAR/monocle-micropython/releases) of the *monocle-micropython* repository. After that Monocle is rebooted into device firmware update (DFU) mode where the Nordic DFU service handles the transfer of the file data. To read how the DFU mechanim works, you can check the Nordic documentation [here](https://infocenter.nordicsemi.com/topic/sdk_nrf5_v17.1.0/lib_dfu_transport_ble.html).
+Under the hood, the update `.zip` file is obtained from the [releases page](https://github.com/brilliantlabsAR/monocle-micropython/releases) of the *monocle-micropython* repository. After that Monocle is rebooted into device firmware update (DFU) mode where the Nordic DFU service handles the transfer of the file data. To read how the DFU mechanism works, you can check the Nordic documentation [here](https://infocenter.nordicsemi.com/topic/sdk_nrf5_v17.1.0/lib_dfu_transport_ble.html).
 
 For testing everything Bluetooth related, try our the nRF Connect App, for [desktop](https://www.nordicsemi.com/Products/Development-tools/nrf-connect-for-desktop), [Android](https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp&hl=en&gl=US), or [iOS](https://apps.apple.com/se/app/nrf-connect-for-mobile/id1054362403).
 
