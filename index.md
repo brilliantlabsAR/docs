@@ -18,4 +18,4 @@ See what others are making.
 
 Our Discord server is open to all, and is the perfect place to get help with your project.
 
-[Join the Server](https://discord.com/invite/vDS9X7gdwg){: .btn .btn-purple}
+[Join the Server](https://discord.gg/7w3DFxek4p){: .btn .btn-purple}
