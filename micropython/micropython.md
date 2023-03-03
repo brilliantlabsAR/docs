@@ -21,14 +21,13 @@ A subset of the standard MicroPython libraries are currently supported, with mor
 ## Quick start
 {: .no_toc }
 
-{: .note }
-> **Check that you're on the [latest firmware](#firmware-updates).**
-
 Get started by trying out the [Web Bluetooth REPL](https://repl.brilliant.xyz) using Google Chrome on your PC, Mac, or Android, or use a Web Bluetooth compatible web browser on your iOS device such as [Bluefy](https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055).
 
 ![Accessing MicroPython on Monocle using the web REPL interface](/micropython/images/micropython-web-repl.png)
 
 Once you're connected, try running this code:
+
+You can either type it line by line, or use **Paste Mode**. Press **Ctrl-E** to enter paste mode, paste the whole thing, and then press **Ctrl-D** to execute the program.
 
 ```python
 import touch
@@ -43,18 +42,6 @@ touch.callback(touch.BOTH, change_text)
 display.text("Tap a touch button", 0, 0, 0xffffff)
 display.show()
 ```
-
----
-
-## Mobile app
-{: .no_toc }
-
-We're gradually building our companion app along with some extra features to help you get the most out of Monocle. It's also a great place to start if you'd like to make your own app, and the source code is freely available on our [GitHub](https://github.com/brilliantlabsAR/brilliant-mobile-app).
-
-<div style="text-align:center" markdown="1">
-[<img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Apple App Store badge" width="175"/>](https://apps.apple.com/us/app/monocle-by-brilliant/id1632203938)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[<img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play Store badge" width="175"/>](https://play.google.com/store/apps/details?id=com.brilliantmonocle)
-</div>
 
 ---
 
@@ -304,6 +291,8 @@ We're gradually building our companion app along with some extra features to hel
 
 This section describes how data is transferred to and from Monocle over Bluetooth.
 
+For testing everything Bluetooth related, try our the nRF Connect App, for [desktop](https://www.nordicsemi.com/Products/Development-tools/nrf-connect-for-desktop), [Android](https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp&hl=en&gl=US), or [iOS](https://apps.apple.com/se/app/nrf-connect-for-mobile/id1054362403).
+
 ### Communication
 {: .no_toc }
 
@@ -341,17 +330,30 @@ The first payload includes metadata about the file such as the filename (with a 
 ### Firmware updates
 {: .no_toc }
 
-Updates of the MicroPython firmware are handled using Nordic's over-the-air device firmware update process. 
+Within the Web REPL, firmware updates should show up automatically, and you'll be prompted to update. If it doesn't work. You can follow these steps:
 
-To perform an update:
+1. Make sure you're using a Bluetooth enabled web browser such as Google Chrome on desktop, Android Chrome, or Bluefy on iOS.
+1. Navigate to the repl at [repl.brilliant.xyz](https://repl.brilliant.xyz)
+1. Take monocle out of the case. It should turn on.
+1. Press any key in the repl to connect.
+1. Select **monocle** from the Bluetooth menu that appears.
+1. An update notification should appear at the bottom. Click it.
+    
+    If it doesn’t show up, you can force an update using the commands:
 
-1. Check which version of the firmware you current have by entering `import device; device.VERSION`.
+    ```python
+    import update;update.micropython()
+    ```
+1. Monocle will disconnect, and you’ll see a message to reconnect again.
+1. Press any key to reconnect and select **DFUTarg** from the Bluetooth menu.
+1. The update should start, and you'll see the progress.
+1. If anything goes wrong, simply try again.
 
-1. Download the latest `monocle-vXX.XXX.XXXX.zip` package from our [GitHub releases](https://github.com/brilliantlabsAR/monocle-micropython/releases) page.
+---
 
-1. Issue an update command over MicroPython using `import update; update.micropython()`. Monocle will now reboot into DFU mode.
+Under the hood, the update `.zip` file is obtained from the [releases page](https://github.com/brilliantlabsAR/monocle-micropython/releases) of the *monocle-micropython* repository. After that Monocle is rebooted into device firmware update (DFU) mode where the Nordic DFU service handles the transfer of the file data. To read how the DFU mechanim works, you can check the Nordic documentation [here](https://infocenter.nordicsemi.com/topic/sdk_nrf5_v17.1.0/lib_dfu_transport_ble.html).
 
-1. Using the nRF Connect App, for [desktop](https://www.nordicsemi.com/Products/Development-tools/nrf-connect-for-desktop), [Android](https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp&hl=en&gl=US), or [iOS](https://apps.apple.com/se/app/nrf-connect-for-mobile/id1054362403), you can reconnect to Monocle, select the downloaded `.zip` file, and update to the latest version.
+For testing everything Bluetooth related, try our the nRF Connect App, for [desktop](https://www.nordicsemi.com/Products/Development-tools/nrf-connect-for-desktop), [Android](https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp&hl=en&gl=US), or [iOS](https://apps.apple.com/se/app/nrf-connect-for-mobile/id1054362403).
 
 ### FPGA bitstream updates
 {: .no_toc }

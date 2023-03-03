@@ -8,7 +8,13 @@ nav_order: 4
 # Updating your Monocle firmware
 {: .no_toc }
 
-Follow this video to update your device. The same steps are also described below.
+Firmware updates should be automatic if you're using the Web REPL at [repl.brilliant.xyz](https://repl.brilliant.xyz).
+
+Make sure you're on Google Chrome for Desktop, Android Chrome, or [Bluefy](https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055) on iOS.
+
+---
+
+If that does work, you can follow this tutorial to update manually. The same steps are also described below.
 
 <div style="display: flex; justify-content: center"> 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/-DYI3DfHPyw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
