@@ -163,16 +163,13 @@ Monocle contains two LEDs (green and red) connected to GPIOs on the PMIC. They a
 
 ## Charging case
 
-Monocle is provided with a compact charging case for taking on the go. When inserted into the case, Monocle will begin to recharge from the charging case battery. The case battery can provide several full charges of the Monocle and be itself recharged from a standard 500mA USB Type-C jack.
+Monocle is provided with a compact charging case for taking on the go. When inserted into the case, Monocle will begin to recharge from the charging case battery. The case battery can provide several full charges of the Monocle and be itself recharged from a standard 500mA USB Type-C jack. While charging, the case will show an orange LED. Once the LED turns off, the case is fully charged.
 
 ![Annotation of the Monocle charging case](/monocle/images/monocle-charging-case.png)
 
-When placed into the charger, the PMIC, and thus the Bluetooth MCU will detect the charge voltage and be able to shut down the peripherals to efficiently charge. Upon removal from the case, the Bluetooth MCU firmware will restore the Monocle into a normal power mode.
+When placed into the charger, the Monocle will detect the charge voltage and shut down all peripherals to efficiently charge. Upon removal from the case, and touching of either of the touch pads, Monocle will return into its normally powered state.
 
-Once placed on the charging case, it can take up to 10s for the monocle to detect it and go to sleep.
-
-The charging case has an orange led glowing when it is charging its own internal battery.
-Checking the charge status of the Monocle is to be done from the [API](/micropython/micropython/#device--monocle-specific), such as text showing the battery level on a corner.
+Note that once placed into the charging case, it can take up to 10s for charging to begin. During this time, Monocle will look as if it's awake. If Monocle does not go to sleep after 10 seconds, ensure that the charging case is sufficently charged (by placing it on USB-C charging), or ensure that `device.prevent_sleep()` is disabled.
 
 ---
 
