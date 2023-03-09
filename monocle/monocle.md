@@ -172,7 +172,7 @@ When placed into the charger, the PMIC, and thus the Bluetooth MCU will detect t
 Once placed on the charging case, it can take up to 10s for the monocle to detect it and go to sleep.
 
 The charging case has an orange led glowing when it is charging its own internal battery.
-Checking the charge status of the Monocle is to be done from the [API](../micropython/micropython/#device--monocle-specific), such as text showing the battery level on a corner.
+Checking the charge status of the Monocle is to be done from the [API](/micropython/micropython/#device--monocle-specific), such as text showing the battery level on a corner.
 
 ---
 
