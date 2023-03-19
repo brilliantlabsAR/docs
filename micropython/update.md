@@ -8,41 +8,34 @@ nav_order: 4
 # Updating your Monocle firmware
 {: .no_toc }
 
-Firmware updates should be automatic if you're using the Web REPL at [repl.brilliant.xyz](https://repl.brilliant.xyz).
+You can use the Brilliant WebREPL directly from your browser to keep your Monocle up to date. 
 
-Make sure you're on Google Chrome for Desktop, Android Chrome, or [Bluefy](https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055) on iOS.
+1. Firstly, ensure that you're using a browser that supports Web Bluetooth such as Google Chrome for Desktop, Android Chrome, or [Bluefy](https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055) on iOS.
 
----
+1. Next, navigate to the Web REPL at [https://repl.brilliant.xyz](https://repl.brilliant.xyz)
 
-If that does work, you can follow this tutorial to update manually. The same steps are also described below.
+1. Press any key to open the connection dialog box.
 
-<div style="display: flex; justify-content: center"> 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/-DYI3DfHPyw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-</div>
+1. Select **monocle** from the list and hit connect. (Note, if a previous update had failed, you may see **DFUTarg** in the list. In this case, connect to that instead).
 
-## Steps:
+1. Once connected, check the message at the bottom of the screen. If it says `Connected.` that means that you're already on the latest firmware, if not, you will be prompted that an update is available and you can click the update button to start the update.
 
-1. Make sure your Monocle is well charged before starting an update.
-
-1. Download both the Brilliant App as well as the nRF Connect App.
-    - Get the **Brilliant App** on Apple [AppStore](https://apps.apple.com/us/app/monocle-by-brilliant/id1632203938) or Google [Play Store](https://play.google.com/store/apps/details?id=com.brilliantmonocle).
-    - Get the **nRF Connect App** on Apple [AppStore](https://apps.apple.com/us/app/nrf-connect-for-mobile/id1054362403) or Google [Play Store](https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp&hl=en&gl=US).
-
-1. Download the latest firmware from our [releases page](https://github.com/brilliantlabsAR/monocle-micropython/releases), and save it to your mobile.
-
-1. Connect to the Monocle from within the Brilliant App, and type the commands:
+1. If you see a message that the current firmware could not be detected, then you can use the following commands to start the update manually:
 
     ```python
     import update
     update.micropython()
     ```
 
-1. Switch to the nRF Connect App, and connect to **"DFUTarg"**.
+1. Monocle will then restart into the update mode, and you'll be prompted to reconnect. Press any key to open the connection dialog box again.
 
-1. Switch to the DFU tab, select your file, and start the update.
+1. Select **DFUTarg** from the list, and connect.
 
-1. Keep Monocle close, and don't switch app while the update is in progress.
+1. The firmware update will start and Monocle will reboot. You may need to place your Monocle into the case once the update is complete to reboot it.
 
-Once the update is complete, Monocle will restart, and will be running the new firmware.
+1. That's it! You're Monocle should now be up to date. Check it by using the commands below once connected again. The version number should match the latest release on the Monocle MicroPython [releases page](https://github.com/brilliantlabsAR/monocle-micropython/releases).
 
-If the update process stops for any reason, simply put Monocle back into the case, search for **"DFUTarg"** from within the nRF Connect App, and try again.
+    ```python
+    import device
+    device.VERSION
+    ```
