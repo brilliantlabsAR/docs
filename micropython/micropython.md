@@ -78,6 +78,7 @@ display.show()
 | `reset_cause()` **function**                  | Returns the reason for the previous reset or startup state. These can be either:<br>- `'POWERED_ON'` if the device was powered on normally<br>- `'SOFTWARE_RESET'` if `device.reset()` was called<br>- `'CRASHED'` if the device had crashed.
 | `prevent_sleep(enable)`&nbsp;**function**     | Enables or disables sleeping of the device when put back into the charging case. Sleeping is enabled by default. If no argument is given. The currently set value is returned. **WARNING: Running monocle for prolonged periods may result in display burn in, as well as reduced lifetime of components.**
 | `force_sleep()` **function**                  | Puts the device to sleep. All hardware components are shut down, and Bluetooth is disconnected. Upon touching either of the touch pads, the device will wake up, and reset.
+| `Storage(start, length)` **class**            | The `Storage` class is used internally for initializing and accessing the file system. This class shouldn't be accessed, unless you want to reformat the internal storage. To learn more about how MicroPython handles user files, have a look at the documentation [here](https://docs.micropython.org/en/latest/esp8266/tutorial/filesystem.html) and [here](https://docs.micropython.org/en/latest/reference/filesystem.html).
 
 ---
 
@@ -107,7 +108,7 @@ display.show()
 | Members | Description |
 |:--------|:------------|
 | `capture()` **function** ❌                    | Captures an image and returns it to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are done.
-| `overlay(enable)` **function**               | Enables or disables an overlay of what the camera is currently seeing onto the display.
+| `overlay(enable)` **function**                 | Enables or disables an overlay of what the camera is currently seeing onto the display.
 | `output(x,y,format)`&nbsp;**function**&nbsp;❌ | Set the output resolution and format. `x` and `y` represent the output resolution in pixels. `format` can be either `RGB`, `'YUV'` or `'JPEG'`. The default output settings are `camera.output(640, 400, 'YUV')`.
 | `zoom(multiplier)` **function** ❌             | Sets the zoom level of the camera. Multiplier can be any floating point number between 1 and 8.
 | `RGB` ❌ **constant**                          | String constant which represents a RGB565 output format.
@@ -155,26 +156,12 @@ display.show()
 
 ### `fpga` – Monocle specific
 
-> The FPGA module allows for direct control of the FPGA, as well as the ability to update the bitstream.
+> The FPGA module allows for communicating with the FPGA over the internal SPI bus.
 
 | Members | Description |
 |:--------|:------------|
 | `read(addr, n)` **function**            | Reads `n` number of bytes from the 16-bit address `addr`, and returns a **bytes object**.
 | `write(addr,bytes[])`&nbsp;**function** | Writes all bytes from a given **bytes object** `bytes[]` to the 16-bit address `addr`.
-
----
-
-### `storage` - Monocle specific
-
-> Storage can be used for reading or writing to files within the non-volatile storage. `"file"` can be any user defined string, however certain strings are reserved for special uses such as `"fpga-bitstream"` which is used to store the FPGA application.
-
-| Members | Description |
-|:--------|:------------|
-|`read("file",length,offset)`&nbsp;**function**&nbsp;❌ | Reads and returns a **bytes object** of length `length` from a file `file` within the non-volatile storage. `offset` is an optional position in bytes from the start of the file to read from.
-|`append("file", bytes[])` **function** ❌              | Appends data from a **bytes object** `bytes[]` to the end of a file within. If the file doesn't exist, then it's created.
-|`delete("file")` **function** ❌                       | Deletes a file from the storage.
-|`list()` **function** ❌                               | Lists all files within the storage.
-|`FPGA_BITSTREAM` **constant** ❌                       | A special filename which is used for storing the FPGA bitstream. It is used by the `update.fpga()` function to update the FPGA application.
 
 ---
 
@@ -205,18 +192,18 @@ display.show()
 | `sleep_ms(msecs)` **function**                 | Sleep for a given number of milliseconds.
 | `ticks_ms()` **function**                      | Returns a timestamp in milliseconds since power on.
 | `ticks_add(ticks, delta)` **function**         | Offsets a timestamp value by a given number. Can be positive or negative.
-| `ticks_diff(ticks1,ticks2)`&nbsp;**function** | Returns the difference between two timestamps. i.e. `ticks1 - ticks2`, but takes into consideration if the numbers wrap around.
+| `ticks_diff(ticks1,ticks2)`&nbsp;**function**  | Returns the difference between two timestamps. i.e. `ticks1 - ticks2`, but takes into consideration if the numbers wrap around.
 
 ---
 
 ### `update` - Monocle specific
 
-> The update module allows for firmware upgrades of the MicroPython firmware, as well as the FPGA bitstream over bluetooth.
+> The update module allows for firmware upgrades of the MicroPython firmware, as well as the FPGA application over bluetooth.
 
 | Members | Description |
 |:--------|:------------|
 | `micropython()`&nbsp;**function** | Puts the device into over-the-air device firmware update mode. The device will stay in DFU mode for 5 minutes or until an update is finished being performed. The device will then restart with an updated MicroPython firmware.
-| `fpga(url)` **function** ❌ | Downloads and reboots the FPGA with a bitstream provided from the `url`. If the update is interrupted part way through, the FPGA will no longer be running a valid application, and must be updated again. See [FPGA bitstream updates](#fpga-bitstream-updates) to understand how the update process is done.
+| `Fpga` **class**                  | `Fpga` contains three low level functions which are used to update the FPGA. `Fpga.erase()` erases the existing application, `Fpga.write(bytes[])` sequentially writes in the new application, and `Fpga.read(address, length)` can be used to read back and verify the application. For details on how the FPGA application is updated, check out the [FPGA application updates](#fpga-application-updates) section.
 
 ---
 
@@ -258,11 +245,15 @@ display.show()
 
 ### `uio`
 
-> Standard MicroPython [IO streams](https://docs.micropython.org/en/latest/library/io.html) **except** for `FileIO` are supported.
+> Standard MicroPython [IO streams](https://docs.micropython.org/en/latest/library/io.html) are supported.
 
 ### `ujson`
 
 > Standard MicroPython [JSON handling](https://docs.micropython.org/en/latest/library/json.html) is supported.
+
+### `uos`
+
+> Standard MicroPython [operating system](https://docs.micropython.org/en/latest/library/os.html) services for file handling are supported.
 
 ### `urandom`
 
@@ -355,7 +346,30 @@ Under the hood, the update `.zip` file is obtained from the [releases page](http
 
 For testing everything Bluetooth related, try our the nRF Connect App, for [desktop](https://www.nordicsemi.com/Products/Development-tools/nrf-connect-for-desktop), [Android](https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp&hl=en&gl=US), or [iOS](https://apps.apple.com/se/app/nrf-connect-for-mobile/id1054362403).
 
-### FPGA bitstream updates
+### FPGA application updates
 {: .no_toc }
 
-Details coming soon.
+FPGA application updates are automatically updated when using the Brilliant WebREPL.
+
+For simplicity, the WebREPL encodes the application binary file to base-64 format, and simply sends the data over the raw REPL. The entire process is shown below.
+
+```python
+import device
+import update
+import ubinascii
+
+# Erases the entire application
+update.Fpga.erase()
+
+# Send exactly 444430 bytes. Each write appends to the already written data
+# There's no limitation on how many bytes you can send, but it should be
+# tuned to match the host MTU length for a faster upload speed
+update.Fpga.write(ubinascii.a2b_base64(b'TWFueSBoYW5kcyBtYWt...lIGxpZ2h0IHdvcmsu'))
+...
+update.Fpga.write(ubinascii.a2b_base64(b'yBtYWtTWFueSBoYW5kc...cmslIGxpZIHd2h0vu'))
+
+# Write the special "done" flag at the end of the file
+update.Fpga.write(b'done')
+
+device.reset()
+```
