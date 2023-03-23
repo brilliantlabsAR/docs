@@ -70,8 +70,8 @@ display.show()
 |:--------|:------------|
 | `NAME` **constant**                           | Constant which holds `'monocle'` as a **string**.
 | `mac_address()` **function**                  | Returns the 48-bit MAC address as a 17 character **string** in the format `'xx:xx:xx:xx:xx:xx'`, where each `xx` is a byte in lowercase hex format.
-| `VERSION` **constant**                        | Constant containing the firmware version as a **string**. E.g. `'monocle-firmware-v22.342.1252'`.
-| `GIT_TAG` **constant**                        | Constant containing the build git tag as a 7 character **string**.
+| `VERSION` **constant**                        | Constant containing the firmware version as a 12 character **string**. E.g. `'v22.342.1252'`.
+| `GIT_TAG` **constant**                        | Constant containing the build git tag as a 9 character **string**.
 | `GIT_REPO` **constant**                       | Constant containing the project git repo as a **string**.
 | `battery_level()` **function**                | Returns the battery level percentage as an **integer**.
 | `reset()` **function**                        | Resets the device.
