@@ -220,7 +220,7 @@ Generally it's convenient to use the [MicroPython FPGA module](/micropython/micr
 
     ![Monocle main board FPGA JTAG diagram](/monocle/images/monocle-swd.png)
 
-1. The programming pins for the FPGA are shown below. You can use Gowin's GWU2X based dongles to program the FPGA directly from within the IDE. Alternatively, [openFPGAloader](https://github.com/trabucayre/openFPGALoader) works as an open source alternative and can be used with a variety of programmers, such as [FTDI FT2232 based dongles](https://www.seeedstudio.com/Sipeed-USB-JTAG-TTL-RISC-V-Debugger-ST-Link-V2-STM8-STM32-Simulator-p-2910.html).
+1. The programming pins for the FPGA are shown below. You can use Gowin's GWU2X based dongles to program the FPGA directly from within the IDE. Alternatively, [openFPGAloader](https://github.com/trabucayre/openFPGALoader) works as an open source alternative and can be used with a variety of programmers, such as [FTDI FT2232 based dongles](https://www.seeedstudio.com/Sipeed-USB-JTAG-TTL-RISC-V-Debugger-ST-Link-V2-STM8-STM32-Simulator-p-2910.html). Note that you will need to perform [level shifting](https://en.wikipedia.org/wiki/Level_shifter) between the 3.3V of most tools and the 1.8V of the FPGA, to avoid damaging it. If programming the internal flash, care must be taken to not perform so while the firmware is starting, which could provoke damage to the internal flash (see [RECONFIG_N](http://cdn.gowinsemi.com.cn/UG290E.pdf)).
 
     ![Monocle main board FPGA JTAG diagram](/monocle/images/monocle-jtag.png)
 
