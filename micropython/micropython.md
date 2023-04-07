@@ -73,6 +73,13 @@ We're gradually building our companion app along with some extra features to hel
 
 > Standard MicroPython [built in functions](https://docs.micropython.org/en/latest/library/builtins.html) are supported.
 
+```
+import builtins
+
+# List all built-in functions supported by MicroPython
+help(builtins)
+```
+
 ---
 
 ### `device` – Monocle specific
@@ -91,6 +98,21 @@ We're gradually building our companion app along with some extra features to hel
 | `reset_cause()` **function**                  | Returns the reason for the previous reset or startup state. These can be either:<br>- `'POWERED_ON'` if the device was powered on normally<br>- `'SOFTWARE_RESET'` if `device.reset()` was called<br>- `'CRASHED'` if the device had crashed.
 | `prevent_sleep(enable)`&nbsp;**function**     | Enables or disables sleeping of the device when put back into the charging case. Sleeping is enabled by default. If no argument is given. The currently set value is returned. **WARNING: Running monocle for prolonged periods may result in display burn in, as well as reduced lifetime of components.**
 | `force_sleep()` **function**                  | Puts the device to sleep. All hardware components are shut down, and Bluetooth is disconnected. Upon touching either of the touch pads, the device will wake up, and reset.
+
+```python
+import device
+
+# Check the firmware version manually
+print(device.VERSION)
+
+# Prevent the device from sleeping while put in the charging case
+# not for too long to avoid burn-ins marks on the dislay...
+device.prevent_sleep(True)
+
+# Reboot the deice from MicroPython
+device.reset()
+
+```
 
 ---
 
@@ -127,6 +149,17 @@ We're gradually building our companion app along with some extra features to hel
 | `YUV` ❌ **constant**                          | String constant which represents a YUV422 output format.
 | `JPEG` ❌ **constant**                         | String constant which represents a jpeg output format.
 
+```python
+import camera
+
+# Verify the overlay status
+camera.overlay()
+
+# Turn on and off the mirroring from camera to display
+camera.overlay(True)
+camera.overlay(False)
+```
+
 ---
 
 ### `microphone` – Monocle specific
@@ -151,6 +184,20 @@ We're gradually building our companion app along with some extra features to hel
 | `B` **constant**                           | String constant which represents Pad B.
 | `BOTH` **constant**                        | String constant which represents both pads.
 
+```python
+import touch
+
+# Define a function used as a callback
+def fn(arg):
+    if arg == touch.A:
+        print("button A")
+    if arg == touch.B:
+        print("button B")
+
+# Bind the callback to the button actions
+touch.callback(touch.BOTH, fn)
+```
+
 ---
 
 ### `led` – Monocle specific
@@ -164,6 +211,13 @@ We're gradually building our companion app along with some extra features to hel
 | `RED` **constant**                   | String constant which represents the red led.
 | `GREEN` **constant**                 | String constant which represents the green led.
 
+```python
+import led
+
+# Turn the green LED on
+led.on(led.GREEN)
+```
+
 ---
 
 ### `fpga` – Monocle specific
@@ -174,6 +228,19 @@ We're gradually building our companion app along with some extra features to hel
 |:--------|:------------|
 | `read(addr, n)` **function**            | Reads `n` number of bytes from the 16-bit address `addr`, and returns a **bytes object**.
 | `write(addr,bytes[])`&nbsp;**function** | Writes all bytes from a given **bytes object** `bytes[]` to the 16-bit address `addr`.
+
+```
+import fpga
+
+# Read the FGPA release version
+fpga.read(0x0002, 3)
+
+# Write command `0x34` to FPGA peripheral `0x12` 
+fpga.write(0x1234, b'')
+
+# Write a command then some payload data to FPGA
+fpga.write(0x1234, b'\x01\x02\x03\x04\x05')
+```
 
 ---
 
@@ -189,6 +256,22 @@ We're gradually building our companion app along with some extra features to hel
 |`list()` **function** ❌                               | Lists all files within the storage.
 |`FPGA_BITSTREAM` **constant** ❌                       | A special filename which is used for storing the FPGA bitstream. It is used by the `update.fpga()` function to update the FPGA application.
 
+```python
+import os
+
+# Create a new file in write mode
+with open("path_to_file.py", "w") as f:
+
+    # Write some python code to that file
+    f.write("print('hello world!')\n")
+
+# List the existing files at the root directory "/"
+os.list("/")
+
+# Execute an existing python file
+import path_to_file
+```
+
 ---
 
 ### `bluetooth` - Monocle specific
@@ -201,6 +284,27 @@ We're gradually building our companion app along with some extra features to hel
 |`receive_callback(callback)`&nbsp;**function** | Assigns a callback to receive data over the [raw data service](#communication). `callback` must be a predefined function taking one argument. The value of the argument will be a **bytes object** `bytes[]` containing the received data. To unbind the callback, issue this function with `callback` set as `None`. If `callback` isn't given when issuing this function, the currently set callback will be returned if it is set.
 |`connected()` **function**                     | Returns `True` if the [raw data service](#communication) is connected, otherwise returns `False`.
 |`max_length()` **function**                    | Returns the maximum data size the Bluetooth host allows for single transfers.
+
+```python
+import bluetooth
+
+# Get the MTU size to make sure of how much data we can send.
+len = bluetooth.max_length()
+
+# Send a string over Bluetooth
+# The host at the other side will need some code that reads that string.
+# This will be sent as a single BLE packet of the same size.
+str = "hello world"
+bluetooth.send(str[:len])
+
+# Define a function that will handle data reception
+# The host at the other end will need some code that sends that string.
+def fn(bytes):
+    print(bytes)
+
+# Activate the reception of all data to that function
+bluetooth.receive_callback(fn)
+```
 
 ---
 
@@ -220,6 +324,25 @@ We're gradually building our companion app along with some extra features to hel
 | `ticks_add(ticks, delta)` **function**         | Offsets a timestamp value by a given number. Can be positive or negative.
 | `ticks_diff(ticks1,ticks2)`&nbsp;**function** | Returns the difference between two timestamps. i.e. `ticks1 - ticks2`, but takes into consideration if the numbers wrap around.
 
+```python
+import utime
+
+# Sleep for 1.5 second
+time.sleep_ms(1500)
+
+# Build a time/date string value into a timestamp, using the UTC (00:00) timezone
+t = time.mktime({"timezone": "00:00", "weekday": "friday", "minute": 2, "day": 20, "yearday": 20, "month": 1, "second": 51, "hour": 22, "year": 2023})
+
+# Set that time to be the current time
+time.time(t)
+
+# Show the current time in HH:MM format
+t = time.now()
+hour = t["hour"]
+minute = t["minute"]
+print(f"{hour:02d}:{minute:02d}")
+```
+
 ---
 
 ### `update` - Monocle specific
@@ -231,11 +354,29 @@ We're gradually building our companion app along with some extra features to hel
 | `micropython()`&nbsp;**function** | Puts the device into over-the-air device firmware update mode. The device will stay in DFU mode for 5 minutes or until an update is finished being performed. The device will then restart with an updated MicroPython firmware.
 | `fpga(url)` **function** ❌ | Downloads and reboots the FPGA with a bitstream provided from the `url`. If the update is interrupted part way through, the FPGA will no longer be running a valid application, and must be updated again. See [FPGA bitstream updates](#fpga-bitstream-updates) to understand how the update process is done.
 
+```python
+import update
+
+# Reboot the Monocle into update mode
+update.micropython()
+```
+
 ---
 
 ### `gc`
 
 > Standard MicroPython [garbage collection](https://docs.micropython.org/en/latest/library/gc.html) is supported.
+
+```python
+import gc
+
+# Show the memory usage (in percent)
+mem_used = gc.mem_alloc() / (gc.mem_alloc() + gc.mem_free())
+print('{:d}%'.format(round(mem_used * 100)))
+
+# Manually run the garbage collector
+gc.collect()
+```
 
 ### `math`
 
