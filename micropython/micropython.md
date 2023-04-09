@@ -105,14 +105,13 @@ device.battery_level() # Returns the current battery level as a percentage
 
 | Members | Description |
 |:--------|:------------|
-| `fill(color)` **function**                   | Fills the entire display with a color. `color` should be a 24-bit RGB value such as `0xAABBCC`.
-| `pixel(x, y, color)` **function** ❌           | Draws a single pixel of color `color` at the position `x`, `y`.
-| `hline(x,y,width,color)` **function**        | Draws a horizontal line from the position `x`, `y`, with a given `width` and `color`.
-| `vline(x,y,height,color)` **function**       | Draws a vertical line from the position `x`, `y`, with a given `height` and `color`.
-| `line(x1,y1,x2,y2,color)` **function**       | Draws a straight line from the position `x1`, `y1`, to the position `x2`, `y2`, with a given `color`.
-| `text("string",x,y,color)`&nbsp;**function** | Draws text at the position `x`, `y`, with a given `color`.
-| `show()` **function**                        | Prints the populated frame buffer to the display. After this call, another series of drawing functions may be called and `show()` can be used to print the next frame. This also clears the display.
 | `brightness(level)` **function**             | Sets the display's brightness. `level` can be 0, 1, 2, 3, or 4.
+| `Rect(width, height, color)` **class**       | Rectangle with given width, height and color [1]
+| `Line(width, height, color)` **class**       | Rectangle with given width, height and color [1]
+| `Polygon(list, fill=, stroke=, width=)` **class** | Polygon with given fill and stroke color [1], the shape is defined by a `list` of tuples of `(x, y)` coordinates.
+| `Polyline(list, [width,])` **class**         | Segmented line with given fill and stroke color [1], the segments are defined by a `list` of tuples of `(x, y)` coordinates.
+| `Text(string, color)`                        | Display the given `string` with the given `color` [1]
+| `show(list)` **function**                    | Show a list of shapes onto the display.
 | `WIDTH` **constant**                         | The display width in pixels. Equal to 640.
 | `HEIGHT` **constant**                        | The display height in pixels. Equal to 400.
 
