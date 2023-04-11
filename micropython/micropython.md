@@ -126,11 +126,67 @@ device.reset()
 | `Rect(width, height, color)` **class**       | Rectangle with given width, height and color [1]
 | `Line(width, height, color)` **class**       | Rectangle with given width, height and color [1]
 | `Polygon(list, fill=, stroke=, width=)` **class** | Polygon with given fill and stroke color [1], the shape is defined by a `list` of tuples of `(x, y)` coordinates.
-| `Polyline(list, [width,])` **class**         | Segmented line with given fill and stroke color [1], the segments are defined by a `list` of tuples of `(x, y)` coordinates.
+| `Polyline(list, color, [width])` **class**  | Segmented line with given color [1], the segments are defined by a `list` of tuples of `(x, y)` coordinates.
 | `Text(string, color)`                        | Display the given `string` with the given `color` [1]
 | `show(list)` **function**                    | Show a list of shapes onto the display.
 | `WIDTH` **constant**                         | The display width in pixels. Equal to 640.
 | `HEIGHT` **constant**                        | The display height in pixels. Equal to 400.
+| `BLACK` **constant**                         | Configurable color, `#000000` by default [1].
+| `RED` **constant**                           | Configurable color, `#ad2323` by default [1].
+| `GREEN` **constant**                         | Configurable color, `#1d6914` by default [1].
+| `BLUE` **constant**                          | Configurable color, `#2a4bd7` by default [1].
+| `CYAN` **constant**                          | Configurable color, `#29d0d0` by default [1].
+| `MAGENTA` **constant**                       | Configurable color, `#8126c0` by default [1].
+| `YELLOW` **constant**                        | Configurable color, `#ffee33` by default [1].
+| `WHITE` **constant**                         | Configurable color, `#ffffff` by default [1].
+| `GRAY1` **constant**                         | Configurable color, `#1c1c1c` by default [1].
+| `GRAY2` **constant**                         | Configurable color, `#383838` by default [1].
+| `GRAY3` **constant**                         | Configurable color, `#555555` by default [1].
+| `GRAY4` **constant**                         | Configurable color, `#717171` by default [1].
+| `GRAY5` **constant**                         | Configurable color, `#8d8d8d` by default [1].
+| `GRAY6` **constant**                         | Configurable color, `#aaaaaa` by default [1].
+| `GRAY7` **constant**                         | Configurable color, `#c6c6c6` by default [1].
+| `GRAY8` **constant**                         | Configurable color, `#e2e2e2` by default [1].
+
+> [1]: The colors are small values that do not permit to express the full palette of the display.
+>     the 16 default values can be one of the constants listed above.
+>     There will be an API to customize these colors coming in the future.
+
+```python
+from display import *
+
+# Create a list that will contain all the thing we want to display
+list = []
+
+# It has a long red horizontal rectangle that we place near the middle
+list += Rect(10, 30, RED).move(300, 200)
+
+# It has a vertical line with 5 segments doing some zig-zags.
+list += Polyline([(10,20), (40,40), (10,60), (40,80), (10,100), (40,120)], 
+
+# It has a triangle filled in yellow, moved to the top right corner.
+list += Polygon([(0,0), (10,0), (5,8)], fill=YELLOW).move(WIDTH - 50, HEIGHT - 50)
+
+# It has a diagonal line through the whole display, bottom left to top right
+list += Line(WIDTH, HEIGHT, WHITE)
+
+# In a separate list, we store a few text messages
+text = []
+text += Text("something less", WHITE)
+text += Text("something more", WHITE)
+
+# Then we display all of that at once
+show(list + text)
+
+# Then we display the list of geometric shapes with alternative text
+show(list + Text("something different", YELLOW)
+
+# Finally, we modify each of the text list's content and display that
+# along with the geometric shapes
+for x in text:
+    text[x].str = "something else"
+show(list + text)
+```
 
 ---
 
