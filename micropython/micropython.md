@@ -60,6 +60,14 @@ display.show()
 
 > Standard MicroPython [built in functions](https://docs.micropython.org/en/latest/library/builtins.html) are supported.
 
+#### Example
+{: .no_toc }
+
+```python
+import builtins
+help(builtins) # Lists all of the built-in MicroPython functions
+```
+
 ---
 
 ### `device` – Monocle specific
@@ -79,6 +87,15 @@ display.show()
 | `prevent_sleep(enable)`&nbsp;**function**     | Enables or disables sleeping of the device when put back into the charging case. Sleeping is enabled by default. If no argument is given. The currently set value is returned. **WARNING: Running monocle for prolonged periods may result in display burn in, as well as reduced lifetime of components.**
 | `force_sleep()` **function**                  | Puts the device to sleep. All hardware components are shut down, and Bluetooth is disconnected. Upon touching either of the touch pads, the device will wake up, and reset.
 | `Storage(start, length)` **class**            | The `Storage` class is used internally for initializing and accessing the file system. This class shouldn't be accessed, unless you want to reformat the internal storage. To learn more about how MicroPython handles user files, have a look at the documentation [here](https://docs.micropython.org/en/latest/esp8266/tutorial/filesystem.html) and [here](https://docs.micropython.org/en/latest/reference/filesystem.html).
+
+#### Example
+{: .no_toc }
+
+```python
+import device
+device.VERSION # Prints the device firmware version
+device.battery_level() # Returns the current battery level as a percentage
+```
 
 ---
 
@@ -115,6 +132,15 @@ display.show()
 | `YUV` ❌ **constant**                          | String constant which represents a YUV422 output format.
 | `JPEG` ❌ **constant**                         | String constant which represents a jpeg output format.
 
+#### Example
+{: .no_toc }
+
+```python
+import camera
+camera.overlay(True) # Turns on mirroring from the camera to the display
+camera.overlay(False) # Turns off mirroring from the camera to the display
+```
+
 ---
 
 ### `microphone` – Monocle specific
@@ -139,6 +165,23 @@ display.show()
 | `B` **constant**                           | String constant which represents Pad B.
 | `BOTH` **constant**                        | String constant which represents both pads.
 
+#### Example
+{: .no_toc }
+
+```python
+import touch
+
+# Define the touch callback function which is triggered upon a touch event
+def fn(arg):
+    if arg == touch.A:
+        print("button A pressed!")
+    if arg == touch.B:
+        print("button B pressed!")
+
+touch.callback(touch.BOTH, fn) # Attaches the callback to the both buttons
+touch.callback(touch.A, fn) # Attaches the callback to an individual button
+```
+
 ---
 
 ### `led` – Monocle specific
@@ -152,6 +195,18 @@ display.show()
 | `RED` **constant**                   | String constant which represents the red led.
 | `GREEN` **constant**                 | String constant which represents the green led.
 
+#### Example
+{: .no_toc }
+
+```python
+import led
+led.on(led.GREEN) # Turns on the green LED
+led.on('GREEN') # Also turns on the green LED
+led.off(led.GREEN) # Turns off the green LED
+led.on(led.RED) # Turns on the red LED
+led.off(led.RED) # Turns off the red LED
+```
+
 ---
 
 ### `fpga` – Monocle specific
@@ -162,6 +217,17 @@ display.show()
 |:--------|:------------|
 | `read(addr, n)` **function**            | Reads `n` number of bytes from the 16-bit address `addr`, and returns a **bytes object**.
 | `write(addr,bytes[])`&nbsp;**function** | Writes all bytes from a given **bytes object** `bytes[]` to the 16-bit address `addr`.
+
+#### Example
+{: .no_toc }
+
+```python
+import fpga
+fpga.read(0x1234, 5) # Reads 5 bytes from some FPGA register (0x1234 in this case)
+fpga.write(0x1234, b'\x01\x02\x03') # Writes three bytes (1, 2, 3) to the FPGA register 0x1234
+fpga.write(0x1234, b'hello fpga') # Writes the byte string 'hello fpga' to the FPGA register
+fpga.write(0x1234, b'') # Doesn't write anything specific, but acts as a command or trigger
+```
 
 ---
 
@@ -175,6 +241,24 @@ display.show()
 |`receive_callback(callback)`&nbsp;**function** | Assigns a callback to receive data over the [raw data service](#communication). `callback` must be a predefined function taking one argument. The value of the argument will be a **bytes object** `bytes[]` containing the received data. To unbind the callback, issue this function with `callback` set as `None`. If `callback` isn't given when issuing this function, the currently set callback will be returned if it is set.
 |`connected()` **function**                     | Returns `True` if the [raw data service](#communication) is connected, otherwise returns `False`.
 |`max_length()` **function**                    | Returns the maximum data size the Bluetooth host allows for single transfers.
+
+#### Example
+{: .no_toc }
+
+```python
+import bluetooth
+bluetooth.connected() # Returns True if the Bluetooth is connected. Always true when using the REPL, but useful for saved scripts
+len = bluetooth.max_length() # Returns the maximum payload size we can send in one go
+
+str = "hello world"
+bluetooth.send(str[:len]) # Sends the string 'hello world' to the host. Limited by the maximum payload size
+
+# Define a callback function which is triggered upon reception of Bluetooth data from the host
+def fn(bytes):
+    print(bytes)
+
+bluetooth.receive_callback(fn) # Attaches the above function to the receive callback
+```
 
 ---
 
@@ -194,22 +278,56 @@ display.show()
 | `ticks_add(ticks, delta)` **function**         | Offsets a timestamp value by a given number. Can be positive or negative.
 | `ticks_diff(ticks1,ticks2)`&nbsp;**function**  | Returns the difference between two timestamps. i.e. `ticks1 - ticks2`, but takes into consideration if the numbers wrap around.
 
+#### Example
+{: .no_toc }
+
+```python
+import utime
+time.sleep(1.5) # Sleeps for 1.5 seconds
+time.sleep_ms(100) # Sleeps for 500ms
+time.time(1681236168) # Sets the device system time using UTC timestamp
+time.time() # Returns the current time (as a UTC timestamp), based on the system time
+time.now() # Returns the current time as a human readable dictionary
+```
+
 ---
 
 ### `update` - Monocle specific
 
-> The update module allows for firmware upgrades of the MicroPython firmware, as well as the FPGA application over bluetooth.
+> The update module allows for firmware upgrades of the MicroPython firmware, as well as the FPGA application over bluetooth. **This library use used automatically by the Brilliant REPL for firmware updates. You generally shouldn't need to call these manually, unless you're implementing your own update process.**
 
 | Members | Description |
 |:--------|:------------|
 | `micropython()`&nbsp;**function** | Puts the device into over-the-air device firmware update mode. The device will stay in DFU mode for 5 minutes or until an update is finished being performed. The device will then restart with an updated MicroPython firmware.
 | `Fpga` **class**                  | `Fpga` contains three low level functions which are used to update the FPGA. `Fpga.erase()` erases the existing application, `Fpga.write(bytes[])` sequentially writes in the new application, and `Fpga.read(address, length)` can be used to read back and verify the application. For details on how the FPGA application is updated, check out the [FPGA application updates](#fpga-application-updates) section.
 
+#### Example
+{: .no_toc }
+
+```python
+import update
+update.micropython() # Reboots the device into update mode for updating the MicroPython firmware
+```
+
 ---
 
 ### `gc`
 
 > Standard MicroPython [garbage collection](https://docs.micropython.org/en/latest/library/gc.html) is supported.
+
+#### Example
+{: .no_toc }
+
+```python
+import gc
+
+# Shows the current memory usage as a percentage
+mem_used = gc.mem_alloc() / (gc.mem_alloc() + gc.mem_free())
+print('{:d}%'.format(round(mem_used * 100)))
+
+# Manually runs the garbage collector
+gc.collect()
+```
 
 ### `math`
 
