@@ -34,13 +34,11 @@ import touch
 import display
 
 def change_text(button):
-    display.text(f"Button {button} touched!", 0, 0, 0xffffff)
-    display.show()
+    show([display.Text(f"Button {button} touched!", display.WHITE)])
 
 touch.callback(touch.BOTH, change_text)
 
-display.text("Tap a touch button", 0, 0, 0xffffff)
-display.show()
+display.show([Text("Tap a touch button", display.WHITE)])
 ```
 
 ---
@@ -106,11 +104,11 @@ device.battery_level() # Returns the current battery level as a percentage
 | Members | Description |
 |:--------|:------------|
 | `brightness(level)` **function**             | Sets the display's brightness. `level` can be 0, 1, 2, 3, or 4.
-| `Rect(width, height, color)` **class**       | Rectangle with given width, height and color [1]
-| `Line(width, height, color)` **class**       | Rectangle with given width, height and color [1]
-| `Polygon(list, fill=, stroke=, width=)` **class** | Polygon with given fill and stroke color [1], the shape is defined by a `list` of tuples of `(x, y)` coordinates.
-| `Polyline(list, color, [width])` **class**   | Segmented line with given color [1], the segments are defined by a `list` of tuples of `(x, y)` coordinates.
-| `Text(string, color)`                        | Display the given `string` with the given `color` [1]
+| `Text(string, fg=)` **class**                | Text with the given `string` shown with the given color [1]
+| `Rect(width, height, fg=)` **class**         | Rectangle with given width, height and color [1]
+| `Line(x1, y1, x2, y2, fg=)` **class**        | Line with given coordinates and color [1]
+| `Polygon(list, width=, fg=, bg=)` **class**  | Polygon with given fill and stroke color [1], the shape is defined by a `list` of tuples of `(x, y)` coordinates.
+| `Polyline(list, width=, fg=)` **class**      | Segmented line with given color [1], the segments are defined by a `list` of tuples of `(x, y)` coordinates.
 | `show(list)` **function**                    | Show a list of shapes onto the display.
 | `WIDTH` **constant**                         | The display width in pixels. Equal to 640.
 | `HEIGHT` **constant**                        | The display height in pixels. Equal to 400.
@@ -134,41 +132,45 @@ device.battery_level() # Returns the current battery level as a percentage
 > [1]: The colors are small values that do not cover the full palette of the display.
 > The 16 default values can be one of the constants listed above.
 > There will be an API to customize these colors coming in the future.
+> The default foreground is white and background is gray3.
 
 ```python
 from display import *
 
 # Create a list that will contain all the thing we want to display
-list = []
+list = [
+  # It has a long red horizontal rectangle that we place near the middle
+  Rect(10, 30, fg=RED).move(300, 200),
 
-# It has a long red horizontal rectangle that we place near the middle
-list += Rect(10, 30, RED).move(300, 200)
+  # It has a vertical line with 5 segments doing some zig-zags.
+  Polyline([(10,20), (40,40), (10,60), (40,80), (10,100), (40,120)], fg=RED),
 
-# It has a vertical line with 5 segments doing some zig-zags.
-list += Polyline([(10,20), (40,40), (10,60), (40,80), (10,100), (40,120)], 
+  # It has a triangle filled in yellow, moved to the top right corner.
+  Polygon([(0,0), (10,0), (5,8)], bg=YELLOW).move(WIDTH - 50, HEIGHT - 50),
 
-# It has a triangle filled in yellow, moved to the top right corner.
-list += Polygon([(0,0), (10,0), (5,8)], fill=YELLOW).move(WIDTH - 50, HEIGHT - 50)
+  # It has a diagonal line through the whole display, bottom left to top right
+  Line(0, 0, WIDTH, HEIGHT),
 
-# It has a diagonal line through the whole display, bottom left to top right
-list += Line(WIDTH, HEIGHT, WHITE)
+  # It has a text message in the middle
+  Text("something").move(WIDTH/2, HEIGHT/2),
+]
 
-# If we wish, we can use a separate list, here we store a few text messages
-text = []
-text += Text("something less", WHITE)
-text += Text("something more", WHITE)
+# Render these elements to the display
+show(list)
 
-# Then we display all of that at once
-show(list + text)
+# We are free to use an extra list and concatenate it while rendering:
+list2 = [
+  Text("something less", fg=WHITE),
+  Text("something more", fg=WHITE),
+]
+show(list + list2)
 
-# Then we display the list of geometric shapes with alternative text
-show(list + Text("something different", YELLOW)
+# Then we display the first list with alternative text
+show(list + [Text("something different", fg=YELLOW)])
 
 # Finally, we modify each of the text list's content and display that
-# along with the geometric shapes
-for x in text:
-    text[x].str = "something else"
-show(list + text)
+list2[0].str = "something else"
+show(list + list2)
 ```
 
 ---
