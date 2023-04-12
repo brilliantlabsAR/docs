@@ -104,11 +104,11 @@ device.battery_level() # Returns the current battery level as a percentage
 | Members | Description |
 |:--------|:------------|
 | `brightness(level)` **function**             | Sets the display's brightness. `level` can be 0, 1, 2, 3, or 4.
-| `Text(string, fg=)` **class**                | Text with the given `string` shown with the given color [1]
-| `Rect(width, height, fg=)` **class**         | Rectangle with given width, height and color [1]
-| `Line(x1, y1, x2, y2, fg=)` **class**        | Line with given coordinates and color [1]
-| `Polygon(list, width=, fg=, bg=)` **class**  | Polygon with given fill and stroke color [1], the shape is defined by a `list` of tuples of `(x, y)` coordinates.
-| `Polyline(list, width=, fg=)` **class**      | Segmented line with given color [1], the segments are defined by a `list` of tuples of `(x, y)` coordinates.
+| `Text(string, color=)` **class**             | Text with the given `string` shown with the given color [1]
+| `Rect(width, height, color=)` **class**      | Rectangle with given width, height and color [1]
+| `Line(x1, y1, x2, y2, color=)` **class**     | Line with given coordinates and color [1]
+| `Polygon(list, width=, stroke=, fill=)` **class** | Polygon with given fill and stroke color [1], the shape is defined by a `list` of tuples of `(x, y)` coordinates.
+| `Polyline(list, width=, color=)` **class**   | Segmented line with given color [1], the segments are defined by a `list` of tuples of `(x, y)` coordinates.
 | `show(list)` **function**                    | Show a list of shapes onto the display.
 | `WIDTH` **constant**                         | The display width in pixels. Equal to 640.
 | `HEIGHT` **constant**                        | The display height in pixels. Equal to 400.
@@ -139,38 +139,31 @@ from display import *
 
 # Create a list that will contain all the thing we want to display
 list = [
-  # It has a long red horizontal rectangle that we place near the middle
-  Rect(10, 30, fg=RED).move(300, 200),
+  # It has a text message in the middle
+  Text("something").move(WIDTH//2, HEIGHT//2),
 
-  # It has a vertical line with 5 segments doing some zig-zags.
-  Polyline([(10,20), (40,40), (10,60), (40,80), (10,100), (40,120)], fg=RED),
+  # It has a long red horizontal rectangle that we place near the middle
+  Rect(100, 30, color=RED).move(300, 200),
+
+  # It has a horizontal line with 5 segments doing some zig-zags.
+  Polyline([(100,20), (200,80), (300,20), (400,80), (500,20), (600,80)], color=RED),
 
   # It has a triangle filled in yellow, moved to the top right corner.
-  Polygon([(0,0), (10,0), (5,8)], bg=YELLOW).move(WIDTH - 50, HEIGHT - 50),
+  Polygon([(0,0), (100,0), (50,80)], stroke=None, fill=YELLOW).move(50, 100),
 
   # It has a diagonal line through the whole display, bottom left to top right
-  Line(0, 0, WIDTH, HEIGHT),
-
-  # It has a text message in the middle
-  Text("something").move(WIDTH/2, HEIGHT/2),
+  Line(0, 0, WIDTH - 1, HEIGHT - 1),
 ]
 
 # Render these elements to the display
 show(list)
 
-# We are free to use an extra list and concatenate it while rendering:
-list2 = [
-  Text("something less", fg=WHITE),
-  Text("something more", fg=WHITE),
-]
-show(list + list2)
+# We can concatenate an extra list while rendering:
+show(list + [Text("something less"), Text("something more")])
 
-# Then we display the first list with alternative text
-show(list + [Text("something different", fg=YELLOW)])
-
-# Finally, we modify each of the text list's content and display that
-list2[0].str = "something else"
-show(list + list2)
+# We can also modify elements from that list directly
+list[0].string = "something else"
+show(list)
 ```
 
 ---
