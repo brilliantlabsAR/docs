@@ -163,7 +163,7 @@ display.show(group)
 
 # Create a white polygon with a red outline and print everything. Text on top
 poly = display.Polygon([0, 0, 640, 400, 0, 400], display.WHITE)
-outline = display.Polygon([0, 0, 640, 400, 0, 400], display.RED)
+outline = display.Polyline([0, 0, 640, 400, 0, 400], display.RED)
 display.show(text, line, outline, poly)
 ```
 
