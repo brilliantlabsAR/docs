@@ -157,13 +157,13 @@ group = [text, line]
 display.color(group, display.GREEN)
 display.show(group)
 
-# Move only the line down, and print everything again
+# Move the line above the text, and print everything again
 line.move(0, -100)
 display.show(group)
 
-# Create a white polygon with a red outline and print everything. Text on top
+# Create a white polygon with a red outline and print everything again
 poly = display.Polygon([0, 0, 640, 400, 0, 400], display.WHITE)
-outline = display.Polygon([0, 0, 640, 400, 0, 400], display.RED)
+outline = display.Polyline([0, 0, 640, 400, 0, 400, 0, 0], display.RED)
 display.show(text, line, outline, poly)
 ```
 
