@@ -34,13 +34,13 @@ import touch
 import display
 
 def change_text(button):
-    display.text(f"Button {button} touched!", 0, 0, 0xffffff)
-    display.show()
+    new_text = display.Text(f"Button {button} touched!", display.WHITE)
+    display.show(new_text)
 
 touch.callback(touch.BOTH, change_text)
 
-display.text("Tap a touch button", 0, 0, 0xffffff)
-display.show()
+initial_text = display.Text("Tap a touch button", display.WHITE)
+display.show(initial_text)
 ```
 
 ---
@@ -101,20 +101,71 @@ device.battery_level() # Returns the current battery level as a percentage
 
 ### `display` – Monocle specific
 
-> The display module allows for drawing to the micro OLED display. An image can be prepared using the functions below, and then `show()` can be used to print the image to the display.
+> The display module allows for drawing to the micro OLED display.
 
 | Members | Description |
 |:--------|:------------|
-| `fill(color)` **function**                   | Fills the entire display with a color. `color` should be a 24-bit RGB value such as `0xAABBCC`.
-| `pixel(x, y, color)` **function** ❌           | Draws a single pixel of color `color` at the position `x`, `y`.
-| `hline(x,y,width,color)` **function**        | Draws a horizontal line from the position `x`, `y`, with a given `width` and `color`.
-| `vline(x,y,height,color)` **function**       | Draws a vertical line from the position `x`, `y`, with a given `height` and `color`.
-| `line(x1,y1,x2,y2,color)` **function**       | Draws a straight line from the position `x1`, `y1`, to the position `x2`, `y2`, with a given `color`.
-| `text("string",x,y,color)`&nbsp;**function** | Draws text at the position `x`, `y`, with a given `color`.
-| `show()` **function**                        | Prints the populated frame buffer to the display. After this call, another series of drawing functions may be called and `show()` can be used to print the next frame. This also clears the display.
-| `brightness(level)` **function**             | Sets the display's brightness. `level` can be 0, 1, 2, 3, or 4.
-| `WIDTH` **constant**                         | The display width in pixels. Equal to 640.
-| `HEIGHT` **constant**                        | The display height in pixels. Equal to 400.
+| `Text(string, x, y, color, justify=TOP_LEFT)` **class**       | Creates a text object at the coordinate `x, y` which can be passed to `display.show()`. `string` can be any string, and `color` can be any color from the available color palette. If the `justify` parameter is given, the text will be justified accordingly from the `x, y` coordinate.
+| `Rectangle(x1, y1, x2, y2, color)` **class**                  | Creates a rectangle object which can be passed to `display.show()`. `x1, y1` and `x2, y2` define each corner of the rectangle. `color` can be any color from the available color palette.
+| `Line(x1, y1, x2, y2, color, thickness=1)` **class**          | Creates a line object from `x1, y1` to `x2, y2` which can be passed to `display.show()`. `color` can be any color from the available color palette, and `thickness` can optionally be provided to override the default line thickness in pixels.
+| `Polygon([x1, y1, ... xn, yn], color)` **class**              | Creates a polygon object which can be passed to `display.show()`. The first parameter should be a list of coordinates, and `color` can be any color from the available color palette. Polygons are always closed shapes, therefore if the last coordinate does not close the shape, it will be closed automatically.
+| `Polyline([x1,y1,...xn,yn],color,thickness=1)`&nbsp;**class** | Similar to the Polygon object, Polyline creates a shape based on a list of coordinates. Unlike Polygon, Polyline does not need to be a closed shape. `color` can be any color from the available color palette, and `thickness` can optionally be provided to override the default line thickness in pixels.
+| `show(object_1, ... object_n)` **function**                   | Prints to the display. The passed arguments can be any number of Text, Line, Rectangle, Polygon, or Polyline objects, or any number of lists containing such objects. Objects are layered front to back, i.e. `object_1` is shown on top of `object_n`.
+| `move(x, y)` **function**                                     | `move()` can be called as a class method on any printable object to translate its position. `x` and `y` will move the object relative to its current position.
+| `move([objects], x, y)` **function**                          | Additionally, `move()` can be called as a standard function to move a list of objects together. This is useful for grouping printable objects together and moving them as layers.
+| `color(color)` **function**                                   | `color()` can be called as a class method on any printable object to change its color. `color` can be any color from the available color palette.
+| `color([objects], color)` **function**                        | Additionally, `color()` can be called as a standard function to change the color on a whole list of objects. `color` can be any color from the available color palette.
+| `brightness(level)` **function**                              | Sets the display's brightness. `level` can be 0 (dimmest), 1, 2, 3, or 4 (brightest). Level 3 is the default.
+| `CLEAR` **constant**                                          | If using the default color palette, this constant indexes the color `#000000`. Note, color indexes may be overridden by the user.
+| `RED` **constant**                                            | If using the default color palette, this constant indexes the color `#ad2323`. Note, color indexes may be overridden by the user.
+| `GREEN` **constant**                                          | If using the default color palette, this constant indexes the color `#1d6914`. Note, color indexes may be overridden by the user.
+| `BLUE` **constant**                                           | If using the default color palette, this constant indexes the color `#2a4bd7`. Note, color indexes may be overridden by the user.
+| `CYAN` **constant**                                           | If using the default color palette, this constant indexes the color `#29d0d0`. Note, color indexes may be overridden by the user.
+| `MAGENTA` **constant**                                        | If using the default color palette, this constant indexes the color `#8126c0`. Note, color indexes may be overridden by the user.
+| `YELLOW` **constant**                                         | If using the default color palette, this constant indexes the color `#ffee33`. Note, color indexes may be overridden by the user.
+| `WHITE` **constant**                                          | If using the default color palette, this constant indexes the color `#ffffff`. Note, color indexes may be overridden by the user.
+| `GRAY1` **constant**                                          | If using the default color palette, this constant indexes the color `#1c1c1c`. Note, color indexes may be overridden by the user.
+| `GRAY2` **constant**                                          | If using the default color palette, this constant indexes the color `#383838`. Note, color indexes may be overridden by the user.
+| `GRAY3` **constant**                                          | If using the default color palette, this constant indexes the color `#555555`. Note, color indexes may be overridden by the user.
+| `GRAY4` **constant**                                          | If using the default color palette, this constant indexes the color `#717171`. Note, color indexes may be overridden by the user.
+| `GRAY5` **constant**                                          | If using the default color palette, this constant indexes the color `#8d8d8d`. Note, color indexes may be overridden by the user.
+| `GRAY6` **constant**                                          | If using the default color palette, this constant indexes the color `#aaaaaa`. Note, color indexes may be overridden by the user.
+| `GRAY7` **constant**                                          | If using the default color palette, this constant indexes the color `#c6c6c6`. Note, color indexes may be overridden by the user.
+| `GRAY8` **constant**                                          | If using the default color palette, this constant indexes the color `#e2e2e2`. Note, color indexes may be overridden by the user.
+| `TOP_LEFT` **constant**                                       | Justifies a text object on its `x, y` coordinate to the top left.
+| `MIDDLE_LEFT` **constant**                                    | Justifies a text object on its `x, y` coordinate to the middle left
+| `BOTTOM_LEFT` **constant**                                    | Justifies a text object on its `x, y` coordinate to the bottom left
+| `TOP_CENTER` **constant**                                     | Justifies a text object on its `x, y` coordinate to the top center
+| `BOTTOM_CENTER` **constant**                                  | Justifies a text object on its `x, y` coordinate to the middle center
+| `TOP_RIGHT` **constant**                                      | Justifies a text object on its `x, y` coordinate to the bottom center
+| `MIDDLE_CENTER` **constant**                                  | Justifies a text object on its `x, y` coordinate to the top right
+| `MIDDLE_RIGHT` **constant**                                   | Justifies a text object on its `x, y` coordinate to the middle right
+| `BOTTOM_RIGHT` **constant**                                   | Justifies a text object on its `x, y` coordinate to the bottom right
+| `WIDTH` **constant**                                          | The display width in pixels. Equal to 640.
+| `HEIGHT` **constant**                                         | The display height in pixels. Equal to 400.
+
+```python
+import display
+
+# Place some text in the middle of the screen with a line underneath
+text = display.Text('Hello world', 320, 200, display.WHITE, justify=display.MIDDLE_CENTER)
+line = display.Line(50, 230, 590, 230, display.WHITE)
+display.show(text, line)
+
+# Group the line and the text together to change the color of both at the same time
+group = [text, line]
+display.color(group, display.GREEN)
+display.show(group)
+
+# Move the line above the text, and print everything again
+line.move(0, -100)
+display.show(group)
+
+# Create a white polygon with a red outline and print everything again
+poly = display.Polygon([0, 0, 640, 400, 0, 400], display.WHITE)
+outline = display.Polyline([0, 0, 640, 400, 0, 400, 0, 0], display.RED)
+display.show(text, line, outline, poly)
+```
 
 ---
 
