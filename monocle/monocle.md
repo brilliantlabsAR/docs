@@ -65,7 +65,7 @@ Over the air updates can be performed via Nordic's nRFConnect software either on
 
 ## FPGA
 
-The FPGA is used for graphics acceleration, as well as image processing of the 5MP camera. It's perfect for computer vision and AI tasks which can make direct use of the camera and microphone as inputs. The FPGA IC used is a [Gowin GW1N-LV9MG100C6/I5](https://www.mouser.se/datasheet/2/1033/GW1N_series_of_FPGA_Products_Data_Sheet-1830682.pdf). It contains **7k LUTs**, **468kb of block RAM**, as well as **608kb of Flash** memory. An additional [8Mb SPI Flash IC](#flash) is also included in Monocle, and either flash space may be used for booting up the FPGA, or storing user data.
+The FPGA is used for graphics acceleration, as well as image processing of the 5MP camera. It's perfect for computer vision and AI tasks which can make direct use of the camera and microphone as inputs. The FPGA IC used is a [Gowin GW1N-LV9MG100C6/I5](https://www.mouser.se/datasheet/2/1033/GW1N_series_of_FPGA_Products_Data_Sheet-1830682.pdf). It contains **7k LUTs**, **468kb of block RAM**, as well as **608kb of Flash** memory. An additional [1 megabyte (8 megabits) SPI Flash IC](#flash) is also included in Monocle, and either flash space may be used for booting up the FPGA, or storing user data.
 
 By default, the FPGA comes pre-loaded our [Graphics & Camera Accelerator IP](https://github.com/brilliantlabsAR/monocle-fpga) and can be accessed using MicroPython commands. Our IP is a perfect starting point if you wish to [create your own FPGA application](#developing-for-the-fpga).
 
@@ -81,11 +81,11 @@ Aside from the built-in memories of the Bluetooth MCU and the FPGA, Monocle cont
 
 ### Flash
 
-The Flash IC used is the [Winbond W25Q80EWUXIE](https://www.winbond.com/hq/support/documentation/levelOne.jsp?__locale=en&DocNo=DA00-W25Q80EW). It's an 8Mb serial Flash and is connected to the FPGA and nRF52 via an SPI bus. 
+The Flash IC used is the [Winbond W25Q80EWUXIE](https://www.winbond.com/hq/support/documentation/levelOne.jsp?__locale=en&DocNo=DA00-W25Q80EW). It's an 1 megabyte (8 megabits) serial Flash and is connected to the FPGA and nRF52 via an SPI bus. 
 
 ### RAM
 
-The RAM ICs used are the [AP Memory APS256XXN](https://www.apmemory.com/wp-content/uploads/APM_PSRAM_OPI_Xccela-APS256XXN-OBRx-v1.0-PKG.pdf). A total of 512Mb of memory is addressable, and can be accessed at up to 800Mb/s in DDR mode.
+The RAM ICs used are the [AP Memory APS256XXN](https://www.apmemory.com/wp-content/uploads/APM_PSRAM_OPI_Xccela-APS256XXN-OBRx-v1.0-PKG.pdf). A total of 64 megabytes (512 megabits) of memory is addressable, and can be accessed at up to 800Mb/s in DDR mode.
 
 ---
 
