@@ -162,8 +162,8 @@ line.move(0, -100)
 display.show(group)
 
 # Create a white polygon with a red outline and print everything again
-poly = display.Polygon([0, 0, 640, 400, 0, 400], display.WHITE)
-outline = display.Polyline([0, 0, 640, 400, 0, 400, 0, 0], display.RED)
+poly = display.Polygon([10, 10, 640-10, 400-10, 10, 400-10], display.GRAY2)
+outline = display.Polyline([10, 10, 640-10, 400-10, 10, 400-10], display.WHITE, thickness=10)
 display.show(text, line, outline, poly)
 ```
 
