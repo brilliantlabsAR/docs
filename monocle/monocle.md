@@ -312,4 +312,4 @@ These resources are intended for skilled developers. You are solely responsible 
 
 Brilliant Labs Ltd. reserves the right to change the circuitry and specifications without notice at any time. The parametric values quoted in this manual are provided for guidance only.
 
-The resources and products are provided subject to our [terms and conditions](https://www.brilliantmonocle.com/terms).
+The resources and products are provided subject to our [terms and conditions](https://www.brilliant.xyz/terms).
