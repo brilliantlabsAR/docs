@@ -176,7 +176,7 @@ display.show(text, line, outline, poly)
 | Members | Description |
 |:--------|:------------|
 | `capture()` **function** ❌                    | Captures an image and returns it to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are done.
-| `overlay(enable)` **function**                 | Enables or disables an overlay of what the camera is currently seeing onto the display.
+| `overlay(enable)` **function** ❌              | Enables or disables an overlay of what the camera is currently seeing onto the display.
 | `output(x,y,format)`&nbsp;**function**&nbsp;❌ | Set the output resolution and format. `x` and `y` represent the output resolution in pixels. `format` can be either `RGB`, `'YUV'` or `'JPEG'`. The default output settings are `camera.output(640, 400, 'YUV')`.
 | `zoom(multiplier)` **function** ❌             | Sets the zoom level of the camera. Multiplier can be any floating point number between 1 and 8.
 | `RGB` ❌ **constant**                          | String constant which represents a RGB565 output format.
