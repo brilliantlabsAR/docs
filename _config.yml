@@ -1,7 +1,7 @@
 # Site settings
 title: Brilliant Documentation
 description: Technical documentation for all the Brilliant products.
-logo: /images/logo.png
+logo: /images/logo.svg
 remote_theme: just-the-docs/just-the-docs
 permalink: pretty
 heading_anchors: true
