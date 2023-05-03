@@ -1,12 +1,14 @@
 ---
-title: Update
+title: Firmware Updates
 description: A guide on how to update your Monocle AR device.
 image: /micropython/images/monocle-micropython.png
-nav_order: 4
+nav_order: 5
 ---
 
 # Updating your Monocle firmware
 {: .no_toc }
+
+---
 
 You can use the Brilliant WebREPL directly from your browser to keep your Monocle up to date. 
 
