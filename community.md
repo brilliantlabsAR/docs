@@ -17,7 +17,7 @@ If you'd like to share your project too, feel free to edit this doc, and create 
 ## Apps
 
 - [OpenAI GPT client for Monocle](https://github.com/acui51/monocle-rizz) by acui51
-- [A heads up display workout app](https://github.com/simonevetere/monocle) by simonevetere
+- [A heads up display workout app](https://github.com/simonevetere/monocle) by simonevetere and jdc-cunningham
 - [Web based drawing tool for Monocle](https://github.com/jdc-cunningham/oled-pixels-to-mpython) by jdc-cunningham
 - [Monocle Navigation App](https://github.com/semtexzv/MonoNav) by semtexzv. [Try it here](https://semtexzv.github.io/MonoNav/)
 - [WebRTC video streaming demo](https://github.com/jdc-cunningham/bl-monocle-video-stream) by jdc-cunningham
