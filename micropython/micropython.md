@@ -34,12 +34,12 @@ import touch
 import display
 
 def change_text(button):
-    new_text = display.Text(f"Button {button} touched!", display.WHITE)
+    new_text = display.Text(f"Button {button} touched!", 0, 0, display.WHITE)
     display.show(new_text)
 
 touch.callback(touch.BOTH, change_text)
 
-initial_text = display.Text("Tap a touch button", display.WHITE)
+initial_text = display.Text("Tap a touch button", 0, 0, display.WHITE)
 display.show(initial_text)
 ```
 
@@ -149,7 +149,7 @@ import display
 
 # Place some text in the middle of the screen with a line underneath
 text = display.Text('Hello world', 320, 200, display.WHITE, justify=display.MIDDLE_CENTER)
-line = display.Line(50, 230, 590, 230, display.WHITE)
+line = display.Line(175, 230, 465, 230, display.WHITE)
 display.show(text, line)
 
 # Group the line and the text together to change the color of both at the same time
@@ -158,12 +158,12 @@ display.color(group, display.GREEN)
 display.show(group)
 
 # Move the line above the text, and print everything again
-line.move(0, -100)
+line.move(0, -75)
 display.show(group)
 
 # Create a white polygon with a red outline and print everything again
-poly = display.Polygon([0, 0, 640, 400, 0, 400], display.WHITE)
-outline = display.Polyline([0, 0, 640, 400, 0, 400, 0, 0], display.RED)
+poly = display.Polygon([0, 0, 639, 399, 0, 399], display.WHITE)
+outline = display.Polyline([0, 0, 639, 399, 0, 399, 0, 0], display.RED)
 display.show(text, line, outline, poly)
 ```
 
