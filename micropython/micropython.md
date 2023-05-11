@@ -105,37 +105,37 @@ device.battery_level() # Returns the current battery level as a percentage
 
 | Members | Description |
 |:--------|:------------|
-| `Text(string, x, y, color, justify=TOP_LEFT)` **class**       | Creates a text object at the coordinate `x, y` which can be passed to `display.show()`. `string` can be any string, and `color` can be any color from the available color palette. If the `justify` parameter is given, the text will be justified accordingly from the `x, y` coordinate.
-| `Rectangle(x1, y1, x2, y2, color)` **class**                  | Creates a rectangle object which can be passed to `display.show()`. `x1, y1` and `x2, y2` define each corner of the rectangle. `color` can be any color from the available color palette.
-| `Fill(color)` **class**                                       | Creates a colored box object which fills the entire screen, and can be passed to `display.show()`. `color` can be any color from the available color palette.
-| `Line(x1, y1, x2, y2, color, thickness=1)` **class**          | Creates a line object from `x1, y1` to `x2, y2` which can be passed to `display.show()`. `color` can be any color from the available color palette, and `thickness` can optionally be provided to override the default line thickness in pixels.
-| `VLine(x, y, height, color, thickness=1)` **class**           | Creates a vertical line object from position `x, y` with a length of `height` which can be passed to `display.show()`. `color` can be any color from the available color palette, and `thickness` can optionally be provided to override the default line thickness in pixels.
-| `HLine(x, y, width, color, thickness=1)` **class**            | Creates an horizontal line object from position `x, y` with a length of `width` which can be passed to `display.show()`. `color` can be any color from the available color palette, and `thickness` can optionally be provided to override the default line thickness in pixels.
-| `Polygon([x1, y1, ... xn, yn], color)` **class**              | Creates a polygon object which can be passed to `display.show()`. The first parameter should be a list of coordinates, and `color` can be any color from the available color palette. Polygons are always closed shapes, therefore if the last coordinate does not close the shape, it will be closed automatically.
-| `Polyline([x1,y1,...xn,yn],color,thickness=1)`&nbsp;**class** | Similar to the Polygon object, Polyline creates a shape based on a list of coordinates. Unlike Polygon, Polyline does not need to be a closed shape. `color` can be any color from the available color palette, and `thickness` can optionally be provided to override the default line thickness in pixels.
+| `Text(string, x, y, color, justify=TOP_LEFT)` **class**       | Creates a text object at the coordinate `x, y` which can be passed to `display.show()`. `string` can be any string, and `color` in the `0xRRGGBB` format. If the `justify` parameter is given, the text will be justified accordingly from the `x, y` coordinate.
+| `Rectangle(x1, y1, x2, y2, color)` **class**                  | Creates a rectangle object which can be passed to `display.show()`. `x1, y1` and `x2, y2` define each corner of the rectangle. `color` in the `0xRRGGBB` format.
+| `Fill(color)` **class**                                       | Creates a colored box object which fills the entire screen, and can be passed to `display.show()`. `color` in the `0xRRGGBB` format.
+| `Line(x1, y1, x2, y2, color, thickness=1)` **class**          | Creates a line object from `x1, y1` to `x2, y2` which can be passed to `display.show()`. `color` in the `0xRRGGBB` format, and `thickness` can optionally be provided to override the default line thickness in pixels.
+| `VLine(x, y, height, color, thickness=1)` **class**           | Creates a vertical line object from position `x, y` with a length of `height` which can be passed to `display.show()`. `color` in the `0xRRGGBB` format, and `thickness` can optionally be provided to override the default line thickness in pixels.
+| `HLine(x, y, width, color, thickness=1)` **class**            | Creates an horizontal line object from position `x, y` with a length of `width` which can be passed to `display.show()`. `color` in the `0xRRGGBB` format, and `thickness` can optionally be provided to override the default line thickness in pixels.
+| `Polygon([x1, y1, ... xn, yn], color)` **class**              | Creates a polygon object which can be passed to `display.show()`. The first parameter should be a list of coordinates, and `color` in the `0xRRGGBB` format. Polygons are always closed shapes, therefore if the last coordinate does not close the shape, it will be closed automatically.
+| `Polyline([x1,y1,...xn,yn],color,thickness=1)`&nbsp;**class** | Similar to the Polygon object, Polyline creates a shape based on a list of coordinates. Unlike Polygon, Polyline does not need to be a closed shape. `color` in the `0xRRGGBB` format, and `thickness` can optionally be provided to override the default line thickness in pixels.
 | `show(object_1, ... object_n)` **function**                   | Prints to the display. The passed arguments can be any number of Text, Line, Rectangle, Polygon, or Polyline objects, or any number of lists containing such objects. Objects are layered front to back, i.e. `object_1` is shown on top of `object_n`.
 | `move(x, y)` **function**                                     | `move()` can be called as a class method on any printable object to translate its position. `x` and `y` will move the object relative to its current position.
 | `move([objects], x, y)` **function**                          | Additionally, `move()` can be called as a standard function to move a list of objects together. This is useful for grouping printable objects together and moving them as layers.
-| `color(color)` **function**                                   | `color()` can be called as a class method on any printable object to change its color. `color` can be any color from the available color palette.
-| `color([objects], color)` **function**                        | Additionally, `color()` can be called as a standard function to change the color on a whole list of objects. `color` can be any color from the available color palette.
+| `color(color)` **function**                                   | `color()` can be called as a class method on any printable object to change its color. `color` in the `0xRRGGBB` format.
+| `color([objects], color)` **function**                        | Additionally, `color()` can be called as a standard function to change the color on a whole list of objects. `color` in the `0xRRGGBB` format.
 | `brightness(level)` **function**                              | Sets the display's brightness. `level` can be 0 (dimmest), 1, 2, 3, or 4 (brightest). Level 3 is the default.
 | `clear()` **function**                                        | Clears the display.
-| `CLEAR` **constant**                                          | If using the default color palette, this constant indexes the color `#000000`. Note, color indexes may be overridden by the user.
-| `RED` **constant**                                            | If using the default color palette, this constant indexes the color `#ad2323`. Note, color indexes may be overridden by the user.
-| `GREEN` **constant**                                          | If using the default color palette, this constant indexes the color `#1d6914`. Note, color indexes may be overridden by the user.
-| `BLUE` **constant**                                           | If using the default color palette, this constant indexes the color `#2a4bd7`. Note, color indexes may be overridden by the user.
-| `CYAN` **constant**                                           | If using the default color palette, this constant indexes the color `#29d0d0`. Note, color indexes may be overridden by the user.
-| `MAGENTA` **constant**                                        | If using the default color palette, this constant indexes the color `#8126c0`. Note, color indexes may be overridden by the user.
-| `YELLOW` **constant**                                         | If using the default color palette, this constant indexes the color `#ffee33`. Note, color indexes may be overridden by the user.
-| `WHITE` **constant**                                          | If using the default color palette, this constant indexes the color `#ffffff`. Note, color indexes may be overridden by the user.
-| `GRAY1` **constant**                                          | If using the default color palette, this constant indexes the color `#1c1c1c`. Note, color indexes may be overridden by the user.
-| `GRAY2` **constant**                                          | If using the default color palette, this constant indexes the color `#383838`. Note, color indexes may be overridden by the user.
-| `GRAY3` **constant**                                          | If using the default color palette, this constant indexes the color `#555555`. Note, color indexes may be overridden by the user.
-| `GRAY4` **constant**                                          | If using the default color palette, this constant indexes the color `#717171`. Note, color indexes may be overridden by the user.
-| `GRAY5` **constant**                                          | If using the default color palette, this constant indexes the color `#8d8d8d`. Note, color indexes may be overridden by the user.
-| `GRAY6` **constant**                                          | If using the default color palette, this constant indexes the color `#aaaaaa`. Note, color indexes may be overridden by the user.
-| `GRAY7` **constant**                                          | If using the default color palette, this constant indexes the color `#c6c6c6`. Note, color indexes may be overridden by the user.
-| `GRAY8` **constant**                                          | If using the default color palette, this constant indexes the color `#e2e2e2`. Note, color indexes may be overridden by the user.
+| `CLEAR` **constant**                                          | Equal to `0x000000`.
+| `RED` **constant**                                            | Equal to `0xad2323`.
+| `GREEN` **constant**                                          | Equal to `0x1d6914`.
+| `BLUE` **constant**                                           | Equal to `0x2a4bd7`.
+| `CYAN` **constant**                                           | Equal to `0x29d0d0`.
+| `MAGENTA` **constant**                                        | Equal to `0x8126c0`.
+| `YELLOW` **constant**                                         | Equal to `0xffee33`.
+| `WHITE` **constant**                                          | Equal to `0xffffff`.
+| `GRAY1` **constant**                                          | Equal to `0x1c1c1c`.
+| `GRAY2` **constant**                                          | Equal to `0x383838`.
+| `GRAY3` **constant**                                          | Equal to `0x555555`.
+| `GRAY4` **constant**                                          | Equal to `0x717171`.
+| `GRAY5` **constant**                                          | Equal to `0x8d8d8d`.
+| `GRAY6` **constant**                                          | Equal to `0xaaaaaa`.
+| `GRAY7` **constant**                                          | Equal to `0xc6c6c6`.
+| `GRAY8` **constant**                                          | Equal to `0xe2e2e2`.
 | `TOP_LEFT` **constant**                                       | Justifies a text object on its `x, y` coordinate to the top left.
 | `MIDDLE_LEFT` **constant**                                    | Justifies a text object on its `x, y` coordinate to the middle left
 | `BOTTOM_LEFT` **constant**                                    | Justifies a text object on its `x, y` coordinate to the bottom left
