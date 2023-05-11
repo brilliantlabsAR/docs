@@ -148,6 +148,10 @@ device.battery_level() # Returns the current battery level as a percentage
 | `WIDTH` **constant**                                          | The display width in pixels. Equal to 640.
 | `HEIGHT` **constant**                                         | The display height in pixels. Equal to 400.
 
+This shows, for a given coordinate `(x,y)` used as reference, where the text will be placed:
+
+![Illustration of the `justify=...` parameter](/micropython/images/micropython-justify.drawio.svg)
+
 ```python
 import display
 
