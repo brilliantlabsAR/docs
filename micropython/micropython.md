@@ -18,30 +18,44 @@ A subset of the standard MicroPython libraries are currently supported, with mor
 
 ---
 
-## Quick start
+## Getting start
 {: .no_toc }
 
-Get started by trying out the [Web Bluetooth REPL](https://repl.brilliant.xyz) using Google Chrome on your PC, Mac, or Android, or use a Web Bluetooth compatible web browser on your iOS device such as [Bluefy](https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055).
+### Brilliant AR Studio for VSCode
+{: .no_toc }
+
+![Accessing MicroPython on Monocle using the web REPL interface](/micropython/images/vs-code-extension.png)
+
+Get started by trying out the [VSCode extension](https://marketplace.visualstudio.com/items?itemName=brilliantlabs.brilliant-ar-studio) on PC or MacOS. Once installed:
+
+- Initialize a new project using the command `Ctrl-Shift-P` (`Cmd-Shift-P` on MacOS) → `Brilliant AR Studio: Initialize new project folder`.
+- Then connect to Monocle by brining it close and running the command `Ctrl-Shift-P` → `Brilliant AR Studio: Connect`.
+- Copy paste the example below into `main.py` and save the file.
+
+    ```python
+    import touch
+    import display
+
+    def change_text(button):
+        new_text = display.Text(f"Button {button} touched!", 0, 0, display.WHITE)
+        display.show(new_text)
+
+    touch.callback(touch.BOTH, change_text)
+
+    initial_text = display.Text("Tap a touch button", 0, 0, display.WHITE)
+    display.show(initial_text)
+    ```
+
+- After a few moments, you should be able to touch each of the touch pads on Monocle, and see the display update.
+
+### WebREPL Console
+{: .no_toc }
+
+Monocle also supports bare scripting from a custom app. The [Web Bluetooth REPL](https://repl.brilliant.xyz) is a good starting point for debugging and using as a template for building your own web apps. Try it from Google Chrome on your PC, Mac, Android, or a Web Bluetooth compatible web browser on your iOS device such as [Bluefy](https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055).
+
+Check out the full instructions and the source code [here](https://github.com/siliconwitchery/web-bluetooth-repl/).
 
 ![Accessing MicroPython on Monocle using the web REPL interface](/micropython/images/micropython-web-repl.png)
-
-Once you're connected, try running this code:
-
-You can either type it line by line, or use **Paste Mode**. Press **Ctrl-E** to enter paste mode, paste the whole thing, and then press **Ctrl-D** to execute the program.
-
-```python
-import touch
-import display
-
-def change_text(button):
-    new_text = display.Text(f"Button {button} touched!", 0, 0, display.WHITE)
-    display.show(new_text)
-
-touch.callback(touch.BOTH, change_text)
-
-initial_text = display.Text("Tap a touch button", 0, 0, display.WHITE)
-display.show(initial_text)
-```
 
 ---
 

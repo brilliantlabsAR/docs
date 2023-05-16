@@ -22,7 +22,7 @@ Connect to Monocle over Bluetooth using the WebREPL console at [repl.brilliant.x
 
 ### How can I start programming Monocle?
 
-Monocle understands Python and exposes some intuitive APIs for you to easily access every aspect of the hardware. Using the [WebREPL console](https://repl.brilliant.xyz), you can start building Python apps and test them directly on Monocle. Check out the examples and reference documentation [here](/micropython/micropython) for all of the details.
+Monocle understands Python and exposes some intuitive APIs for you to easily access every aspect of the hardware. Using the [VSCode extension](https://marketplace.visualstudio.com/items?itemName=brilliantlabs.brilliant-ar-studio), or [WebREPL console](https://repl.brilliant.xyz), you can start building Python apps and test them directly on Monocle. Check out the examples and reference documentation [here](/micropython/micropython) for all of the details.
 
 ### How do I update the firmware?
 
