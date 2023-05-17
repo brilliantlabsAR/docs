@@ -38,3 +38,10 @@ If you'd like to share your project too, feel free to edit this doc, and create 
 ## Hardware & Accessories
 
 - [3D printed accessories for Monocle](https://github.com/jdc-cunningham/bl-monocle-stuff) by jdc-cunningham
+
+## AI Resources
+
+We're hard at work developing tools and apps for AI enabled workflows on Monocle. In the meantime, if you'd like to build your own applications, the links below might help you get started:
+
+- [GoWin GoAI IP](https://www.gowinsemi.com/en/market/featured_detail/11/)
+- [Tensorflow Lite for microcontrollers](https://www.tensorflow.org/lite)
