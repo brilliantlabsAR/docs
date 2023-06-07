@@ -16,6 +16,7 @@ If you'd like to share your project too, feel free to edit this doc, and create 
 
 ## Apps
 
+- [Teleprompter for Google Slides](https://github.com/milesprovus/Monocle-Teleprompter) by milesprovus
 - [OpenAI GPT client for Monocle](https://github.com/acui51/monocle-rizz) by acui51
 - [A heads up display workout app](https://github.com/simonevetere/monocle) by simonevetere and jdc-cunningham
 - [Web based drawing tool for Monocle](https://github.com/jdc-cunningham/oled-pixels-to-mpython) by jdc-cunningham
