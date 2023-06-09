@@ -151,16 +151,18 @@ device.battery_level() # Returns the current battery level as a percentage
 | `GRAY7` **constant**                                          | Equal to `0xc6c6c6`.
 | `GRAY8` **constant**                                          | Equal to `0xe2e2e2`.
 | `TOP_LEFT` **constant**                                       | Justifies a text object on its `x, y` coordinate to the top left.
-| `MIDDLE_LEFT` **constant**                                    | Justifies a text object on its `x, y` coordinate to the middle left
-| `BOTTOM_LEFT` **constant**                                    | Justifies a text object on its `x, y` coordinate to the bottom left
 | `TOP_CENTER` **constant**                                     | Justifies a text object on its `x, y` coordinate to the top center
-| `BOTTOM_CENTER` **constant**                                  | Justifies a text object on its `x, y` coordinate to the middle center
 | `TOP_RIGHT` **constant**                                      | Justifies a text object on its `x, y` coordinate to the bottom center
+| `MIDDLE_LEFT` **constant**                                    | Justifies a text object on its `x, y` coordinate to the middle left
 | `MIDDLE_CENTER` **constant**                                  | Justifies a text object on its `x, y` coordinate to the top right
 | `MIDDLE_RIGHT` **constant**                                   | Justifies a text object on its `x, y` coordinate to the middle right
+| `BOTTOM_LEFT` **constant**                                    | Justifies a text object on its `x, y` coordinate to the bottom left
+| `BOTTOM_CENTER` **constant**                                  | Justifies a text object on its `x, y` coordinate to the middle center
 | `BOTTOM_RIGHT` **constant**                                   | Justifies a text object on its `x, y` coordinate to the bottom right
 | `WIDTH` **constant**                                          | The display width in pixels. Equal to 640.
 | `HEIGHT` **constant**                                         | The display height in pixels. Equal to 400.
+| `FONT_WIDTH` **constant**                                     | The font width in pixels. Equal to 24.
+| `FONT_HEIGHT` **constant**                                    | The font height in pixels. Equal to 48.
 
 This shows, for a given coordinate `(x,y)` used as reference, where the text will be placed:
 
@@ -222,7 +224,44 @@ camera.overlay(False) # Turns off mirroring from the camera to the display
 
 | Members | Description |
 |:--------|:------------|
-| `stream()`&nbsp;**function**&nbsp;❌ | Streams audio from the microphone to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are performed.
+| `record(sample_rate=16000,seconds=1.0)`&nbsp;**function** | Issues an instruction to the FPGA to start recording audio for a number of `seconds`. Always clears previously recorded audio, and while recording is ongoing, data can be read out using `read()`. **NOTE:** `sample_rate` is currently fixed to 16000 samples per second, and cannot be overridden.
+| `read(samples=127)` **function**                          | Reads out a number of recorded audio samples from the FPGA as a **list**. Samples are signed 16bit values, and up to 127 samples can be read at a time. Once all samples have been read, `read()` will return `None`.
+| `compress(data)` **function**                             | Compresses a list of signed 16bit sample values into an **bytearray** using delta compression. The first two bytes represent the first signed 16bit sample value as big endian. Subsequent bytes represent the difference between the previous sample and next sample as signed 8bit values. If a sample in the list provided has a value greater than ±127, then the returned bytearray is truncated before that sample value. This allows for packing multiple compressed packets together, using -128 as a flag to signify a new 16bit starting sample.
+
+#### Example
+{: .no_toc }
+
+```python
+import microphone
+microphone.record(seconds=4.0) # Starts a new 4 second recording
+time.sleep(0.5)  ## A short time is needed to let the FPGA prepare the buffer
+
+raw_audio_fifo_buffer = []
+
+while True:
+    # Keep the buffer topped up with at least 127 samples
+    if len(raw_audio_fifo_buffer) < 127:
+        new_samples = microphone.read()
+
+        if new_samples == None:
+            break # This would mean we're done and should exit the loop
+        
+        raw_audio_fifo_buffer.extend(new_samples)
+
+    # Compress data up to the size of the max bluetooth payload
+    compressed_data = microphone.compress(raw_audio_fifo_buffer[: bluetooth.max_length()])
+
+    while True:
+        try:
+            # Once the bluetooth channel is available, send the compressed data
+            bluetooth.send(compressed_data)
+            break
+        except OSError:
+            pass
+
+    # Pop out the bytes which have now been compressed and sent
+    raw_audio_fifo_buffer = raw_audio_fifo_buffer[len(compressed_data) - 1 :]
+```
 
 ---
 
