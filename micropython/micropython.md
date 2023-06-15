@@ -32,19 +32,19 @@ Get started by trying out the [VSCode extension](https://marketplace.visualstudi
 - Then connect to Monocle by brining it close and running the command `Ctrl-Shift-P` → `Brilliant AR Studio: Connect`.
 - Copy paste the example below into `main.py` and save the file.
 
-    ```python
-    import touch
-    import display
+```python
+import touch
+import display
 
-    def change_text(button):
-        new_text = display.Text(f"Button {button} touched!", 0, 0, display.WHITE)
-        display.show(new_text)
+def change_text(button):
+    new_text = display.Text(f"Button {button} touched!", 0, 0, display.WHITE)
+    display.show(new_text)
 
-    touch.callback(touch.BOTH, change_text)
+touch.callback(touch.BOTH, change_text)
 
-    initial_text = display.Text("Tap a touch button", 0, 0, display.WHITE)
-    display.show(initial_text)
-    ```
+initial_text = display.Text("Tap a touch button", 0, 0, display.WHITE)
+display.show(initial_text)
+```
 
 - After a few moments, you should be able to touch each of the touch pads on Monocle, and see the display update.
 
