@@ -224,43 +224,31 @@ camera.overlay(False) # Turns off mirroring from the camera to the display
 
 | Members | Description |
 |:--------|:------------|
-| `record(sample_rate=16000,seconds=1.0)`&nbsp;**function** | Issues an instruction to the FPGA to start recording audio for a number of `seconds`. Always clears previously recorded audio, and while recording is ongoing, data can be read out using `read()`. **NOTE:** `sample_rate` is currently fixed to 16000 samples per second, and cannot be overridden.
-| `read(samples=127)` **function**                          | Reads out a number of recorded audio samples from the FPGA as a **list**. Samples are signed 16bit values, and up to 127 samples can be read at a time. Once all samples have been read, `read()` will return `None`.
-| `compress(data)` **function**                             | Compresses a list of signed 16bit sample values into an **bytearray** using delta compression. The first two bytes represent the first signed 16bit sample value as big endian. Subsequent bytes represent the difference between the previous sample and next sample as signed 8bit values. If a sample in the list provided has a value greater than ±127, then the returned bytearray is truncated before that sample value. This allows for packing multiple compressed packets together, using -128 as a flag to signify a new 16bit starting sample.
+| `record(seconds=5.0,sample_rate=16000,bit_depth=16)`&nbsp;**function** | Issues an instruction to the FPGA to start recording audio for a number of `seconds`. Always clears previously recorded audio. While recording is ongoing, data can be read out using `read()`. `sample_rate` can be either 16000 or 8000. `bit_depth` can be either 16 or 8.
+| `read(samples)` **function**                                           | Reads out a number of recorded audio samples from the FPGA as a **bytearray**. Samples are either signed 16bit values, or signed 8bit values, depending on what `bit_depth` was previously set to during recording. Up to 127 samples can be read at a time. **Note** if using 16bit mode, the number of bytes returned are always twice the sample value.
 
 #### Example
 {: .no_toc }
 
 ```python
 import microphone
-microphone.record(seconds=4.0) # Starts a new 4 second recording
+
+# Starts a new 4 second recording in 8khz-8bit mode
+microphone.record(seconds=4.0, bit_depth=8, sample_rate=8000)
 time.sleep(0.5)  ## A short time is needed to let the FPGA prepare the buffer
 
-raw_audio_fifo_buffer = []
+samples = bluetooth.max_length() // 2
 
 while True:
-    # Keep the buffer topped up with at least 127 samples
-    if len(raw_audio_fifo_buffer) < 127:
-        new_samples = microphone.read()
+        chunk1 = microphone.read(samples)
+        chunk2 = microphone.read(samples)
 
-        if new_samples == None:
-            break # This would mean we're done and should exit the loop
-        
-        raw_audio_fifo_buffer.extend(new_samples)
-
-    # Compress data up to the size of the max bluetooth payload
-    compressed_data = microphone.compress(raw_audio_fifo_buffer[: bluetooth.max_length()])
-
-    while True:
-        try:
-            # Once the bluetooth channel is available, send the compressed data
-            bluetooth.send(compressed_data)
+        if chunk1 == None:
             break
-        except OSError:
-            pass
-
-    # Pop out the bytes which have now been compressed and sent
-    raw_audio_fifo_buffer = raw_audio_fifo_buffer[len(compressed_data) - 1 :]
+        elif chunk2 == None:
+            bluetooth_send_message(chunk1)
+        else:
+            bluetooth_send_message(chunk1 + chunk2)
 ```
 
 ---
