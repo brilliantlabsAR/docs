@@ -8,28 +8,34 @@ nav_order: 1
 
 ![Brilliant Monocle use cases](/images/monocle-splash.png)
 
-# Technical documentation
+# Technical Documentation
 
-Monocle was designed for hackers, by hackers. Learn briefly about the Monocle [hardware](/monocle/monocle), and once you're ready to dive in, try out the [MicroPython interface](/micropython/micropython) to start building your AR application.
+Monocle was designed for hackers, by hackers. Take a moment to familiarize yourself with the [Monocle hardware](/monocle/monocle.md), and when you're ready to delve deeper, visit the [getting started](/building-apps.md) section to discover how you can construct your own augmented reality apps.
 
 ### How do I start my Monocle?
 
-As soon as you take Monocle out of the case, it’ll automatically power on. You’ll see the display turn on, and be able to connect over Bluetooth. Monocle will go to sleep once you put it back into the case, and will recharge on its own.
+As soon as you remove Monocle from its case, it will automatically power on. You'll notice the display turning on, and you can easily connect via Bluetooth. When you place Monocle back into the case, it will go to sleep and recharge automatically.
 
-### How do I connect to Monocle?
+### How do I program my Monocle?
 
-Connect to Monocle over Bluetooth using the WebREPL console at [repl.brilliant.xyz](https://repl.brilliant.xyz). Make sure you’re using Chrome Desktop, Chrome for Android, or [Bluefy](https://apps.apple.com/de/app/bluefy-web-ble-browser/id1492822055) in iOS.
+Monocle understands Python and offers a convenient set of APIs to control the display, camera, touch, and microphone. By leveraging Brilliant's [AR Studio for VSCode](https://marketplace.visualstudio.com/items?itemName=brilliantlabs.brilliant-ar-studio), you can create Python applications and effortlessly test them on Monocle. To get started, explore the helpful examples in our [reference documentation](/micropython/micropython). Alternatively, you can browse the [community projects page](/community.md) to discover what others have built with Monocle.
 
-### How can I start programming Monocle?
+### How do I update my Monocle?
 
-Monocle understands Python and exposes some intuitive APIs for you to easily access every aspect of the hardware. Using the [VSCode extension](https://marketplace.visualstudio.com/items?itemName=brilliantlabs.brilliant-ar-studio), or [WebREPL console](https://repl.brilliant.xyz), you can start building Python apps and test them directly on Monocle. Check out the examples and reference documentation [here](/micropython/micropython) for all of the details.
+Brilliant AR Studio will promptly notify you whenever a new firmware update is available, ensuring that you stay up-to-date with the latest features and improvements. Additionally, if you prefer, you have the option to load custom FPGA images directly from within AR Studio.
 
-### How do I update the firmware?
+### Are there any out of the box applications?
 
-Whenever a new firmware update is available, you’ll see an option to update within the [WebREPL console](https://repl.brilliant.xyz) once Monocle is connected. If you’re on a very early version of the firmware, you may be prompted to update manually by typing `import update;update.micropython()` and hitting enter. Subsequent updates will then be automatically shown, and you can start an update by clicking the update button within the WebREPL console.
+arGPT by Brilliant, brings ChatGPT directly to your Monocle. With just a tap and a spoken command, you can witness ChatGPT's response right in front of your eyes. Download it now from the iOS App Store, and stay tuned for the upcoming Android release.
+
+<div style="text-align:left" markdown="1">
+[<img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Apple App Store badge" width="125"/>](https://apps.apple.com/az/app/argpt/id6450499355)
+<!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[<img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play Store badge" width="175"/>](https://play.google.com/store/apps/details?id=com.brilliantmonocle) -->
+</div>
 
 ## Join the community
 
-Our Discord server is open to all, and is the perfect place to get help with your project. See what others are making, and share your project with the community.
+Join our Discord server, open to everyone, where you can receive valuable assistance for your project. It's the ideal place to explore inspiring projects created by others and share your own work with the community.
 
 [Join the Server](https://discord.gg/7w3DFxek4p){: .btn .btn-purple}

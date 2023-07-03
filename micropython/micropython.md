@@ -1,8 +1,8 @@
 ---
-title: MicroPython
+title: MicroPython API
 description: A guide on how to use MicroPython on your Monocle AR device.
 image: /micropython/images/monocle-micropython.png
-nav_order: 3
+nav_order: 4
 ---
 
 # MicroPython API
@@ -10,52 +10,59 @@ nav_order: 3
 
 ---
 
-MicroPython lets you prototype and build your applications quickly without having to dive into any low level programming. With a few lines of Python, you can draw to the display, access the camera, and offload processing to the FPGA. Of course you get all the other benefits of Python too. Best of all, it's completely wireless, and you can access the Python REPL fully over Bluetooth.
 
-The [MicroPython firmware for Monocle](https://github.com/brilliantlabsAR/monocle-micropython) is a customized firmware which is largely based on the [upstream MicroPython](https://github.com/micropython/micropython) project. Thanks to the large MicroPython community, we're always updating to new features as they come out on the upstream project.
 
-A subset of the standard MicroPython libraries are currently supported, with more periodically being added. Additionally, some extra modules are included which let you easily interact with the Monocle hardware. Be sure to check out the [MicroPython docs site](https://docs.micropython.org/en/latest/index.html),  as well as the docs here to familiarize yourself with all the features.
+With MicroPython, you can rapidly prototype and develop applications without delving into low-level programming. Just a few lines of Python code allow you to draw on the display, access the camera, and leverage the FPGA for processing. Plus, you enjoy all the advantages of Python. The best part? It's completely wireless, and you can access the Python REPL seamlessly over Bluetooth.
+
+The [MicroPython firmware for Monocle](https://github.com/brilliantlabsAR/monocle-micropython) is a customized version based on the upstream [MicroPython project](https://github.com/micropython/micropython). Thanks to the thriving MicroPython community, we continuously update our firmware to incorporate new features from the upstream project.
+
+Currently, a subset of the standard MicroPython libraries is supported, with periodic additions. We have also included additional modules that facilitate easy interaction with the Monocle hardware. To familiarize yourself with all the features, make sure to explore the [MicroPython docs site](https://docs.micropython.org/en/latest/index.html) and our own documentation.
 
 ---
 
-## Getting start
-{: .no_toc }
+The REPL enables you to explore the hardware capabilities and prototype your applications line by line before final implementation.
 
-### Brilliant AR Studio for VSCode
-{: .no_toc }
+As you embark on building your applications, you can conveniently save them directly onto your Monocle device. Upon booting up, Monocle will automatically attempt to execute a `main.py` file if you have created one. Using the [Brilliant AR Studio](/building-apps/#getting-started-with-ar-studio-for-vscode), you can easily create, save, and edit files directly on your Monocle.
 
-![Accessing MicroPython on Monocle using the web REPL interface](/micropython/images/vs-code-extension.png)
+Typing `help('modules')` lists all the modules contained on the device:
 
-Get started by trying out the [VSCode extension](https://marketplace.visualstudio.com/items?itemName=brilliantlabs.brilliant-ar-studio) on PC or MacOS. Once installed:
-
-- Initialize a new project using the command `Ctrl-Shift-P` (`Cmd-Shift-P` on MacOS) → `Brilliant AR Studio: Initialize new project folder`.
-- Then connect to Monocle by brining it close and running the command `Ctrl-Shift-P` → `Brilliant AR Studio: Connect`.
-- Copy paste the example below into `main.py` and save the file.
-
-```python
-import touch
-import display
-
-def change_text(button):
-    new_text = display.Text(f"Button {button} touched!", 0, 0, display.WHITE)
-    display.show(new_text)
-
-touch.callback(touch.BOTH, change_text)
-
-initial_text = display.Text("Tap a touch button", 0, 0, display.WHITE)
-display.show(initial_text)
+```
+>>> help('modules')
+__main__          asyncio/core      display           os
+_asyncio          asyncio/event     errno             random
+_camera           asyncio/funcs     fpga              re
+_display          asyncio/lock      gc                select
+_mountfs          asyncio/stream    hashlib           struct
+_rtt              binascii          io                sys
+_splashscreen     bluetooth         json              time
+_test             builtins          led               touch
+_update           camera            math              uasyncio
+array             collections       microphone        update
+asyncio/__init__  device            micropython       vgr2d
+Plus any modules on the filesystem
 ```
 
-- After a few moments, you should be able to touch each of the touch pads on Monocle, and see the display update.
+To explore a specific module, import it, and call `help(module_name)`:
 
-### WebREPL Console
-{: .no_toc }
+```
+>>> import device
+>>> help(device)
+object <module ''> is of type module
+  NAME -- monocle
+  mac_address -- <function>
+  VERSION -- v23.181.0720
+  GIT_TAG -- 813d559bc
+  GIT_REPO -- https://github.com/brilliantlabsAR/monocle-micropython
+  battery_level -- <function>
+  reset -- <function>
+  reset_cause -- <function>
+  prevent_sleep -- <function>
+  force_sleep -- <function>
+  is_charging -- <function>
+  Storage -- <class 'Storage'>
+```
 
-Monocle also supports bare scripting from a custom app. The [Web Bluetooth REPL](https://repl.brilliant.xyz) is a good starting point for debugging and using as a template for building your own web apps. Try it from Google Chrome on your PC, Mac, Android, or a Web Bluetooth compatible web browser on your iOS device such as [Bluefy](https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055).
-
-Check out the full instructions and the source code [here](https://github.com/siliconwitchery/web-bluetooth-repl/).
-
-![Accessing MicroPython on Monocle using the web REPL interface](/micropython/images/micropython-web-repl.png)
+To gain a clear understanding of the purpose and return values of each function or class, refer to the MicroPython API reference provided below.
 
 ---
 
@@ -539,55 +546,44 @@ The first payload includes metadata about the file such as the filename (with a 
 ### Firmware updates
 {: .no_toc }
 
-Within the Web REPL, firmware updates should show up automatically, and you'll be prompted to update. If it doesn't work. You can follow these steps:
+Firmware updates are handled in two parts:
 
-1. Make sure you're using a Bluetooth enabled web browser such as Google Chrome on desktop, Android Chrome, or Bluefy on iOS.
-1. Navigate to the repl at [repl.brilliant.xyz](https://repl.brilliant.xyz)
-1. Take monocle out of the case. It should turn on.
-1. Press any key in the repl to connect.
-1. Select **monocle** from the Bluetooth menu that appears.
-1. An update notification should appear at the bottom. Click it.
-    
-    If it doesn’t show up, you can force an update using the commands:
+- **MicroPython firmware** which runs on the Nordic nRF52 Bluetooth IC.
+
+    The nRF52 contains a bootloader which is able to wirelessly update the firmware. To enter the bootloader mode, the following command can be used:
 
     ```python
-    import update;update.micropython()
+    import update
+    update.micropython()
     ```
-1. Monocle will disconnect, and you’ll see a message to reconnect again.
-1. Press any key to reconnect and select **DFUTarg** from the Bluetooth menu.
-1. The update should start, and you'll see the progress.
-1. If anything goes wrong, simply try again.
 
----
+    Monocle will then reboot, and show as a new Bluetooth device named `DFUTarg`. The [Nordic DFU protocol](https://infocenter.nordicsemi.com/topic/sdk_nrf5_v17.1.0/lib_dfu_transport_ble.html) can then be used to perform an update.
 
-Under the hood, the update `.zip` file is obtained from the [releases page](https://github.com/brilliantlabsAR/monocle-micropython/releases) of the *monocle-micropython* repository. After that Monocle is rebooted into device firmware update (DFU) mode where the Nordic DFU service handles the transfer of the file data. To read how the DFU mechanism works, you can check the Nordic documentation [here](https://infocenter.nordicsemi.com/topic/sdk_nrf5_v17.1.0/lib_dfu_transport_ble.html).
+    If you're using the AR Studio for VSCode, firmware updates are handled automatically, however if you wish to implement your own. The [WebREPL project](https://github.com/siliconwitchery/web-bluetooth-repl/blob/main/js/nordicdfu.js) serves as an example of how to implement your own firmware update protocol.
 
-For testing everything Bluetooth related, try our the nRF Connect App, for [desktop](https://www.nordicsemi.com/Products/Development-tools/nrf-connect-for-desktop), [Android](https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp&hl=en&gl=US), or [iOS](https://apps.apple.com/se/app/nrf-connect-for-mobile/id1054362403).
+- **FPGA binary image** which is used for display, camera and microphone processing.
 
-### FPGA application updates
-{: .no_toc }
+    FPGA images can also be loaded wirelessly using Python commands. For simplicity, the FPGA binary is represented here as base64 encoded data, however the `bluetooth.receive_callback()` function can also be used to send bytes more efficiently over the air. 
 
-FPGA application updates are automatically updated when using the Brilliant WebREPL.
+    Again, the [WebREPL project](https://github.com/siliconwitchery/web-bluetooth-repl/blob/main/js/update.js) serves as an example of how to implement your own FPGA update protocol.
 
-For simplicity, the WebREPL encodes the application binary file to base-64 format, and simply sends the data over the raw REPL. The entire process is shown below.
+    ```python
+    import device
+    import update
+    import ubinascii
 
-```python
-import device
-import update
-import ubinascii
+    # Erases the entire application
+    update.Fpga.erase()
 
-# Erases the entire application
-update.Fpga.erase()
+    # Send exactly 444430 bytes. Each write appends to the already written data
+    # There's no limitation on how many bytes you can send, but it should be
+    # tuned to match the host MTU length for a faster upload speed
+    update.Fpga.write(ubinascii.a2b_base64(b'TWFueSBoYW5kcyBtYWt...lIGxpZ2h0IHdvcmsu'))
+    ...
+    update.Fpga.write(ubinascii.a2b_base64(b'yBtYWtTWFueSBoYW5kc...cmslIGxpZIHd2h0vu'))
 
-# Send exactly 444430 bytes. Each write appends to the already written data
-# There's no limitation on how many bytes you can send, but it should be
-# tuned to match the host MTU length for a faster upload speed
-update.Fpga.write(ubinascii.a2b_base64(b'TWFueSBoYW5kcyBtYWt...lIGxpZ2h0IHdvcmsu'))
-...
-update.Fpga.write(ubinascii.a2b_base64(b'yBtYWtTWFueSBoYW5kc...cmslIGxpZIHd2h0vu'))
+    # Write the special "done" flag at the end of the file
+    update.Fpga.write(b'done')
 
-# Write the special "done" flag at the end of the file
-update.Fpga.write(b'done')
-
-device.reset()
-```
+    device.reset()
+    ```

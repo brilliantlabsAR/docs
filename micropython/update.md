@@ -2,19 +2,21 @@
 title: Firmware Updates
 description: A guide on how to update your Monocle AR device.
 image: /micropython/images/monocle-micropython.png
-nav_order: 5
+nav_order: 6
 ---
 
-# Updating your Monocle firmware
+# Updating your Monocle Firmware
 {: .no_toc }
 
 ---
 
-You can use the Brilliant WebREPL directly from your browser to keep your Monocle up to date. 
+If you're using the [Brilliant AR Studio](/building-apps/#getting-started-with-ar-studio-for-vscode), firmware updates are automatic, and you will be prompted whenever a new update is available.
+
+If you run into problems, you can update manually using the following steps:
 
 1. Firstly, ensure that you're using a browser that supports Web Bluetooth such as Google Chrome for Desktop, Android Chrome, or [Bluefy](https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055) on iOS.
 
-1. Next, navigate to the Web REPL at [https://repl.brilliant.xyz](https://repl.brilliant.xyz)
+1. Next, navigate to the WebREPL at [https://repl.brilliant.xyz](https://repl.brilliant.xyz)
 
 1. Press any key to open the connection dialog box.
 

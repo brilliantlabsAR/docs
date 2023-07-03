@@ -2,10 +2,10 @@
 title: Community Projects
 description: Technical documentation for Brilliant's AR devices.
 image: /images/monocle-splash.png
-nav_order: 4
+nav_order: 5
 ---
 
-# Community projects, libraries and resources
+# Community Projects, Libraries and Resources
 {: .no_toc }
 
 ---

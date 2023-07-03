@@ -1,0 +1,68 @@
+---
+title: Building Apps
+description: A guide on how to develop your own applications for Monocle.
+image: /micropython/images/monocle-micropython.png
+nav_order: 3
+---
+
+# Building Apps
+{: .no_toc }
+
+---
+
+## Getting started with AR Studio for VSCode
+{: .no_toc }
+
+AR Studio for VSCode lets you develop, test and save apps directly onto your Monocle. Download it today from the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=brilliantlabs.brilliant-ar-studio) and start developing your Monocle projects.
+
+![Brilliant AR Studio for VSCode](/micropython/images/vs-code-extension.png)
+
+- Once installed, connect to Monocle with `Ctrl-Shift-P` → `Brilliant AR Studio: Connect`.
+- Copy the example below, and save the file as `main.py`.
+
+```python
+import touch
+import display
+
+def change_text(button):
+    new_text = display.Text(f"Button {button} touched!", 0, 0, display.WHITE)
+    display.show(new_text)
+
+touch.callback(touch.BOTH, change_text)
+
+initial_text = display.Text("Tap a touch button", 0, 0, display.WHITE)
+display.show(initial_text)
+```
+
+- Run main.py with `Ctrl-Shift-P` → `Brilliant AR Studio: Build`.
+- You should be able to touch each of the touch pads on Monocle, and see the display update.
+
+---
+
+## Connecting to the wider world
+
+MicroPython on Monocle simplifies the usage of complex protocols typically employed in Bluetooth devices. Just like Python on desktop, Monocle can be conveniently interacted with using the REPL (Read Evaluate Print Loop) interface. The key difference? It's completely wireless!
+
+This wireless functionality not only allows for effortless testing and application development on Monocle, but also enables Python commands to control Monocle from your customized iOS, Android, or Desktop app.
+
+![Diagram of Monocle network flow](/images/monocle-network-flow.png)
+
+Below are some templates to help you get started building your own apps.
+
+### iOS
+
+arGPT is our ChatGPT client for Monocle. Check out the [source code](https://github.com/brilliantlabsAR/argpt-for-ios) and use it as a template for your own iOS app.
+
+![Brilliant arGPT for iOS App](/images/argpt-for-ios-screens.png)
+
+### Javascript
+
+The [WebREPL](https://repl.brilliant.xyz) is a good starting point building your own web apps. Try it from Google Chrome on your PC, Mac, Android, or a Web Bluetooth compatible web browser on your iOS device such as [Bluefy](https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055).
+
+Check out the full instructions and the source code [here](https://github.com/siliconwitchery/web-bluetooth-repl/).
+
+![Accessing MicroPython on Monocle using the WebREPL interface](/micropython/images/micropython-web-repl.png)
+
+### Community projects
+
+For more application examples and ideas, check out the [community projects](/community.md) section to see what others have built.
