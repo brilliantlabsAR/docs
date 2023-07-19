@@ -240,7 +240,7 @@ camera.overlay(False) # Turns off mirroring from the camera to the display
 ```python
 import microphone
 
-# Starts a new 4 second recording in 8khz-8bit mode
+# Starts a new 4 second recording in 8khz-8bit-signed mode
 microphone.record(seconds=4.0, bit_depth=8, sample_rate=8000)
 time.sleep(0.5)  ## A short time is needed to let the FPGA prepare the buffer
 
