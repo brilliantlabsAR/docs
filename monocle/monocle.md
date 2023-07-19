@@ -73,6 +73,15 @@ By default, the FPGA comes pre-loaded our [Graphics & Camera Accelerator IP](htt
 
 To save power, the FPGA can be shutdown along with the camera and display when not needed. See the [power](#power) section for details. 
 
+### FPGA chip revisions
+
+Your Monocle will contain one of two FPGA chip revisions. These revisions are functionally very similar, with `revC` having slightly tighter PLL limits over the `revB`. This does mean however that should you decide to build your own FPGA application, you'd need to build for the correct chip revision. The chip revision can be seen on the chip marking itself, or read over MicroPython using `fpga.version()`.
+
+| Chip revision | Marking on chip                        | Device name in Gowin EDA | Device ID for programmer |
+|:-------------:|:--------------------------------------:|:------------------------:|:------------------------:|
+| **revB**      | GW1N-LV9<br>MG100C6/I5<br>xxxx**B**A0N | GW1N-9                   | 0x1100**5**81B           |
+| **revC**      | GW1N-LV9<br>MG100C6/I5<br>xxxx**C**A0N | GW1N-9**C**              | 0x1100**4**81B           |
+
 ---
 
 ## Memory
@@ -197,7 +206,9 @@ To generate the `.zip` file, you'll need to use the [nRF Util](https://www.nordi
 
 We recommend having a look at our [Graphics & Camera Accelerator IP](https://github.com/brilliantlabsAR/monocle-fpga) to see how an FPGA project is set up and built.
 
-Generally it's convenient to use the [MicroPython FPGA module](/micropython/micropython/#fpga--monocle-specific) to wirelessly program the FPGA. However this method does not allow for JTAG debugging, and can be a slow process for iterative development. It's therefore also possible to program the FPGA manually using a programmer. 
+Generally it's convenient to use the [MicroPython FPGA module](/micropython/micropython/#fpga--monocle-specific) to wirelessly program the FPGA. However this method does not allow for JTAG debugging, and can be a slow process for iterative development. It's therefore also possible to program the FPGA manually using a programmer.
+
+**Note:** Be sure to check your [chip revision](#fpga-chip-revisions) prior to developing and programming your application.
 
 ### Manually programming
 
