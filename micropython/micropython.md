@@ -107,7 +107,7 @@ help(builtins) # Lists all of the built-in MicroPython functions
 | `reset_cause()` **function**                  | Returns the reason for the previous reset or startup state. These can be either:<br>- `'POWERED_ON'` if the device was powered on normally<br>- `'SOFTWARE_RESET'` if `device.reset()` was called<br>- `'CRASHED'` if the device had crashed.
 | `prevent_sleep(enable)`&nbsp;**function**     | Enables or disables sleeping of the device when put back into the charging case. Sleeping is enabled by default. If no argument is given. The currently set value is returned. **WARNING: Running monocle for prolonged periods may result in display burn in, as well as reduced lifetime of components.**
 | `force_sleep()` **function**                  | Puts the device to sleep. All hardware components are shut down, and Bluetooth is disconnected. Upon touching either of the touch pads, the device will wake up, and reset.
-| `is_charging()`&nbsp;**function**             | Return `True` if the Monocle is currently charging. Useful when `prevent_sleep()` is called, otherwise the Monocle turns off when charging.
+| `is_charging()` **function**                  | Returns `True` if the Monocle is currently charging. Useful only when `prevent_sleep()` is enabled, otherwise the Monocle automatically turns off when placed on charge.
 | `Storage(start, length)` **class**            | The `Storage` class is used internally for initializing and accessing the file system. This class shouldn't be accessed, unless you want to reformat the internal storage. To learn more about how MicroPython handles user files, have a look at the documentation [here](https://docs.micropython.org/en/latest/esp8266/tutorial/filesystem.html) and [here](https://docs.micropython.org/en/latest/reference/filesystem.html).
 
 #### Example
@@ -207,13 +207,12 @@ display.show(text, line, outline, poly)
 
 | Members | Description |
 |:--------|:------------|
-| `capture()` **function** ❌                    | Captures an image and returns it to a device over Bluetooth. See [downloading media](#downloading-media) to understand how media transfers are done.
-| `overlay(enable)` **function** ❌              | Enables or disables an overlay of what the camera is currently seeing onto the display.
-| `output(x,y,format)`&nbsp;**function**&nbsp;❌ | Set the output resolution and format. `x` and `y` represent the output resolution in pixels. `format` can be either `RGB`, `'YUV'` or `'JPEG'`. The default output settings are `camera.output(640, 400, 'YUV')`.
-| `zoom(multiplier)` **function** ❌             | Sets the zoom level of the camera. Multiplier can be any floating point number between 1 and 8.
-| `RGB` ❌ **constant**                          | String constant which represents a RGB565 output format.
-| `YUV` ❌ **constant**                          | String constant which represents a YUV422 output format.
-| `JPEG` ❌ **constant**                         | String constant which represents a jpeg output format.
+| `capture()` **function**                       | Issues an instruction to the FPGA to start capturing a single image. Always overwrites any previously captured image. Once `capture()` returns, the image data can be read out using `read()`.
+| `read(bytes=254)` **function**                 | Reads out a number of bytes from the image frame buffer. `bytes` can be overridden to read out less than 254 bytes. A maximum of 254 bytes may be read out at a time. Multiple reads are required to read out an entire image. Once an entire image is read, and no bytes remain, `read()` will return `None`. If the output mode is set to `RGB`, a known number of bytes can be read out, however in `JPEG` mode, the total number of bytes will vary.
+| `output(x,y,format)`&nbsp;**function**&nbsp;❌ | Set the output resolution and format. `x` and `y` represent the output resolution in pixels. `format` can be either `'RGB'`, or `'JPEG'`. The default output settings are `camera.output(640, 400, 'JPEG')`.
+| `zoom(factor)` **function** ❌                 | Sets the zoom level of the camera. `factor` can be any floating point value between 1 and 8.
+| `RGB` **constant**                             | String constant which represents a RGB565 output format.
+| `JPEG` **constant**                            | String constant which represents a JPEG output format.
 
 #### Example
 {: .no_toc }
@@ -222,7 +221,7 @@ display.show(text, line, outline, poly)
 import camera
 import bluetooth
 
-# Capture a JPEG image and transfer it over the Bluetooth raw data stream
+# Capture a JPEG image and transfer it over the Bluetooth raw data service
 camera.capture()
 while data := camera.read(bluetooth.max_length()):
     bluetooth.send(data)
@@ -245,7 +244,7 @@ while data := camera.read(bluetooth.max_length()):
 ```python
 import microphone
 
-# Starts a new 4 second recording in 8khz-8bit-signed mode
+# Starts a new 4 second recording with 8khz sample rate, and signed 8bit output
 microphone.record(seconds=4.0, bit_depth=8, sample_rate=8000)
 time.sleep(0.5)  ## A short time is needed to let the FPGA prepare the buffer
 
@@ -271,11 +270,12 @@ while True:
 
 | Members | Description |
 |:--------|:------------|
-| `callback(pad,callback)`&nbsp;**function** | Attaches a callback handler to one or both of the touch pads. If `pad` is given as `touch.BOTH`, a single callback will be used to capture both touch events. Otherwise `touch.A` or `touch.B` can be used to assign separate callback functions if desired. `callback` should be a predefined function taking one argument. This argument will equal the pad which triggered the callback. To unassign a callback, issue `touch.callback()` with `None` in the `callback` argument. To view the currently assigned callback, issue `touch.callback()` without the `callback` argument.
+| `callback(pad,callback)`&nbsp;**function** | Attaches a callback handler to one, both or either of the touch pads. If `pad` is given as `'BOTH'`, then both pads must be touched to trigger the callback. If `pad` is given as `'EITHER'`, then touching either of the pads will trigger the callback. Otherwise `'A'` or `'B'` can be used to assign separate callback functions to each pad individually. `callback` should be a predefined function taking one argument. This argument will equal the pad which triggered the callback. To unassign a callback, issue `callback(pad, None)`. To view the currently assigned callback for a particular pad, issue `callback(pad)` without the second argument.
 | `state(pad)` **function**                  | Returns the current touch state of the touch pads. If `pad` is not specified, either `'A'`, `'B'`, `'BOTH'` or `None` will be returned depending on which pads are currently touched. If `pad` is specified, then `True` or `False` will be returned for the touch state of that pad.
 | `A` **constant**                           | String constant which represents Pad A.
 | `B` **constant**                           | String constant which represents Pad B.
 | `BOTH` **constant**                        | String constant which represents both pads.
+| `EITHER` **constant**                      | String constant which represents either pads.
 
 #### Example
 {: .no_toc }
@@ -290,8 +290,7 @@ def fn(arg):
     if arg == touch.B:
         print("button B pressed!")
 
-touch.callback(touch.BOTH, fn) # Attaches the callback to the both buttons
-touch.callback(touch.A, fn) # Attaches the callback to an individual button
+touch.callback(touch.EITHER, fn) # Attaches the same callback to either of the touch pads
 ```
 
 ---
@@ -329,6 +328,8 @@ led.off(led.RED) # Turns off the red LED
 |:--------|:------------|
 | `read(addr, n)` **function**            | Reads `n` number of bytes from the 16-bit address `addr`, and returns a **bytes object**.
 | `write(addr,bytes[])`&nbsp;**function** | Writes all bytes from a given **bytes object** `bytes[]` to the 16-bit address `addr`.
+| `run(state)` **function**               | `run(False)` stops and powers down the FPGA. `run(True)` powers up the FPGA and restarts operation. This function should only be using during the FPGA application update process. Once stopped, the camera and display will no longer be configured, and a `device.reset()` would be required to reinitialize them. Calling `run()` without any argument will return the current run state of the FPGA.
+| `version()` **function**                | Returns the first three registers (`0x0001`, `0x0002`, and `0x0003`) from the FPGA SPI interface. The three registers return a python **dictionary object** with keys: `target_device`, `application_version`, and `chip_revision`. Note that the values of these registers are dependent on the application that is currently running on the FPGA. For Brilliant supplied FPGA applications, `target_device` should always be `'Mncl'`. `application_version` should be a 12 byte version string of the FPGA application, eg. `'v22.342.1252'`. Finally `chip_revision` should return either `'revB'` or `'revC'`. See the [Monocle Hardware Manual](/monocle/monocle#fpga) to lean more about chip revisions. 
 
 #### Example
 {: .no_toc }
