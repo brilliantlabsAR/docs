@@ -220,8 +220,12 @@ display.show(text, line, outline, poly)
 
 ```python
 import camera
-camera.overlay(True) # Turns on mirroring from the camera to the display
-camera.overlay(False) # Turns off mirroring from the camera to the display
+import bluetooth
+
+# Capture a JPEG image and transfer it over the Bluetooth raw data stream
+camera.capture()
+while data := camera.read(bluetooth.max_length()):
+    bluetooth.send(data)
 ```
 
 ---
