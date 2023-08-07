@@ -82,6 +82,8 @@ Your Monocle will contain one of two FPGA chip revisions. These revisions are fu
 | **revB**      | GW1N-LV9<br>MG100C6/I5<br>xxxx**B**A0N | GW1N-9                   | 0x1100**5**81B           |
 | **revC**      | GW1N-LV9<br>MG100C6/I5<br>xxxx**C**A0N | GW1N-9**C**              | 0x1100**4**81B           |
 
+**Note:** If the values of `fpga.version()` return `unknown`, then the FPGA didn't boot. Try re-starting the Monocle, or re-uploading the FPGA image.
+
 ---
 
 ## Memory
