@@ -28,12 +28,14 @@ def change_text(button):
     new_text = display.Text(f"Button {button} touched!", 0, 0, display.WHITE)
     display.show(new_text)
 
-touch.callback(touch.BOTH, change_text)
+touch.callback(touch.EITHER, change_text)
 
 initial_text = display.Text("Tap a touch button", 0, 0, display.WHITE)
 display.show(initial_text)
 ```
 
+- Upload `main.py` by right clicking on the file in the Explorer and clicking `Brilliant AR Studio: Upload File to Device`. Ensure that you have a workspace or folder open in the Explorer so that you can see the file.
+- When prompted for the on-device name, keep it as `main.py` and press Enter.
 - Run main.py with `Ctrl-Shift-P` → `Brilliant AR Studio: Build`.
 - You should be able to touch each of the touch pads on Monocle, and see the display update.
 
