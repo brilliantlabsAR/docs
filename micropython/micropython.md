@@ -329,7 +329,6 @@ led.off(led.RED) # Turns off the red LED
 | `read(addr, n)` **function**            | Reads `n` number of bytes from the 16-bit address `addr`, and returns a **bytes object**.
 | `write(addr,bytes[])`&nbsp;**function** | Writes all bytes from a given **bytes object** `bytes[]` to the 16-bit address `addr`.
 | `run(state)` **function**               | `run(False)` stops and powers down the FPGA. `run(True)` powers up the FPGA and restarts operation. This function should only be using during the FPGA application update process. Once stopped, the camera and display will no longer be configured, and a `device.reset()` would be required to reinitialize them. Calling `run()` without any argument will return the current run state of the FPGA.
-| `version()` **function**                | Returns the first three registers (`0x0001`, `0x0002`, and `0x0003`) from the FPGA SPI interface. The three registers return a python **dictionary object** with keys: `target_device`, `application_version`, and `chip_revision`. Note that the values of these registers are dependent on the application that is currently running on the FPGA. For Brilliant supplied FPGA applications, `target_device` should always be `'Mncl'`. `application_version` should be a 12 byte version string of the FPGA application, eg. `'v22.342.1252'`. Finally `chip_revision` should return either `'revB'` or `'revC'`. See the [Monocle Hardware Manual](/monocle/monocle#fpga) to lean more about chip revisions. 
 
 #### Example
 {: .no_toc }
