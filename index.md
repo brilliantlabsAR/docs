@@ -30,8 +30,8 @@ arGPT by Brilliant, brings ChatGPT directly to your Monocle. With just a tap and
 
 <div style="text-align:left" markdown="1">
 [<img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Apple App Store badge" width="125"/>](https://apps.apple.com/az/app/argpt/id6450499355)
-<!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[<img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play Store badge" width="175"/>](https://play.google.com/store/apps/details?id=com.brilliantmonocle) -->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[<img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play Store badge" width="125"/>](https://play.google.com/store/apps/details?id=xyz.brilliant.argpt)
 </div>
 
 ## Join the community

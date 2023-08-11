@@ -51,9 +51,9 @@ This wireless functionality not only allows for effortless testing and applicati
 
 Below are some templates to help you get started building your own apps.
 
-### iOS
+### iOS & Android
 
-arGPT is our ChatGPT client for Monocle. Check out the [source code](https://github.com/brilliantlabsAR/argpt-for-ios) and use it as a template for your own iOS app.
+arGPT is our ChatGPT client for Monocle. Check out the source code for [iOS](https://github.com/brilliantlabsAR/argpt-for-ios), as well as for [Android](https://github.com/brilliantlabsAR/argpt-for-android) and use it as a template for your own mobile app.
 
 ![Brilliant arGPT for iOS App](/images/argpt-for-ios-screens.png)
 
