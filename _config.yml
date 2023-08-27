@@ -9,6 +9,7 @@ url: https://docs.brilliant.xyz
 
 # Plugins
 plugins:
+  - jekyll-include-cache
   - jekyll-seo-tag
   - jekyll-sitemap
 
