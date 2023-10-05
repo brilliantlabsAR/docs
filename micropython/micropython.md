@@ -220,11 +220,17 @@ display.show(text, line, outline, poly)
 ```python
 import camera
 import bluetooth
+import ubinascii
 
 # Capture a JPEG image and transfer it over the Bluetooth raw data service
 camera.capture()
 while data := camera.read(bluetooth.max_length()):
     bluetooth.send(data)
+
+# Capture a JPEG image and shows it as base64 in the REPL (less efficient)
+camera.capture()
+while data := camera.read(bluetooth.max_length()):
+    print(binascii.b2a_base64(data))
 ```
 
 ---
