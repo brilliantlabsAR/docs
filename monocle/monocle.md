@@ -65,7 +65,7 @@ Over the air updates can be performed via Nordic's nRFConnect software either on
 
 ## FPGA
 
-The FPGA is used for graphics acceleration, as well as image processing of the 5MP camera. It's perfect for computer vision and AI tasks which can make direct use of the camera and microphone as inputs. The FPGA IC used is a [Gowin GW1N-LV9MG100C6/I5](https://www.mouser.se/datasheet/2/1033/GW1N_series_of_FPGA_Products_Data_Sheet-1830682.pdf). It contains **7k LUTs**, **468kb of block RAM**, as well as **608kb of Flash** memory. An additional [1 megabyte (8 megabits) SPI Flash IC](#flash) is also included in Monocle, and either flash space may be used for booting up the FPGA, or storing user data.
+The FPGA is used for graphics acceleration, as well as image processing of the 5MP camera. It's perfect for computer vision and AI tasks which can make direct use of the camera and microphone as inputs. The FPGA IC used is a [Gowin GW1N-LV9MG100C6/I5](http://cdn.gowinsemi.com.cn/DS117E.pdf). It contains **7k LUTs**, **468kb of block RAM**, as well as **608kb of Flash** memory. An additional [1 megabyte (8 megabits) SPI Flash IC](#flash) is also included in Monocle, and either flash space may be used for booting up the FPGA, or storing user data.
 
 By default, the FPGA comes pre-loaded our [Graphics & Camera Accelerator IP](https://github.com/brilliantlabsAR/monocle-fpga) and can be accessed using MicroPython commands. Our IP is a perfect starting point if you wish to [create your own FPGA application](#developing-for-the-fpga).
 
