@@ -12,6 +12,10 @@ nav_order: 1
 
 Monocle was designed for hackers, by hackers. Take a moment to familiarize yourself with the [Monocle hardware](/monocle/monocle.md), and when you're ready to delve deeper, visit the [getting started](/building-apps.md) section to discover how you can construct your own augmented reality apps.
 
+{: .highlight }
+- The [introduction video](https://www.youtube.com/watch?v=_fo8jUKMMFs) is using the former version of the API.
+- Before trying anything, you might want to update the firmware and FPGA by visiting <https://repl.brilliant.xyz> and following the indications or [manually](/micropython/update/).
+
 ### How do I start my Monocle?
 
 As soon as you remove Monocle from its case, it will automatically power on. You'll notice the display turning on, and you can easily connect via Bluetooth. When you place Monocle back into the case, it will go to sleep and recharge automatically.
