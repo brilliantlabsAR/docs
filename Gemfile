@@ -6,9 +6,10 @@ source "https://rubygems.org"
 gem "github-pages", "~> 228", group: :jekyll_plugins
 
 group :jekyll_plugins do
+  gem 'jekyll-include-cache', "~> 0.2.1"
+  gem "jekyll-redirect-from", "~> 0.16.0"
   gem "jekyll-seo-tag", "~> 2.8.0"
   gem "jekyll-sitemap", "~> 1.4.0"
-  gem 'jekyll-include-cache', "~> 0.2.1"
 end
 
 # Windows and JRuby does not include zoneinfo files, so bundle the tzinfo-data

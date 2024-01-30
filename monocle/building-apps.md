@@ -3,6 +3,9 @@ title: Building Apps
 description: A guide on how to develop your own applications for Monocle.
 image: /micropython/images/monocle-micropython.png
 nav_order: 3
+parent: Monocle
+redirect_from:
+  - /building-apps
 ---
 
 # Building Apps

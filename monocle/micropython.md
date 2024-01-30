@@ -2,7 +2,10 @@
 title: MicroPython API
 description: A guide on how to use MicroPython on your Monocle AR device.
 image: /micropython/images/monocle-micropython.png
-nav_order: 4
+nav_order: 2
+parent: Monocle
+redirect_from:
+  - /micropython/micropython
 ---
 
 # MicroPython API
@@ -174,7 +177,7 @@ device.battery_level() # Returns the current battery level as a percentage
 
 This shows, for a given coordinate `(x,y)` used as reference, where the text will be placed:
 
-![Illustration of the `justify=...` parameter](/micropython/images/micropython-justify.drawio.svg)
+![Illustration of the `justify=...` parameter](/monocle/images/micropython-justify.drawio.svg)
 
 ```python
 import display
@@ -533,7 +536,7 @@ The RX characteristic is *write* only, and transports serial string data from th
 
 Each characteristic transports string data of any length up to the negotiated *MTU size - 3 bytes*. Longer strings must be chopped up and will be automatically rejoined on the receiving side by Monocle. Likewise if Monocle wishes to send longer responses than can fit into a single MTU payload, the data will arrive sequentially, and can be concatenated by the central Bluetooth app. The diagram below describes how communication operates between Monocle and a central device.
 
-![Sequence diagram of the Monocle serial data service](/micropython/images/bluetooth-serial-service-sequence-diagram.svg)
+![Sequence diagram of the Monocle serial data service](/monocle/images/bluetooth-serial-service-sequence-diagram.svg)
 
 A secondary Bluetooth *Service*, again containing two *Characteristics*, is used to transport raw data such as image, audio and firmware update data. The mechanism for the raw data service is similar to the serial data service, aside from the fact that `null` or `0` characters may also be included within the payload.
 
@@ -552,7 +555,7 @@ Due to the small payload size of Bluetooth packets, the file may be spit into ma
 
 The first payload includes metadata about the file such as the filename (with a relevant file extension) and the file size. The sequence diagram below describes how a file is broken into several parts and the data can be recombined to construct the full file: 
 
-![Sequence diagram of the Monocle raw data service](/micropython/images/bluetooth-raw-data-service-sequence-diagram.svg)
+![Sequence diagram of the Monocle raw data service](/monocle/images/bluetooth-raw-data-service-sequence-diagram.svg)
 
 ### Firmware updates
 {: .no_toc }
