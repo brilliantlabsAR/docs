@@ -3,6 +3,7 @@ title: Brilliant Documentation
 description: Technical documentation for all the Brilliant products.
 logo: /images/logo.svg
 remote_theme: just-the-docs/just-the-docs
+color_scheme: brilliant
 permalink: pretty
 heading_anchors: true
 url: https://docs.brilliant.xyz
@@ -10,6 +11,7 @@ url: https://docs.brilliant.xyz
 # Plugins
 plugins:
   - jekyll-include-cache
+  - jekyll-redirect-from
   - jekyll-seo-tag
   - jekyll-sitemap
 
@@ -25,7 +27,7 @@ aux_links:
     - https://www.brilliant.xyz
 
 # Footer
-footer_content: Copyright &copy; 2023 <a href="https://www.brilliant.xyz">Brilliant Labs Ltd.</a>
+footer_content: Copyright &copy; 2024 <a href="https://www.brilliant.xyz">Brilliant Labs Ltd.</a>
 last_edit_timestamp: true
 last_edit_time_format: "%b %e %Y"
 

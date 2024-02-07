@@ -1,8 +1,11 @@
 ---
 title: Building Apps
 description: A guide on how to develop your own applications for Monocle.
-image: /micropython/images/monocle-micropython.png
+image: /monocle/images/monocle-micropython.png
 nav_order: 3
+parent: Monocle
+redirect_from:
+  - /building-apps
 ---
 
 # Building Apps
@@ -15,7 +18,7 @@ nav_order: 3
 
 AR Studio for VSCode lets you develop, test and save apps directly onto your Monocle. Download it today from the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=brilliantlabs.brilliant-ar-studio) and start developing your Monocle projects.
 
-![Brilliant AR Studio for VSCode](/micropython/images/vs-code-extension.png)
+![Brilliant AR Studio for VSCode](/monocle/images/vs-code-extension.png)
 
 - Once installed, connect to Monocle with `Ctrl-Shift-P` → `Brilliant AR Studio: Connect`.
 - Copy the example below, and save the file as `main.py`.
@@ -63,8 +66,8 @@ The [WebREPL](https://repl.brilliant.xyz) is a good starting point building your
 
 Check out the full instructions and the source code [here](https://github.com/siliconwitchery/web-bluetooth-repl/).
 
-![Accessing MicroPython on Monocle using the WebREPL interface](/micropython/images/micropython-web-repl.png)
+![Accessing MicroPython on Monocle using the WebREPL interface](/monocle/images/micropython-web-repl.png)
 
 ### Community projects
 
-For more application examples and ideas, check out the [community projects](/community.md) section to see what others have built.
+For more application examples and ideas, check out the [community projects](/community) section to see what others have built.

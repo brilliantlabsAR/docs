@@ -1,8 +1,11 @@
 ---
 title: MicroPython API
 description: A guide on how to use MicroPython on your Monocle AR device.
-image: /micropython/images/monocle-micropython.png
-nav_order: 4
+image: /monocle/images/monocle-micropython.png
+nav_order: 2
+parent: Monocle
+redirect_from:
+  - /monocle/micropython
 ---
 
 # MicroPython API
@@ -10,13 +13,15 @@ nav_order: 4
 
 ---
 
-
-
 With MicroPython, you can rapidly prototype and develop applications without delving into low-level programming. Just a few lines of Python code allow you to draw on the display, access the camera, and leverage the FPGA for processing. Plus, you enjoy all the advantages of Python. The best part? It's completely wireless, and you can access the Python REPL seamlessly over Bluetooth.
 
-The [MicroPython firmware for Monocle](https://github.com/brilliantlabsAR/monocle-micropython) is a customized version based on the upstream [MicroPython project](https://github.com/micropython/micropython). Thanks to the thriving MicroPython community, we continuously update our firmware to incorporate new features from the upstream project.
+The [MicroPython firmware for Monocle](https://github.com/brilliantlabsAR/monocle-micropython) is a customized version based on the upstream [MicroPython project](https://github.com/monocle/micropython). Thanks to the thriving MicroPython community, we continuously update our firmware to incorporate new features from the upstream project.
 
 Currently, a subset of the standard MicroPython libraries is supported, with periodic additions. We have also included additional modules that facilitate easy interaction with the Monocle hardware. To familiarize yourself with all the features, make sure to explore the [MicroPython docs site](https://docs.micropython.org/en/latest/index.html) and our own documentation.
+
+{: .highlight }
+- The [introduction video](https://www.youtube.com/watch?v=_fo8jUKMMFs) is using the former version of the API.
+- Before trying anything, you might want to update the firmware and FPGA by visiting <https://repl.brilliant.xyz> and following the indications or [manually](/monocle/update).
 
 ---
 
@@ -68,9 +73,6 @@ To gain a clear understanding of the purpose and return values of each function 
 
 ## Library reference
 {: .no_toc }
-
-{: .note }
-> MicroPython for Monocle is always being updated so be sure to check back frequently. The ❌ icon signifies a feature which is not implemented yet, but is planned.
 
 1. TOC
 {:toc}
@@ -174,7 +176,7 @@ device.battery_level() # Returns the current battery level as a percentage
 
 This shows, for a given coordinate `(x,y)` used as reference, where the text will be placed:
 
-![Illustration of the `justify=...` parameter](/micropython/images/micropython-justify.drawio.svg)
+![Illustration of the `justify=...` parameter](/monocle/images/micropython-justify.drawio.svg)
 
 ```python
 import display
@@ -209,8 +211,6 @@ display.show(text, line, outline, poly)
 |:--------|:------------|
 | `capture()` **function**                       | Issues an instruction to the FPGA to start capturing a single image. Always overwrites any previously captured image. Once `capture()` returns, the image data can be read out using `read()`.
 | `read(bytes=254)` **function**                 | Reads out a number of bytes from the image frame buffer. `bytes` can be overridden to read out less than 254 bytes. A maximum of 254 bytes may be read out at a time. Multiple reads are required to read out an entire image. Once an entire image is read, and no bytes remain, `read()` will return `None`. If the output mode is set to `RGB`, a known number of bytes can be read out, however in `JPEG` mode, the total number of bytes will vary.
-| `output(x,y,format)`&nbsp;**function**&nbsp;❌ | Set the output resolution and format. `x` and `y` represent the output resolution in pixels. `format` can be either `'RGB'`, or `'JPEG'`. The default output settings are `camera.output(640, 400, 'JPEG')`.
-| `zoom(factor)` **function** ❌                 | Sets the zoom level of the camera. `factor` can be any floating point value between 1 and 8.
 | `RGB` **constant**                             | String constant which represents a RGB565 output format.
 | `JPEG` **constant**                            | String constant which represents a JPEG output format.
 
@@ -533,7 +533,7 @@ The RX characteristic is *write* only, and transports serial string data from th
 
 Each characteristic transports string data of any length up to the negotiated *MTU size - 3 bytes*. Longer strings must be chopped up and will be automatically rejoined on the receiving side by Monocle. Likewise if Monocle wishes to send longer responses than can fit into a single MTU payload, the data will arrive sequentially, and can be concatenated by the central Bluetooth app. The diagram below describes how communication operates between Monocle and a central device.
 
-![Sequence diagram of the Monocle serial data service](/micropython/images/bluetooth-serial-service-sequence-diagram.svg)
+![Sequence diagram of the Monocle serial data service](/monocle/images/bluetooth-serial-service-sequence-diagram.svg)
 
 A secondary Bluetooth *Service*, again containing two *Characteristics*, is used to transport raw data such as image, audio and firmware update data. The mechanism for the raw data service is similar to the serial data service, aside from the fact that `null` or `0` characters may also be included within the payload.
 
@@ -552,7 +552,7 @@ Due to the small payload size of Bluetooth packets, the file may be spit into ma
 
 The first payload includes metadata about the file such as the filename (with a relevant file extension) and the file size. The sequence diagram below describes how a file is broken into several parts and the data can be recombined to construct the full file: 
 
-![Sequence diagram of the Monocle raw data service](/micropython/images/bluetooth-raw-data-service-sequence-diagram.svg)
+![Sequence diagram of the Monocle raw data service](/monocle/images/bluetooth-raw-data-service-sequence-diagram.svg)
 
 ### Firmware updates
 {: .no_toc }
