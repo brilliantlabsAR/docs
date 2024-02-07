@@ -13,7 +13,7 @@ parent: Monocle
 
 ![Monocle exploded view](/monocle/images/monocle-exploded-view.png)
 
-Monocle is a tiny heads-up display which clips onto your existing eye-wear. It's packed full of powerful hardware which is perfect for when you're on the go. It connects to your mobile phone over Bluetooth, and includes a few handy sensors such as touch buttons, camera and microphone. The included FPGA is perfect for computer vision, AI or graphics acceleration directly on the device. Monocle runs open source software and provides an easy way to get started using [MicroPython](/micropython/micropython). You can also write your own firmware from scratch using these docs as guidance.
+Monocle is a tiny heads-up display which clips onto your existing eye-wear. It's packed full of powerful hardware which is perfect for when you're on the go. It connects to your mobile phone over Bluetooth, and includes a few handy sensors such as touch buttons, camera and microphone. The included FPGA is perfect for computer vision, AI or graphics acceleration directly on the device. Monocle runs open source software and provides an easy way to get started using [MicroPython](/monocle/micropython). You can also write your own firmware from scratch using these docs as guidance.
 
 ## Key features:
 {: .no_toc }
@@ -54,7 +54,7 @@ This diagram shows a general overview of the Monocle architecture.
 
 The Bluetooth MCU serves as the main processor for Monocle. It handles the majority of control over the device, and is used for networking and scripting. The MCU used is a [Nordic nRF52832](https://infocenter.nordicsemi.com/pdf/nRF52832_PS_v1.8.pdf) with **512KB of Flash** memory, and **64KB of RAM**. It supports **Bluetooth 5.2**, up to 2Mb/s.
 
-By default, the nRF comes preloaded with our [MicroPython](/micropython/micropython) firmware, however you are able to deploy your own [custom firmware](#developing-custom-firmware) if you wish to do so.
+By default, the nRF comes preloaded with our [MicroPython](/monocle/micropython) firmware, however you are able to deploy your own [custom firmware](#developing-custom-firmware) if you wish to do so.
 
 ### Updating firmware over-the-air
 
@@ -70,7 +70,7 @@ The FPGA is used for graphics acceleration, as well as image processing of the 5
 
 By default, the FPGA comes pre-loaded our [Graphics & Camera Accelerator IP](https://github.com/brilliantlabsAR/monocle-fpga) and can be accessed using MicroPython commands. Our IP is a perfect starting point if you wish to [create your own FPGA application](#developing-for-the-fpga).
 
-**The latest release for the FPGA IP can be updated via the Micropython [`update.fpga()`](/micropython/micropython#fpga--monocle-specific) command. It is also checked periodically if you are using the Brilliant App**
+**The latest release for the FPGA IP can be updated via the Micropython [`update.fpga()`](/monocle/micropython#fpga--monocle-specific) command. It is also checked periodically if you are using the Brilliant App**
 
 To save power, the FPGA can be shutdown along with the camera and display when not needed. See the [power](#power) section for details. 
 
@@ -198,7 +198,7 @@ To generate the `.zip` file, you'll need to use the [nRF Util](https://www.nordi
 
 We recommend having a look at our [Graphics & Camera Accelerator IP](https://github.com/brilliantlabsAR/monocle-fpga) to see how an FPGA project is set up and built.
 
-Generally it's convenient to use the [MicroPython FPGA module](/micropython/micropython/#fpga--monocle-specific) to wirelessly program the FPGA. However this method does not allow for JTAG debugging, and can be a slow process for iterative development. It's therefore also possible to program the FPGA manually using a programmer.
+Generally it's convenient to use the [MicroPython FPGA module](/monocle/monocle/#fpga--monocle-specific) to wirelessly program the FPGA. However this method does not allow for JTAG debugging, and can be a slow process for iterative development. It's therefore also possible to program the FPGA manually using a programmer.
 
 **Note:** Be sure to check your [chip revision](#fpga-chip-revisions) prior to developing and programming your application.
 

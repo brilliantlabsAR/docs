@@ -1,11 +1,11 @@
 ---
 title: Firmware Updates
 description: A guide on how to update your Monocle AR device.
-image: /micropython/images/monocle-micropython.png
+image: /monocle/images/monocle-micropython.png
 nav_order: 4
 parent: Monocle
 redirect_from:
-  - /micropython/update
+  - /monocle/update
 ---
 
 # Updating your Monocle Firmware

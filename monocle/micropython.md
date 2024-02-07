@@ -1,11 +1,11 @@
 ---
 title: MicroPython API
 description: A guide on how to use MicroPython on your Monocle AR device.
-image: /micropython/images/monocle-micropython.png
+image: /monocle/images/monocle-micropython.png
 nav_order: 2
 parent: Monocle
 redirect_from:
-  - /micropython/micropython
+  - /monocle/micropython
 ---
 
 # MicroPython API
@@ -13,13 +13,15 @@ redirect_from:
 
 ---
 
-
-
 With MicroPython, you can rapidly prototype and develop applications without delving into low-level programming. Just a few lines of Python code allow you to draw on the display, access the camera, and leverage the FPGA for processing. Plus, you enjoy all the advantages of Python. The best part? It's completely wireless, and you can access the Python REPL seamlessly over Bluetooth.
 
-The [MicroPython firmware for Monocle](https://github.com/brilliantlabsAR/monocle-micropython) is a customized version based on the upstream [MicroPython project](https://github.com/micropython/micropython). Thanks to the thriving MicroPython community, we continuously update our firmware to incorporate new features from the upstream project.
+The [MicroPython firmware for Monocle](https://github.com/brilliantlabsAR/monocle-micropython) is a customized version based on the upstream [MicroPython project](https://github.com/monocle/micropython). Thanks to the thriving MicroPython community, we continuously update our firmware to incorporate new features from the upstream project.
 
 Currently, a subset of the standard MicroPython libraries is supported, with periodic additions. We have also included additional modules that facilitate easy interaction with the Monocle hardware. To familiarize yourself with all the features, make sure to explore the [MicroPython docs site](https://docs.micropython.org/en/latest/index.html) and our own documentation.
+
+{: .highlight }
+- The [introduction video](https://www.youtube.com/watch?v=_fo8jUKMMFs) is using the former version of the API.
+- Before trying anything, you might want to update the firmware and FPGA by visiting <https://repl.brilliant.xyz> and following the indications or [manually](/monocle/update).
 
 ---
 
@@ -71,9 +73,6 @@ To gain a clear understanding of the purpose and return values of each function 
 
 ## Library reference
 {: .no_toc }
-
-{: .note }
-> MicroPython for Monocle is always being updated so be sure to check back frequently. The ❌ icon signifies a feature which is not implemented yet, but is planned.
 
 1. TOC
 {:toc}
@@ -212,8 +211,6 @@ display.show(text, line, outline, poly)
 |:--------|:------------|
 | `capture()` **function**                       | Issues an instruction to the FPGA to start capturing a single image. Always overwrites any previously captured image. Once `capture()` returns, the image data can be read out using `read()`.
 | `read(bytes=254)` **function**                 | Reads out a number of bytes from the image frame buffer. `bytes` can be overridden to read out less than 254 bytes. A maximum of 254 bytes may be read out at a time. Multiple reads are required to read out an entire image. Once an entire image is read, and no bytes remain, `read()` will return `None`. If the output mode is set to `RGB`, a known number of bytes can be read out, however in `JPEG` mode, the total number of bytes will vary.
-| `output(x,y,format)`&nbsp;**function**&nbsp;❌ | Set the output resolution and format. `x` and `y` represent the output resolution in pixels. `format` can be either `'RGB'`, or `'JPEG'`. The default output settings are `camera.output(640, 400, 'JPEG')`.
-| `zoom(factor)` **function** ❌                 | Sets the zoom level of the camera. `factor` can be any floating point value between 1 and 8.
 | `RGB` **constant**                             | String constant which represents a RGB565 output format.
 | `JPEG` **constant**                            | String constant which represents a JPEG output format.
 
