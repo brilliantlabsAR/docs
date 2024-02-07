@@ -1,12 +1,9 @@
 ---
 title: Welcome
 description: Technical documentation for Brilliant's AR devices.
-image: /images/monocle-splash.png
+image: /images/splash.png
 nav_order: 1
 ---
-
-
-![Brilliant Monocle use cases](/images/monocle-splash.png)
 
 # Technical Documentation
 
@@ -42,4 +39,4 @@ Noa by Brilliant, brings ChatGPT directly to your Monocle. With just a tap and a
 
 Join our Discord server, open to everyone, where you can receive valuable assistance for your project. It's the ideal place to explore inspiring projects created by others and share your own work with the community.
 
-[Join the Server](https://discord.gg/7w3DFxek4p){: .btn .btn-purple}
+[Join the Server](https://discord.gg/7w3DFxek4p){: .btn }
