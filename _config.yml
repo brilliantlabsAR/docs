@@ -19,15 +19,17 @@ plugins:
 search_enabled: true
 aux_links_new_tab: true
 aux_links:
-  GitHub:
-    - https://github.com/brilliantlabsAR
+  YouTube:
+    - https://www.youtube.com/@brilliantlabsAR
   Discord:
     - https://discord.com/invite/vDS9X7gdwg
+  GitHub:
+    - https://github.com/brilliantlabsAR
   Homepage:
     - https://www.brilliant.xyz
 
 # Footer
-footer_content: Copyright &copy; 2024 <a href="https://www.brilliant.xyz">Brilliant Labs Ltd.</a>
+footer_content: Copyright &copy; 2024 <a href="https://www.brilliant.xyz">Brilliant Labs</a>
 last_edit_timestamp: true
 last_edit_time_format: "%b %e %Y"
 
