@@ -1,7 +1,7 @@
 ---
 title: Monocle
 description: Technical documentation for the Brilliant Monocle.
-image: /monocle/images/monocle-splash.png
+image: /images/monocle-splash.png
 nav_order: 3
 has_children: true
 ---
@@ -27,7 +27,7 @@ Brilliant AR Studio will promptly notify you whenever a new firmware update is a
 
 ### Are there any out of the box applications?
 
-Noa by Brilliant, brings ChatGPT directly to your Monocle. With just a tap and a spoken command, you can witness ChatGPT's response right in front of your eyes. Download it now from the iOS App Store, and stay tuned for the upcoming Android release.
+Noa by Brilliant, brings ChatGPT directly to your Monocle. With just a tap and a spoken command, you can witness ChatGPT's response right in front of your eyes.
 
 <div style="text-align:left" markdown="1">
 [<img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Apple App Store badge" width="125"/>](https://apps.apple.com/az/app/argpt/id6450499355)

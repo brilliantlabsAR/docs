@@ -1,7 +1,7 @@
 ---
 title: Hardware
 description: A brief overview of how Monocle works under the hood.
-image: /monocle/images/monocle-exploded-view.png
+image: /images/monocle-splash.png
 nav_order: 1
 parent: Monocle
 ---
@@ -23,13 +23,14 @@ Monocle is a tiny heads-up display which clips onto your existing eye-wear. It's
 - Microphone
 - FPGA based acceleration for ML/CV
 - Bluetooth 5.2
-- 70mAh internal battery
+- 70mAh rechargeable Li-ion battery
 - Touch buttons
 - Full featured MicroPython based OS
 - Charging case with USB & 450mAh battery
 
 ## Example uses:
 {: .no_toc }
+- Generative AI on the go
 - ML based image augmentation
 - Computer vision research
 - QR code & barcode detection
