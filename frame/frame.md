@@ -1,22 +1,16 @@
 ---
 title: Frame
 description: Technical documentation for the Brilliant Frame.
-image: /images/frame-splash.png
+image: /images/frame/frame-splash.png
 nav_order: 2
 has_children: true
 ---
 
-![Brilliant Frame](/images/frame-splash.png)
+![Brilliant Frame](/frame/images/frame-splash.png)
 
 # Getting started with Frame
 
 Whether you're using Frame with Noa, or making your own apps, you'll find everything you need to know about your Frame device here.
-
-## How do I connect to my Frame?
-
-Ensure your Frame is charged, and then with the Mister Power charging cradle connected, use a pin to click the pairing button. From any Frame compatible app, such as Noa, press connect, and accept pairing to start using.
-
-![Pairing Frame to Noa](/frame/images/frame-pairing-diagram.png)
 
 ## How do I charge my Frame?
 
@@ -26,11 +20,21 @@ Mister Power provides an extra helping of battery power for when you're on the g
 
 ![Charging Frame](/frame/images/frame-charging-diagram.png)
 
+## How do I set the bridge height?
+
+Choosing the correct nose bridge is key to...
+
+![Frame nose bridge height](/frame/frame-nose-bridge-diagram.png)
+
+## How do I connect to my Frame?
+
+Ensure your Frame is charged, and then with the Mister Power charging cradle connected, use a pin to click the pairing button. From any Frame compatible app, such as Noa, press connect, and accept pairing to start using.
+
+![Pairing Frame to Noa](/frame/images/frame-pairing-diagram.png)
+
 ## How do I update my Frame?
 
 Whenever software updates are available for your Frame, you'll be notified in your Frame compatible apps. Ensure Frame is well charged before updating to prevent partial updates and having to start again. Be sure to keep the app open and within close range of your Frame during the entire update.
-
-![Updating the Frame firmware](/frame/images/frame-firmware-update-diagram.png)
 
 ## Where can I download Noa?
 

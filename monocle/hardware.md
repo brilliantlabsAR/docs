@@ -1,7 +1,7 @@
 ---
 title: Hardware
 description: A brief overview of how Monocle works under the hood.
-image: /images/monocle-splash.png
+image: /images/monocle/monocle-splash.png
 nav_order: 1
 parent: Monocle
 ---

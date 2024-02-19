@@ -1,7 +1,7 @@
 ---
 title: Monocle
 description: Technical documentation for the Brilliant Monocle.
-image: /images/monocle-splash.png
+image: /images/monocle/monocle-splash.png
 nav_order: 3
 has_children: true
 ---

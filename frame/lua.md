@@ -1,7 +1,7 @@
 ---
 title: Lua API
 description: A guide on how to use Lua on your Frame AR glasses.
-image: /images/frame-splash.png
+image: /images/frame/frame-splash.png
 nav_order: 3
 parent: Frame
 ---

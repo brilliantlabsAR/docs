@@ -1,7 +1,7 @@
 ---
 title: Firmware Updates
 description: A guide on how to update your Monocle AR device.
-image: /images/monocle-splash.png
+image: /images/monocle/monocle-splash.png
 nav_order: 4
 parent: Monocle
 redirect_from:

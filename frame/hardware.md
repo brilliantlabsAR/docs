@@ -1,7 +1,7 @@
 ---
 title: Hardware
 description: A brief overview of how Frame works under the hood.
-image: /images/frame-splash.png
+image: /images/frame/frame-splash.png
 nav_order: 1
 parent: Frame
 ---

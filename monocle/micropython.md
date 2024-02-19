@@ -1,7 +1,7 @@
 ---
 title: MicroPython API
 description: A guide on how to use MicroPython on your Monocle AR device.
-image: /images/monocle-splash.png
+image: /images/monocle/monocle-splash.png
 nav_order: 2
 parent: Monocle
 redirect_from:
