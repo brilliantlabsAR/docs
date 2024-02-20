@@ -298,22 +298,22 @@ Typical and absolute device characteristics are shown below. To get the best lif
 
 ### Safety
 
-Monocle can obscure your vision and should not be used while driving or operating dangerous equipment. Additionally long periods of use may cause eye strain, headaches and motion sickness. Monocle can also display bright flashing images so may not be suitable for those susceptible to light sensitivity.
+Brilliant Labs' devices can obscure your vision and should not be used while driving or operating dangerous equipment. Additionally long periods of use may cause eye strain, headaches and motion sickness. Brilliant Labs' devices can also display bright flashing images so may not be suitable for those who are susceptible to light sensitivity.
 
 ### Critical applications
 
-Monocle is intended for consumer and R&D applications. It is not verified for use where performance and accuracy would be critical to human health, safety or mission critical use.
+Brilliant Labs' devices are intended for consumer and R&D applications. It is not verified for use where performance and accuracy would be critical to human health, safety or mission critical use.
 
 ### Lithium batteries
 
-Lithium batteries can be dangerous if mishandled. Do not expose Monocle, or any related hardware to excess temperatures, fire or liquids. Do not try to remove the battery as the wires can become shorted and result in the battery overheating or fire risks. Once the product reaches the end of it's life, dispose it safely according to your local regulations, such as e-waste collection points where any volatile components can be properly contained and handled.
+Lithium batteries can be dangerous if mishandled. Do not expose Brilliant Labs' devices to excess temperatures, fire or liquids. Do not try to remove the battery as the terminals can become shorted and result in the battery overheating or catching fire. Once the product reaches the end of it's life, dispose it safely according to your local regulations, such as e-waste collection points where any volatile components can be properly contained and handled.
 
 ### Limitation of liability
 
-Brilliant Labs Ltd. provides technical data, including design resources, examples, applications, design advice, tools, safety information and other resources "as is" and disclaims all warranties, express and implied, including without limitation any implied warranties or merchantability, fitness for a particular purpose or non-infringement of third party intellectual property rights. 
+Brilliant Labs provides technical data, including design resources, examples, applications, design advice, tools, safety information and other resources "as is" and disclaims all warranties, express and implied, including without limitation any implied warranties or merchantability, fitness for a particular purpose or non-infringement of third party intellectual property rights. 
 
 These resources are intended for skilled developers. You are solely responsible for selecting the appropriate products for your application, designing, validating and testing your application, and ensuring your application meets applicable standards, and other safety, security, regulatory or other requirements.
 
-Brilliant Labs Ltd. reserves the right to change the circuitry and specifications without notice at any time. The parametric values quoted in this manual are provided for guidance only.
+Brilliant Labs reserves the right to change the circuitry and specifications without notice at any time. The parametric values quoted in this manual are provided for guidance only.
 
-The resources and products are provided subject to our [terms and conditions](https://www.brilliant.xyz/terms).
+The resources and products are provided subject to our [terms and conditions](https://brilliant.xyz/pages/terms-conditions).
