@@ -14,21 +14,21 @@ Whether you're using Frame with Noa, or making your own apps, you'll find everyt
 
 ## How do I charge my Frame?
 
-Your Frame will automatically power off, and start charging whenever it is placed onto the Mister Power charging cradle.
+Your Frame will automatically power off, and start charging whenever it is placed onto the charging cradle (Mister Power).
 
-Mister Power provides an extra helping of battery power for when you're on the go. To charge both Frame and Mister Power, use any USB Type-C power supply.
+The charging cradle provides an extra helping of battery power for when you're on the go. To charge both Frame and the charging cradle, use any USB Type-C power supply.
 
 ![Charging Frame](/frame/images/frame-charging-diagram.png)
 
 ## How do I set the bridge height?
 
-Choosing the correct nose bridge is key to...
+Choosing the correct nose bridge adaptor is key to seeing the full display area. You can choose between 3mm, 2mm or no nose bridge adaptor to set the correct level.
 
-![Frame nose bridge height](/frame/frame-nose-bridge-diagram.png)
+![Frame nose bridge height](/frame/images/frame-nose-bridge-diagram.png)
 
 ## How do I connect to my Frame?
 
-Ensure your Frame is charged, and then with the Mister Power charging cradle connected, use a pin to click the pairing button. From any Frame compatible app, such as Noa, press connect, and accept pairing to start using.
+Ensure your Frame is charged, and then with the charging cradle connected, use a pin to click the pairing button. From any Frame compatible app, such as Noa, press connect, and accept pairing to start using.
 
 ![Pairing Frame to Noa](/frame/images/frame-pairing-diagram.png)
 
