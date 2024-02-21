@@ -93,7 +93,7 @@ The RAM ICs used are the [AP Memory APS256XXN](https://www.apmemory.com/wp-conte
 
 ## Display
 
-The display used in Monocle is a Sony [ECX336CN](https://www.panelook.com/ECX336CN_Sony_0.23_OLED_overview_51733.html) micro OLED. It features **640x400 RGB pixels**, and is optically bonded to the main housing which directs the image into the users eye. The result is a transparent floating display with a **20° field of view**. About the size of a table display at arms length.
+The display used in Monocle is a Sony [ECX336CN](https://www.panelook.com/ECX336CN_Sony_0.23_OLED_overview_51733.html) micro OLED. It features **640x400 RGB pixels**, and is optically bonded to the main housing which directs the image into the users eye. The result is a transparent floating display with a **20° field of view**. About the size of a tablet display at arms length.
 
 ![Diagram of the Monocle display light path](/monocle/images/monocle-display-fov.png)
 
