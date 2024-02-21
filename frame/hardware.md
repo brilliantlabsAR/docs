@@ -64,9 +64,9 @@ The firmware is fully updatable over the air. If you're using a Frame compatible
 
 If you wish to view the source code, or use it as a starting point for a custom firmware, visit the [Frame codebase repository](https://github.com/brilliantlabsAR/frame-codebase).
 
-The physical debug port of the Bluetooth MCU is located on the back of the Frame PCB. A total of four wires can be routed to a suitable ARM SWD debugger such as a [J-Link probe](https://www.segger.com/products/debug-probes/j-link/) or [Black-magic probe](https://black-magic.org).
+The physical debug port of the Bluetooth MCU is located on the back of the Frame PCB. A total of five wires can be routed to a suitable ARM SWD debugger such as a [J-Link probe](https://www.segger.com/products/debug-probes/j-link/) or [Black-magic probe](https://black-magic.org).
 
-![Serial wire debug (SWD) of the Frame PCB]()
+![Serial wire debug (SWD) of the Frame PCB](/frame/images/frame-debug-pinout.png)
 
 ---
 
@@ -141,7 +141,7 @@ The charging cradle functions to both charge Frame via the 5V terminal on the ba
 
 It contains a 140mAh rechargeable li-ion battery which allows for a top of Frame's internal battery while on the go. The charging cradle itself, and in turn Frame, is charged using any USB Type-C power supply.
 
-![Frame charging dock aka Mister Power]()
+![Frame charging dock aka Mister Power](/frame/images/frame-charging-dock.png)
 
 ---
 
