@@ -13,7 +13,7 @@ parent: Frame
 
 Lua is a tiny and extensible scripting language that's designed to be power efficient and quick to learn. Frame features a complete Lua virtual machine based on the latest public release of Lua. Dedicated hardware APIs allow direct access to all of Frame's peripherals at a high level so that developers can start building apps quickly and easily.
 
-There's no special cables or setup needed. Lua on Frame is accessed directly over Bluetooth, such that any user created app can easily execute scripts by simply pushing Lua strings to the device.
+There's no special cables or setup needed. Lua on Frame is accessed solely over Bluetooth, such that any user created host app can easily execute scripts by simply pushing Lua strings to the device.
 
 To learn more how the underlying Bluetooth communication with Frame works, check out the Bluetooth section of the [Building Apps](/frame/building-apps#bluetooth) page.
 
@@ -22,10 +22,10 @@ To learn more how the underlying Bluetooth communication with Frame works, check
 ## Library reference
 {: .no_toc }
 
-This page describes all of the Frame specific Lua APIs available to the developer to access with helpful examples. Certain libraries allow for more low level access that can help with debugging and hacking the various subsystems of Frame.
+This page describes all of the Frame specific Lua APIs available to the developer along with some helpful examples. Certain libraries allow for more low level access that can be used for debugging and hacking the various subsystems of Frame.
 
 {: .note }
-Consider these API a preview as they are still undergoing heavy development. They may change over the coming month or so.
+The API specification is still undergoing heavy development. Some of them may change over the coming month or so.
 
 1. TOC
 {:toc}
@@ -38,20 +38,20 @@ The display engine of allows drawing of text, sprites and vectors. These element
 
 The Frame display is capable of rendering up to 16 colors at one time. These colors are preset by default, however each color can be overridden by any 8bit YCbCr color using the `palette` command.
 
-| API&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
+| API&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
-| `frame.display.palette{}`                                             | Updates the the color pallet with new colors.
-| `frame.display.text(string, x, y, {color="WHITE", align="TOP_LEFT"})` | 
-| `frame.display.bitmap()`                                              | *Coming soon*
-| `frame.display.vector()`                                              | *Coming soon*
-| `frame.display.show()`                                                | Shows the image on the display
+| `frame.display.palette{}`                                             | *Details coming soon*
+| `frame.display.text(string, x, y, {color='WHITE', align='TOP_LEFT'})` | Prints the given `string` to the display at `x` and `y`. A `color` can optionally be provided to print the text in one of the 16 palette colors, and `align` can optionally be provided to jutify the text as either `'TOP_LEFT'`, `'TOP_CENTER'`, `'TOP_RIGHT'`, `'MIDDLE_LEFT'`, `'MIDDLE_CENTER'`, `'MIDDLE_RIGHT'`, `'BOTTOM_LEFT'`, `'BOTTOM_CENTER'`, or `'BOTTOM_RIGHT'`
+| `frame.display.bitmap()`                                              | *Details coming soon*
+| `frame.display.vector()`                                              | *Details coming soon*
+| `frame.display.show()`                                                | Shows the drawn objects on the display
 
 
 #### Example
 {: .no_toc }
 
 ```lua
--- Display "Hello world" at x = 50 and y = 100
+-- Display 'Hello world' at x = 50 and y = 100
 frame.display.clear()
 frame.display.text('Hello world', 50, 100)
 frame.display.show()
@@ -61,7 +61,7 @@ frame.display.show()
 
 ### Camera
 
-The camera capability of Frame allows for capturing and downloading of single JPEG images over Bluetooth. The sensor's full resolution is 1280x720 pixels in portrait orientation, however only square images up to 720x720 pixels can be captured at a time. The user can select which portion of the sensor's window is captured using the `pan` control. Additionally, the resolution of the capture can be cropped to either 360x360, 240x240 or 180x180 by using the `zoom` function. Smaller resolutions will increase the quality of the image returned, and additionally, the `quality` factor can be reduced to decrease the image file size, and increase download speeds.
+The camera capability of Frame allows for capturing and downloading of single JPEG images over Bluetooth. The sensor's full resolution is 1280x720 pixels in portrait orientation, however only square images up to 720x720 pixels can be captured at a time. The user can select which portion of the sensor's window is captured using the `pan` control. Additionally, the resolution of the capture can be cropped to either 360x360, 240x240 or 180x180 by using the `zoom` function. Smaller resolutions will increase the image quality, however the `quality` factor can be reduced to decrease the image file size, and increase download speeds of the image over Bluetooth.
 
 | API&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
@@ -89,7 +89,7 @@ end
 |:---------|:------------|
 | `frame.camera.sleep()`                      | Puts the camera to sleep and reduces power consumption. Note the `frame.sleep()` function will automatically put the camera to sleep
 | `frame.camera.wake()`                       | Wakes up the camera if it has previously been asleep. Note that following wakeups from `frame.sleep()` automatically wakes up the camera
-| `frame.camera.set_register(address, value)` | Allows for hacking the camera's registers
+| `frame.camera.set_register(address, value)` | Allows for hacking the camera's internal registers
 
 ---
 
@@ -126,27 +126,27 @@ end
 
 ### Motion sensor (IMU)
 
-The IMU API allows reading both accelerometer and compass data, as well as assigning a callback to the tap gesture feature.
+The IMU API allows reading both accelerometer and compass data, as well as assigning a callback function for tap gestures.
 
-The tap gesture can function both as a trigger for user apps, but also as a wakeup from `frame.sleep()`  
+The tap gesture will always wake up Frame from `frame.sleep()`.
 
 | API | Description |
 |:---------|:------------|
-| `frame.imu.direction()`           | Returns a table containing the `roll`, `pitch` and `heading` of the wearer
+| `frame.imu.direction()`           | Returns a table containing the `roll`, `pitch` and `heading` angles of the wearer's head position 
 | `frame.imu.tap_callback(handler)` | Assigns a callback to the tap gesture. `handler` must be a function, or can be `nil` to deactive the callback
 
 | Low&nbsp;level&nbsp;functions | Description |
 |:---------|:------------|
-| `frame.imu.raw()` | Returns a table of the raw `accelerometer` and `compass` measurements. Each containing another table with `x`, `y`, and `z` values.
+| `frame.imu.raw()` | Returns a table of the raw `accelerometer` and `compass` measurements. Each containing a table with `x`, `y`, and `z` values
 
 #### Example
 {: .no_toc }
 
 ```lua
-print(frame.imu.direction()["pitch"]) -- Prints the angle of the wears head (up or down)
+print(frame.imu.direction()['pitch']) -- Prints the angle of the wears head (up or down)
 
-function tapped() -- Prints "tapped" whenever the user taps the side of their Frame
-    print("tapped")
+function tapped() -- Prints 'tapped' whenever the user taps the side of their Frame
+    print('tapped')
 end
 
 frame.imu.tap_callback(tapped)
@@ -175,20 +175,20 @@ end
 
 frame.bluetooth.receive_callback(get_data)
 
-frame.bluetooth.send("\x10\x12\x00\xFF") -- Sends the bytes: 0x10, 0x12, 0x00, 0xFF to the host
+frame.bluetooth.send('\x10\x12\x00\xFF') -- Sends the bytes: 0x10, 0x12, 0x00, 0xFF to the host
 ```
 
 ---
 
 ### File system
 
-The file system API allows for writing and reading files on the device. These can include larger lua scripts, or any other user files.
+The file system API allows for writing and reading files to Frame's non-volatile storage. These can include executable Lua scripts, or other user files.
 
 | API&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
-| `frame.file.open(filename, mode)`   | Opens a file and returns a file object. `filename` can be any name, and `mode` can be `r`, `w`, or `a` for read, write, or append respectivly.
+| `frame.file.open(filename, mode)`   | Opens a file and returns a file object. `filename` can be any name, and `mode` can be either `'read'`, `'write'`, or `'append'`.
 | `frame.file.remove(name)`           | Removes a file or directory of given `name`
-| `frame.file.rename(name, new_name)` | Renames a file or directory of given `name`
+| `frame.file.rename(name, new_name)` | Renames a file or directory of given `name` to `new_name`
 | `frame.file.listdir(directory)`     | Lists all files in the directory path given. E.g. `'/'` for the filesystem root directory. The list is returned as a table with `name`, `size`, and `type`
 | `frame.file.mkdir(pathname)`        | Creates a new directory with the given `pathname`
 | `f:read(*num_bytes)`                | Reads a number of bytes from a file. If no argument is give, the whole line is returned
@@ -201,20 +201,20 @@ The file system API allows for writing and reading files on the device. These ca
 ```lua
 frame.file.mkdir('/my_files') -- Make a new directory
 
-f = frame.file.open("/my_files/log.txt", "w") -- Create a new file
-f:write("Log:\n")
+f = frame.file.open('/my_files/log.txt', 'write') -- Create a new file (or overwrite if it exists)
+f:write('Log:\n')
 f:close()
 
-f = frame.file.open("/my_files/log.txt", "a") -- Append two lines to the file
-f:write("Logged a new line\n")
+f = frame.file.open('/my_files/log.txt', 'append') -- Append two lines to the file
+f:write('Logged a new line\n')
 f:close()
 
-f = frame.file.open("/my_files/log.txt", "a")
-f:write("Logged another line\n")
+f = frame.file.open('/my_files/log.txt', 'append')
+f:write('Logged another line\n')
 f:close()
 
 -- Print all the files in the directory
-local files = frame.file.listdir("/my_files")
+local files = frame.file.listdir('/my_files')
 
 for index, data in ipairs(files) do
     print(index)
@@ -229,12 +229,12 @@ end
 
 ### Time functions
 
-The time functions allow for accurate timekeeping on Frame. The `utc()` function can be used to set the time on Frame using a UTC timestamp, and then it will keep the time until it's put back onto charge, or placed into deep sleep using `frame.sleep()`. The `date()` function can then be used to return a human readable time and date.
+The time functions allow for accurate timekeeping on Frame. The `utc()` function can be used to set the time on Frame using a UTC timestamp. Frame will then keep the time until it's put back onto charge, or placed into deep sleep using `frame.sleep()`. The `date()` function can be used to return a human readable time and date.
 
 | API | Description |
 |:---------|:------------|
-| `frame.time.utc(*timestamp)`  | Sets or gets the current time. `timestamp` can be provided as a UTC timestamp to set the internal real-time clock, and if no argument is give, Frame's current time is returned as a UTC timestamp. If no timestamp was initially set, this number will represent the powered on time of Frame in seconds.
-| `frame.time.zone(*offset)`    | Set or gets the timezone offset. If `offset` is give, the timezone will be set to that valuel otherwise if no argument is given, the currently set timezone is returned. The format of the timezone should be a string, e.g. "-7:00", or "5:30".
+| `frame.time.utc(*timestamp)`  | Sets or gets the current time. `timestamp` can be provided as a UTC timestamp to set the internal real-time clock. If no argument is given, Frame's current time is returned as a UTC timestamp. If no timestamp was initially set, this number will simply represent the powered on time of Frame in seconds.
+| `frame.time.zone(*offset)`    | Sets or gets the timezone offset. If `offset` is given, the timezone will be set, otherwise the currently set timezone is returned. The format of the timezone should be a string, e.g. '-7:00', or '5:30'.
 | `frame.time.date(*timestamp)` | Returns a table containing `second`, `minute`, `hour`, `day`, `month`, `year`, `weekday`, `day of year`, and `is daylight saving`. If the optional `timestamp` argument is given, that timestamp will be used to calculate the corresponding date.
 
 #### Example
@@ -242,33 +242,33 @@ The time functions allow for accurate timekeeping on Frame. The `utc()` function
 
 ```lua
 frame.time.utc(1708551112) -- Set the current time to Wed Feb 21 2024 21:31:52 UTC
-frame.time.zone("-7:00") -- Set the timezone to pacific time
+frame.time.zone('-7:00') -- Set the timezone to pacific time
 
 local time_now = frame.time.date()
 
--- print the local date and time
-print(time_now['month'])
-print(time_now['day'])
+-- print the local time and date
 print(time_now['hour'])
 print(time_now['minute'])
+print(time_now['month'])
+print(time_now['day'])
 ```
 
 ---
 
 ### System functions
 
-The system API provides miscellaneous functions such as `sleep` and `update`. It also contains some low level functions which are handy for developing apps and custom FPGA RTL. 
+The system API provides miscellaneous functions such as `sleep` and `update`. It also contains some low level functions which are handy for developing apps and custom FPGA images. 
 
 | API | Description |
 |:---------|:------------|
-| `frame.FIRMWARE_VERSION` | Returns the current firmware version as a 12 character string. E.g. `v24.046.1546`
-| `frame.GIT_TAG`          | Returns the current firmware git tag as a 7 character string. E.g. `4a6ea0b`
+| `frame.FIRMWARE_VERSION` | Returns the current firmware version as a 12 character string. E.g. `'v24.046.1546'`
+| `frame.GIT_TAG`          | Returns the current firmware git tag as a 7 character string. E.g. `'4a6ea0b'`
 | `frame.battery_level()`  | Returns the battery level as a percentage between `1` and `100`
-| `frame.sleep(*seconds)`  | Sleeps for a given number of seconds. `seconds` can be a decimal number such as `1.25`. If no argument is given, Frame will go to sleep until a tap gesture wakes it up.
-| `frame.update()`         | Reboots Frame into the firmware bootloader. Check the [Firmware Updates](/frame/building-apps#firmware-updates) section of the Building Apps page to see how this is used.
+| `frame.sleep(*seconds)`  | Sleeps for a given number of seconds. `seconds` can be a decimal number such as `1.25`. If no argument is given, Frame will go to sleep until a tap gesture wakes it up
+| `frame.update()`         | Reboots Frame into the firmware bootloader. Check the [Firmware Updates](/frame/building-apps#firmware-updates) section of the Building Apps page to see how this is used
 
 | Low&nbsp;level&nbsp;functions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
-| `frame.stay_awake(enable)`            | Prevents Frame from going to sleep when it's put onto charge. This can help during development where continious power is needed, however may degrade the display or cause burn-in if used for extended periods of time.
-| `frame.fpga_read(address, num_bytes)` | Reads a number of bytes from the FPGA at the given address.
+| `frame.stay_awake(enable)`            | Prevents Frame from going to sleep while it's docked onto the charging cradle. This can help during development where continious power is needed, however may degrade the display or cause burn-in if used for extended periods of time
+| `frame.fpga_read(address, num_bytes)` | Reads a number of bytes from the FPGA at the given address
 | `frame.fpga_write(address, data)`     | Writes data to the FPGA at a given address. `data` can be a string containing any byte values

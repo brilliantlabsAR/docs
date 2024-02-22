@@ -53,7 +53,7 @@ Once you have AR Studio installed, you can try an example using the following st
 
 ## Bluetooth
 
-Once you're ready to start making your own host side apps, whether that be for mobile, or desktop, it's useful to understand how Frame's Bluetooth networking works under the hood.
+Once you're ready to start making your own host side apps, it's useful to understand how Frame's Bluetooth works under the hood.
 
 ### Pairing & connecting
 
@@ -71,9 +71,9 @@ Frame has a single BLE service containing two characteristics. One for transmitt
 - TX characteristic UUID: 7A230002-5475-A6A4-654C-8431F6AD49C4
 - RX characteristic UUID: 7A230003-5475-A6A4-654C-8431F6AD49C4
 
-Lua strings can be sent on the TX characteristic as UTF-8 strings, and responses are returned back on the RX characteristic. Note that it's important for the host device to enable notification on the RX characteristic in order to be able to receive data.
+Lua strings can be sent on the TX characteristic as UTF-8 strings, and responses are returned back on the RX characteristic. The host device must enable notification on the RX characteristic in order to receive data.
 
-Frame does not contain a complete Lua REPL, but rather evaluates every message it receives directly. Therefore to return some data, it must be wrapped in a `print()` function. Only the result of `print()` calls and errors are returned over the RX characteristic.
+Frame does not contain a complete Lua REPL, but rather evaluates every message and only returns a message if it resulted in the Lua `print()` function being called, or an error. This keeps the RX channel free of excess messages and echoed characters that would otherwise need to be filtered by the host side app.
 
 ```lua
 print("hello world") -- Returns "hello world" on the RX characteristic
@@ -85,44 +85,44 @@ a = 1 + 2 -- Evaluates 1 + 2 and stores it in a, but does not return anything
 1 + 2 -- Returns an error because 1 + 2 hasn't been assigned to anything
 ```
 
-The length of TX data is limited to a maximum size of the host's chosen MTU length - 3 bytes. This number also determines the maximum length of a Lua string that can be evaluated. For larger scripts, they must first be saved to the device using the [file system API](/frame/lua#file-system) using several `f:write()` operations, and then executed using `require(my_script)`.
+The length of TX data is limited to a maximum size of the host's chosen MTU length - 3 bytes. This number also determines the maximum length of a Lua string that can be evaluated at a time. For larger scripts, they must first be saved to the device using the [file system API](/frame/lua#file-system) using several `f:write()` operations, and then executed using `require()`.
 
-Responses are also limited to the MTU length. Should you want to return very long strings, they should be broken up into smaller `print()` statements, or 
+Responses are also limited to the MTU length. Should you want to return very long strings, they should be broken up into smaller `print()` statements.
 
 ![Bluetooth connection sequence diagram](/frame/images/frame-bluetooth-sending-lua-diagram.drawio.svg)
 
 ### Sending Data
 
-Sometimes it's necessary to send raw byte data rather than strings. These can be sent on the same TX characteristic by simply appending a byte of value `1` at the start of the data. This will trigger a callback function if one has already been assigned by `frame.bluetooth.receive_callback()`. The total length of data that can now be sent is therefore MTU - 4 bytes.
+Sometimes it may be more efficient to send raw byte data rather than strings. For example when transmitting graphical or microphone data. These can be sent on the same TX characteristic by simply appending a byte of value `1` at the start of the payload. This will trigger a callback function if one has already been assigned by `frame.bluetooth.receive_callback()`. The total length of byte data that can be transmitted is therefore MTU - 4 bytes.
 
-Raw byte data can also be returned to the host device using the `frame.bluetooth.send()` function. This data is also limited to MTU - 4 bytes in length, and will be prepended by a value of `1` in the first byte of the data that the host side app can use to differentiate between strings and raw bytes.
+Raw byte data can also be returned to the host device using the `frame.bluetooth.send()` function. This data is also limited to MTU - 4 bytes in length, and will be prepended by a value of `1` in the first byte of the payload.
 
 ![Bluetooth connection sequence diagram](/frame/images/frame-bluetooth-sending-bytes-diagram.drawio.svg)
 
 ### Control characters
 
-While a Lua script is running, Frame will ignore any other Lua strings that are sent over Bluetooth (note that raw byte data can still be sent to trigger callbacks in the user logic). To stop the script, two control signals can be sent on the TX characteristic:
+While a Lua script is running, Frame will ignore any other Lua strings that are sent over Bluetooth (note that raw byte data can still be sent to trigger callbacks in the user logic). The following control signals can be sent on the TX characteristic to exit or restart the script:
 
 - Sending a single byte of value `3` will terminate any running script or loop.
 - Sending a single byte of value `4` will clear all variables, and run `main.lua` if it exists. Same as a reboot.
 
 ### Firmware updates
 
-Frame contains a mechanism for updating the complete system firmware using a bootloader. To enter the bootloader, call `frame.update()`. The device will then reboot and advertise with the name `Frame update`.
+Frame contains a mechanism for updating the complete system firmware via a built in bootloader. To enter the bootloader, call `frame.update()`. The device will then reboot and advertise with the name "Frame update".
 
-To understand how the bootloader process works in more detail, visit the [Nordic DFU documentation](https://infocenter.nordicsemi.com/topic/sdk_nrf5_v17.1.0/lib_bootloader_modules.html).
+To understand how the bootloader process works in closer detail, visit the [Nordic DFU documentation](https://infocenter.nordicsemi.com/topic/sdk_nrf5_v17.1.0/lib_bootloader_modules.html).
 
-If no activity commences on the bootloader for more than 5 minutes, it will timeout and return back to the application firmware. If the firmware update process is interrupted, and the application firmware becomes invalid, the bootloader will wait forever until a valid firmware update is done.
+If no activity commences on the bootloader for more than 5 minutes, it will timeout and return back to the application firmware. If the firmware update process is interrupted, and the application firmware becomes invalid, the bootloader will wait forever until a valid firmware update is completed.
 
-Unlike the application firmware, the bootloader will continue to operate even while on charge. It's therefore possible to update while the device is docked. Once the update completes, the firmware will reload and then go to sleep right away, ready for regular use later.
+Unlike the application firmware, the bootloader will continue to operate even while Frame is on charge. It's therefore possible to update while the device is docked to the charging cradle. In this case, once the update completes, the firmware will reload and then go to sleep right away.
 
-The latest release file of the firmware is available from the [Frame codebase releases page](https://github.com/brilliantlabsAR/frame-codebase/releases).
+The latest release file of the official firmware is available from the [Frame codebase releases page](https://github.com/brilliantlabsAR/frame-codebase/releases) which you can include in your own host apps along with the DFU mechanism.
 
 ---
 
 ## Frame utilities for Python
 
-[frameutils](https://github.com/brilliantlabsAR/frame-utilities-for-python/tree/main) for Python is a handy library for communicating with Frame and provides several tools for common tasks such as creating custom graphics that you can use in your Frame applications.
+[frameutils](https://github.com/brilliantlabsAR/frame-utilities-for-python/tree/main) for Python is a handy library for communicating with Frame and provides several tools for creating graphics that you can use in your Frame apps.
 
 Install it with pip:
 
@@ -132,12 +132,11 @@ pip3 install frameutils
 
 ### Bluetooth library
 
-The bluetooth module of frameutils can be used to communicate with Frame from any Python desktop app. It makes use of [Bleak](https://github.com/hbldh/bleak) under the hood.
+The Bluetooth module of frameutils can be used to communicate with Frame from any Python desktop app. It makes use of [Bleak](https://github.com/hbldh/bleak) under the hood.
 
 ```python
 import asyncio
 from frameutils import Bluetooth
-
 
 async def main():
     bluetooth = Bluetooth()
@@ -147,7 +146,6 @@ async def main():
     print(await bluetooth.send_lua("print(1 + 2)", await_print=True))
 
     await bluetooth.disconnect()
-
 
 asyncio.run(main())
 ```
