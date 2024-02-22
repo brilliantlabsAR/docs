@@ -26,7 +26,7 @@ Choosing the correct nose bridge adaptor is key to seeing the full display area.
 
 ![Frame nose bridge height](/frame/images/frame-nose-bridge-diagram.png)
 
-## How do I connect to my Frame?
+## How do I connect to my Frame for the first time?
 
 Ensure your Frame is charged, and then with the charging cradle connected, use a sim card tool to click the reset button. Then remove the dock, and from any Frame compatible app, such as Noa, press connect, and then tap pair.
 
