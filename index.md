@@ -20,5 +20,3 @@ Here you'll find everything you need to know about using your Brilliant AR devic
 ---
 
 [![Brilliant Discord server](/images/discord-link.png)](https://discord.gg/7w3DFxek4p)
-
-

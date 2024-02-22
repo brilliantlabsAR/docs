@@ -10,11 +10,11 @@ has_children: true
 
 # Getting started with Frame
 
-Whether you're using Frame with Noa, or making your own apps, you'll find everything you need to know about your Frame device here.
+Whether you're using Frame with Noa, or making your own apps, you'll find everything you need to know about your Frame hardware here.
 
 ## How do I charge my Frame?
 
-Your Frame will automatically power off, and start charging whenever it is placed onto the charging cradle (Mister Power).
+Your Frame will automatically power off, and start charging whenever it is placed onto the charging cradle (aka Mister Power).
 
 The charging cradle provides an extra helping of battery power for when you're on the go. To charge both Frame and the charging cradle, use any USB Type-C power supply.
 
@@ -28,7 +28,7 @@ Choosing the correct nose bridge adaptor is key to seeing the full display area.
 
 ## How do I connect to my Frame?
 
-Ensure your Frame is charged, and then with the charging cradle connected, use a pin to click the pairing button. From any Frame compatible app, such as Noa, press connect, and accept pairing to start using.
+Ensure your Frame is charged, and then with the charging cradle connected, use a sim card tool to click the reset button. Then from any Frame compatible app, such as Noa, press connect, and tap pair.
 
 ![Pairing Frame to Noa](/frame/images/frame-pairing-diagram.png)
 

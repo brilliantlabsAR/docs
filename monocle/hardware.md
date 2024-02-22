@@ -35,7 +35,7 @@ Monocle is a tiny heads-up display which clips onto your existing eye-wear. It's
 - Computer vision research
 - QR code & barcode detection
 - Heads up telemetry
-- AR apps & games design
+- AR app & game design
 
 ## Contents
 {: .no_toc }
