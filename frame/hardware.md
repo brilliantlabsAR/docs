@@ -118,7 +118,7 @@ The IMU on Frame is the 6 axis [MC6470](https://eu.mouser.com/datasheet/2/821/MC
 
 This allows for always on detections of taps and steps, as well the as current compass heading of the wearer.
 
-![Motion sensing capabilities of Frame](/frame/frame-imu.png)
+![Motion sensing capabilities of Frame](/frame/images/frame-imu.png)
 
 ---
 
@@ -141,7 +141,7 @@ The charging cradle functions to both charge Frame via the 5V terminal on the ba
 
 It contains a 140mAh rechargeable li-ion battery which allows for a top of Frame's internal battery while on the go. The charging cradle itself, and in turn Frame, is charged using any USB Type-C power supply.
 
-![Frame charging dock aka Mister Power](/frame/images/frame-charging-dock.png)
+![Frame charging cradle aka Mister Power](/frame/images/frame-charging-cradle.png)
 
 ---
 
