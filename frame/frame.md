@@ -28,7 +28,7 @@ Choosing the correct nose bridge adaptor is key to seeing the full display area.
 
 ## How do I connect to my Frame?
 
-Ensure your Frame is charged, and then with the charging cradle connected, use a sim card tool to click the reset button. Then from any Frame compatible app, such as Noa, press connect, and tap pair.
+Ensure your Frame is charged, and then with the charging cradle connected, use a sim card tool to click the reset button. Then remove the dock, and from any Frame compatible app, such as Noa, press connect, and then tap pair.
 
 ![Pairing Frame to Noa](/frame/images/frame-pairing-diagram.png)
 
