@@ -1,7 +1,7 @@
 ---
 title: Building Apps
 description: A guide on how to develop your own applications for Monocle.
-image: /monocle/images/monocle-micropython.png
+image: /images/monocle/monocle-splash.png
 nav_order: 3
 parent: Monocle
 redirect_from:
