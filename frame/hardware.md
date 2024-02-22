@@ -68,7 +68,7 @@ Frame is intended to be used with the officially provided firmware from Brillian
 
 If you wish to view the source code, or use it as a starting point for your custom firmware, visit the [Frame codebase repository](https://github.com/brilliantlabsAR/frame-codebase).
 
-The physical debug port of the Bluetooth MCU is located on the back of the Frame PCB. A total of five wires can be connected to a suitable ARM SWD debugger such as a [J-Link probe](https://www.segger.com/products/debug-probes/j-link/) or [Black-magic probe](https://black-magic.org) to allow for debugging.
+The physical debug port of the Bluetooth MCU is located on the back of the Frame PCB. A total of five wires can be connected to a suitable ARM SWD debugger such as a [J-Link probe](https://www.segger.com/products/debug-probes/j-link/) or [Black-Magic probe](https://black-magic.org) to allow for debugging.
 
 ![Serial wire debug (SWD) of the Frame PCB](/frame/images/frame-debug-pinout.png)
 
@@ -78,7 +78,7 @@ The physical debug port of the Bluetooth MCU is located on the back of the Frame
 
 The FPGA is used for graphics acceleration of the display, as well as interfacing to the 720p camera sensor. It communicates to the Bluetooth MCU via SPI and is dynamically shutdown off to save power.
 
-The FPGA used is the [CrosslinkNX LIFCL-17](https://www.latticesemi.com/Products/FPGAandCPLD/CrossLink-NX) from Lattice. It features 17k logic cells, 432kb of embedded block RAM, and 2.56Mb of large RAM.
+The FPGA used is the [Crosslink-NX LIFCL-17](https://www.latticesemi.com/Products/FPGAandCPLD/CrossLink-NX) from Lattice. It features 17k logic cells, 432kb of embedded block RAM, and 2.56Mb of large RAM.
 
 If you wish to view the source code, or use it as a starting point for a custom RTL design, visit the [FPGA section](https://github.com/brilliantlabsAR/frame-codebase/tree/main/source/fpga) of the Frame codebase repository.
 

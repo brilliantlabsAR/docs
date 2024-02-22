@@ -31,13 +31,13 @@ Once you have AR Studio installed, you can try an example using the following st
     ```lua
     function change_text()
         frame.display.clear()
-        frame.display.text("Frame tapped!", 50, 100)
+        frame.display.text('Frame tapped!', 50, 100)
         frame.display.show()
     end
 
     frame.imu.tap_callback(change_text)
     frame.display.clear()
-    frame.display.text("Tap the side of Frame", 50, 100)
+    frame.display.text('Tap the side of Frame', 50, 100)
     frame.display.show()
     ```
 
@@ -76,7 +76,7 @@ Lua strings can be sent on the TX characteristic as UTF-8 strings, and responses
 Frame does not contain a complete Lua REPL, but rather evaluates every message and only returns a message if it resulted in the Lua `print()` function being called, or an error. This keeps the RX channel free of excess messages and echoed characters that would otherwise need to be filtered by the host side app.
 
 ```lua
-print("hello world") -- Returns "hello world" on the RX characteristic
+print('hello world') -- Returns 'hello world' on the RX characteristic
 
 print(1 + 2) -- Returns 3
 
@@ -142,8 +142,8 @@ async def main():
     bluetooth = Bluetooth()
     await bluetooth.connect()
 
-    print(await bluetooth.send_lua("print('hello world')", await_print=True))
-    print(await bluetooth.send_lua("print(1 + 2)", await_print=True))
+    print(await bluetooth.send_lua('print('hello world')', await_print=True))
+    print(await bluetooth.send_lua('print(1 + 2)', await_print=True))
 
     await bluetooth.disconnect()
 

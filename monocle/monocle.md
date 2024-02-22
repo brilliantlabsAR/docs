@@ -11,7 +11,7 @@ has_children: true
 
 # Technical Documentation
 
-Monocle was designed for hackers, by hackers. Take a moment to familiarize yourself with the [Monocle hardware](/monocle/hardware), and when you're ready to delve deeper, visit the [building apps](/building-apps) section to discover how you can construct your own augmented reality apps.
+Monocle was designed for hackers, by hackers. Take a moment to familiarize yourself with the [Monocle hardware](/monocle/hardware), and when you're ready to delve deeper, visit the [Building Apps](/building-apps) section to discover how you can construct your own augmented reality apps.
 
 ### How do I start my Monocle?
 
