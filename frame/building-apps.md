@@ -68,8 +68,8 @@ If already paired, Frame must be reset using the pinhole button on the charging 
 Frame has a single BLE service containing two characteristics. One for transmitting and one for receiving data.
 
 - Service UUID: 7A230001-5475-A6A4-654C-8431F6AD49C4
-- TX characteristic UUID: 7A230002-5475-A6A4-654C-8431F6AD49C4
-- RX characteristic UUID: 7A230003-5475-A6A4-654C-8431F6AD49C4
+- RX characteristic UUID: 7A230002-5475-A6A4-654C-8431F6AD49C4
+- TX characteristic UUID: 7A230003-5475-A6A4-654C-8431F6AD49C4
 
 Lua strings can be sent on the TX characteristic as UTF-8 strings, and responses are returned back on the RX characteristic. The host device must enable notification on the RX characteristic in order to receive data.
 
@@ -142,7 +142,7 @@ async def main():
     bluetooth = Bluetooth()
     await bluetooth.connect()
 
-    print(await bluetooth.send_lua('print('hello world')', await_print=True))
+    print(await bluetooth.send_lua("print('hello world')", await_print=True))
     print(await bluetooth.send_lua('print(1 + 2)', await_print=True))
 
     await bluetooth.disconnect()
