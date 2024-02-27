@@ -37,7 +37,7 @@ If you'd like to share your project too, feel free to edit this doc, and create 
 - [NodeJS communication library for Monocle](https://github.com/endanke/monocle-node-cli) by endanke
 - [Android image transfer library for Monocle](https://github.com/elizagamedev/monocleprototype)
 - [Flutter communication library for Monocle and Frame](https://pub.dev/packages/brilliant_ble) by [Uma Shankar](github.com/uma-shankar-gupta)
-
+- [Go library and battery life tester for Monocle](https://github.com/floren/monocle) by floren
 
 ## Hardware & Accessories
 
