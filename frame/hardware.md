@@ -88,7 +88,7 @@ The FPGA does not expose a physical programming interface. Therefore the FPGA ap
 
 ## Display
 
-The display used in Frame is a Sony [ECX336CN](https://www.panelook.com/ECX336CN_Sony_0.23_OLED_overview_51733.html) micro OLED. It features 640x400 RGB pixels and is optically bonded to the prism assembly which directs the image into the user's eye. The result is a transparent floating display with a 20° field of view, and appears about the size of a tablet display at arms length.
+The display used in Frame is a 0.23" micro OLED. It features 640x400 RGB pixels and is optically bonded to the prism assembly which directs the image into the user's eye. The result is a transparent floating display with a 20° field of view, and appears about the size of a tablet display at arms length.
 
 The display is connected to the FPGA in 8bit YCbCr mode. 4 wires for the Y channel, and 2 wires each for the Cb and Cr channels. This allows for a total of 255 possible colors shown on the display. In turn, to save memory and ensure fast frame rates, the FPGA RTL is optimized to display a maximum of 16 colors per frame. These colors can be changed on the fly, allowing for large sprite sets and fonts to be efficiently stored within Frame's embedded memory. To better understand how the graphics subsystem of Frame works, check out the [graphics section](https://github.com/brilliantlabsAR/frame-codebase/blob/main/docs/fpga-architecture.md#graphics) of the Frame codebase repository.
 
