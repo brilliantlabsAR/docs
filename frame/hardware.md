@@ -175,15 +175,21 @@ It also contains a 140mAh rechargeable li-ion cell which allows for a top-up of 
 
 **Details coming soon**
 
-<!-- ### Frame -->
+### Frame
 
-<!-- [Download the 3D Model in STL format](/frame/frame.stl) -->
+[Download the 3D Model in STL format](/frame/frame.stl)
 
-<!-- <div>
+<div>
     <a href="/frame/frame-mechanical-drawing.pdf">
         <object data="/frame/frame-mechanical-drawing.pdf" type="application/pdf" width="100%" height="525"></object>
     </a>
-</div> -->
+</div>
+
+<div>
+    <a href="/frame/frame-lenses-mechanical-drawing.pdf">
+        <object data="/frame/frame-lenses-mechanical-drawing.pdf" type="application/pdf" width="100%" height="525"></object>
+    </a>
+</div>
 
 <!-- ### Charging cradle -->
 
