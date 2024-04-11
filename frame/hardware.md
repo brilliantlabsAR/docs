@@ -191,9 +191,9 @@ It also contains a 140mAh rechargeable li-ion cell which allows for a top-up of 
     </a>
 </div>
 
-<!-- ### Charging cradle -->
+### Charging cradle
 
-<!-- [Download the 3D Model in STL format](/frame/charging-cradle.stl) -->
+[Download the 3D Model in STL format](/frame/charging-cradle.stl)
 
 <!-- <div>
     <a href="/frame/charging-cradle-mechanical-drawing.pdf">
