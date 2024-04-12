@@ -27,7 +27,7 @@ Currently, a subset of the standard MicroPython libraries is supported, with per
 
 The REPL enables you to explore the hardware capabilities and prototype your applications line by line before final implementation.
 
-As you embark on building your applications, you can conveniently save them directly onto your Monocle device. Upon booting up, Monocle will automatically attempt to execute a `main.py` file if you have created one. Using the [Brilliant AR Studio](/building-apps/#getting-started-with-ar-studio-for-vscode), you can easily create, save, and edit files directly on your Monocle.
+As you embark on building your applications, you can conveniently save them directly onto your Monocle device. Upon booting up, Monocle will automatically attempt to execute a `main.py` file if you have created one. Using the [Brilliant AR Studio](/monocle/building-apps/#getting-started-with-ar-studio-for-vscode), you can easily create, save, and edit files directly on your Monocle.
 
 Typing `help('modules')` lists all the modules contained on the device:
 
