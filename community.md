@@ -26,6 +26,7 @@ If you'd like to share your project too, feel free to edit this doc, and create 
 - [Various MicroPython snippets and examples](https://github.com/simonevetere/micropython) by simonevetere
 - [Question Visualizer via Google Sheets](https://github.com/ironmanfpv/Project-Question-Visualizer-for-Monocle) by ironmanfpv
 - [Fitness Odometer for Monocle](https://github.com/ironmanfpv/Fitness-Odometer-for-Monocle) by ironmanfpv [Try it here](https://ironmanfpv.github.io/Fitness-Odometer-for-Monocle/index.html)
+- [Simple Weather & Time App](https://github.com/siyengar04/weatherapp) by siyengar04
 
 ## Libraries & Tools
 
