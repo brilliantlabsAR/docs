@@ -38,12 +38,12 @@ Whenever software updates are available for your Frame, you'll be notified in yo
 
 ## Where can I download Noa?
 
-Noa is available on both Apple App Store for iOS and Google Play Store for Android.
+Noa is available on both Apple App Store for iOS and soon on Google Play Store for Android.
 
 <div style="text-align:left" markdown="1">
 [<img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Apple App Store badge" width="125"/>](https://apps.apple.com/us/app/noa-for-frame/id6482980023)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[<img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play Store badge" width="125"/>](https://play.google.com/store/apps/details?id=xyz.brilliant.argpt)
+[<img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play Store badge" width="125"/>](#)
 </div>
 
 ## Developer?
