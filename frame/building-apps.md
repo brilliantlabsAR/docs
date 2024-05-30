@@ -150,6 +150,8 @@ async def main():
 asyncio.run(main())
 ```
 
+See also the [test directory](https://github.com/brilliantlabsAR/frame-codebase/blob/main/tests/) for examples on how to use `frameutils`.
+
 ### Font & graphics generation tool
 
 **Details coming soon**
