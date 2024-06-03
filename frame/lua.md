@@ -101,13 +101,13 @@ end
 
 ### Microphone
 
-The microphone of Frame allows for up to 80kB of recording at a time into a circular buffer. If the recorded data is read out and faster than it is recorded, then the recording can go on continiously. If transfering audio over bluetooth, this limit is around 40kBps under good signal conditions. The audio bitrate for a given `sample_rate` and `bit_depth` is: `sample_rate * bit_depth / 8` bytes per second.
+The microphone on Frame allows for streaming audio to a host device in real-time. Transfers are limited by the Bluetooth bandwith which is typically around 40kBps under good signal conditions. The audio bitrate for a given `sample_rate` and `bit_depth` is: `sample_rate * bit_depth / 8` bytes per second. An internal 32k buffer automatically compensates for additional tasks that might otherwise briefly block Bluetooth transfers. If this buffer limit is exceeded however, then discontinuities in audio might occour.
 
-| API&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
+| API&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
-| `frame.microphone.record{seconds=inf, sample_rate=8000, bit_depth=8}` | Starts recording for a number of `seconds` if it is given, otherwise records continiously. `sample_rate` may be either `20000`, `16000`, `12500`, `10000`, `8000`, `5000` or `4000`. `bit_depth` maybe either `16`, `8`, or `4`
-| `frame.microphone.stop()`                                             | Stops any ongoing recording
-| `frame.microphone.read(num_bytes)`                                    | Reads out a number of bytes from the recording buffer. Once all bytes have been read, `nil` will be returned
+| `frame.microphone.start{sample_rate=8000, bit_depth=8}` | Starts streaming mic data into the internal 32k buffer. `sample_rate` may be either `8000`, or `16000`, and `bit_depth` may be either `8`, `16`
+| `frame.microphone.stop()`                               | Stops the stream
+| `frame.microphone.read(num_bytes)`                      | Reads out a number of bytes from the buffer. If all bytes have been read, but streaming is still active, an empty string will be returned. Once the stream has been stopped and all bytes have been read, then `nil` will be returned
 
 #### Example
 {: .no_toc }
@@ -115,16 +115,27 @@ The microphone of Frame allows for up to 80kB of recording at a time into a circ
 ```lua
 local mtu = frame.bluetooth.max_length()
 
-frame.microphone.record{seconds = 3} -- Record 3 second of audio
+frame.microphone.start{sample_rate=16000} -- Start streaming at 16kHz 8bit
 
-frame.sleep(3) -- Wait for the recording to complete and send all the data
-
+-- Streams forever
 while true do
-    local data = frame.microphone.read(mtu)
+    data = frame.microphone.read(mtu)
+
+    -- Calling frame.microphone.stop() will allow this to break the loop
     if data == nil then
         break
     end
-    bluetooth.send(data)
+
+    -- If there's data to send then ... 
+    if data ~= '' then
+        -- Try to send the data as fast as possible
+        while true do
+            -- If the Bluetooth is busy, this simply trys again until it gets through
+            if (pcall(frame.bluetooth.send, data)) then
+                break
+            end
+        end
+    end
 end
 ```
 
