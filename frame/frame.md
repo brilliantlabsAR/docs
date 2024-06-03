@@ -18,6 +18,8 @@ Your Frame will automatically power off, and start charging whenever it is place
 
 The charging cradle provides an extra helping of battery power for when you're on the go. To charge both Frame and the charging cradle, use any USB Type-C power supply.
 
+The cradle and Frame when docked together will take around 2 hours to fully charge. The white LED on the cradle will turn off to indicate that charging is complete.
+
 ![Charging Frame](/frame/images/frame-charging-diagram.png)
 
 ## How do I set the bridge height?
@@ -28,7 +30,7 @@ Choosing the correct nose bridge adaptor is key to seeing the full display area.
 
 ## How do I connect to my Frame for the first time?
 
-Ensure your Frame is charged, and then with the charging cradle connected, use a sim card tool to click the reset button. Then remove the dock, and from any Frame compatible app, such as Noa, press connect, and then tap pair.
+Ensure your Frame is charged, and then with the charging cradle connected, use a sim card tool and hold the pairing button for 3 seconds. Then remove the dock, and from any Frame compatible app, such as Noa, press connect, and then tap pair.
 
 ![Pairing Frame to Noa](/frame/images/frame-pairing-diagram.png)
 
@@ -38,12 +40,16 @@ Whenever software updates are available for your Frame, you'll be notified in yo
 
 ## Where can I download Noa?
 
-Noa is available on both Apple App Store for iOS and Google Play Store for Android.
+Noa is available on both Apple App Store for iOS and will shortly be available on Google Play Store for Android. In the meanwhile, you can download the [APK from our Github](https://github.com/brilliantlabsAR/noa-flutter/releases/latest)
 
-<div style="text-align:left" markdown="1">
+<div style="text-align:center" markdown="1">
 [<img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Apple App Store badge" width="125"/>](https://apps.apple.com/us/app/noa-for-frame/id6482980023)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[<img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play Store badge" width="125"/>](https://play.google.com/store/apps/details?id=xyz.brilliant.argpt)
+<!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+<!-- [<img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play Store badge" width="125"/>](https://play.google.com/store/apps/details?id=xyz.brilliant.argpt) -->
+</div>
+
+<div style="text-align:center" markdown="1">
+**Check out the getting started with Noa video [here](https://youtu.be/mOoaD1hvi5c)**
 </div>
 
 ## Developer?
