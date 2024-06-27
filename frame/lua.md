@@ -63,11 +63,11 @@ frame.display.show()
 
 The camera capability of Frame allows for capturing and downloading of single JPEG images over Bluetooth. The sensor's full resolution is 1280x720 pixels in portrait orientation, however only square images up to 720x720 pixels can be captured at a time. The user can select which portion of the sensor's window is captured using the `pan` control. Additionally, the resolution of the capture can be cropped to either 360x360, 240x240 or 180x180 by using the `zoom` function. Smaller resolutions will increase the image quality, however the `quality` factor can be reduced to decrease the image file size, and increase download speeds of the image over Bluetooth.
 
-| API&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
+| API&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
-| `frame.camera.auto(enable, metering_mode)`         | Enables automatic exposure and whitebalance when `enable` is set to `true`. When enabling, `mode` can be given as either `'spot'`, `'center_weighted'` or `'average'`. Each option progressivly takes more of the image into account for exposure metering. Once started, the exposure will take around 1 second to stabilize, and then continiously auto-expose until disabled, or until Frame is put to sleep
-| `frame.camera.capture{zoom=1, pan=0, quality=1.0}` | Captures a single image from the camera. `zoom` can be either `1`, `2`, `3`, or `4` returning 720x720, 360x360, 240x240 or 180x180 images respectively. `pan` can be used to tilt the camera view either up or down. A value of `10` represents the highest viewing angle, `0` is center, and `-10` is the lowest. The `quality` factor can help reduce image size by reducing the JPEG quality. A value of `1.0` represents full quality, and can be reduced to `0.01` for the lowest quality and smallest file size
-| `frame.camera.read(num_bytes)`                     | Reads out a number of bytes from the camera capture memory as a byte string. Once all bytes have been read, `nil` will be returned
+| `frame.camera.capture{quality_factor=50}`                                                          | Captures a single image from the camera. The `quality_factor` option can help reduce file sizes by adjusting the JPEG quality. The four possible options are `10`, `25`, `50`, and `100`. Higher values represent higher quality, but also larger file sizes.
+| `frame.camera.read(num_bytes)`                                                                     | Reads out a number of bytes from the camera capture memory as a byte string. Once all bytes have been read, `nil` will be returned
+| `frame.camera.auto{metering='AVERAGE', exposure=0, shutter_kp=0.1, gain_kp=1.0, gain_limit=248.0}` | Runs the automatic exposure and gain algorithm. This funtion must be called every 100ms for the best performance. `metering` can be one of three modes, `SPOT`, `CENTER_WEIGHTED`, or `AVERAGE`. `exposure` can be a value between `-2.0` and `2.0` where lower values will return slightly darker images, and higher values will return slightly brighter images. `shutter_kp` and `gain_kp` allow fine tuning of the auto exposure algorithm. Higher values can make reaching the desired exposure faster, but may result in instability and oscilliation of the control loop. These values are generally more sensitive when using the `SPOT` or `CENTER_WEIGHTED` metering modes. `gain_limit` can be used to cap the gain to below the maximum of `248`. This is useful to reduce noise in darker scenes and results in faster exposure when going from darker to brighter scenes.
 
 #### Example
 {: .no_toc }
@@ -75,9 +75,14 @@ The camera capability of Frame allows for capturing and downloading of single JP
 ```lua
 local mtu = frame.bluetooth.max_length()
 
-frame.camera.auto(true, 'center_weighted') -- Start auto-mode
-frame.sleep(1) -- Wait a little for the exposure to stabilize
-frame.camera.capture() -- Capture an image using default settings
+-- Auto expose for 3 seconds
+for _=1, 30 do
+    frame.camera.auto{}
+    frame.sleep(0.1)
+end
+
+-- Capture an image using default settings
+frame.camera.capture{} -- NOTE: for devices running firmware prior to v24.179.0818, the {} should be ()
 
 while true do
     local data = frame.camera.read(mtu)
@@ -92,9 +97,9 @@ end
 |:---------|:------------|
 | `frame.camera.sleep()`                      | Puts the camera to sleep and reduces power consumption. Note the `frame.sleep()` function will automatically put the camera to sleep
 | `frame.camera.wake()`                       | Wakes up the camera if it has previously been asleep. Note that following wakeups from `frame.sleep()` automatically wakes up the camera
-| `frame.camera.set_exposure(shutter)`        | Sets the shutter speed in microseconds when `camera.auto()` is set to `false`. `shutter` can be a value between `20` and `20000`
-| `frame.camera.set_gain(gain)`               | Sets the analog gain of the sensor when `camera.auto()` is set to `false`. `gain` can be a value between `0` and `255`
-| `frame.camera.set_white_balance(r, g, b)`   | Sets the digital gains of the R, G and B channels when `camera.auto()` is set to `false`. `r`, `g` and `b` can be values between `0` and `1023`
+| `frame.camera.set_exposure(shutter)`        | Sets the shutter value manually. Note that `camera.auto{}` will override this value. `shutter` can be a value between `4` and `16383`
+| `frame.camera.set_gain(gain)`               | Sets the gain value manually. Note that `camera.auto{}` will override this value. `gain` can be a value between `0` and `248`
+| `frame.camera.set_white_balance(r, g, b)`   | Sets the digital gains of the R, G and B channels for fine tuning white balance. `r`, `g` and `b` can be values between `0` and `1023`
 | `frame.camera.set_register(address, value)` | Allows for hacking the camera's internal registers. `address` can be any 16-bit register address of the camera, and `value` any 8-bit value to write to that address
 
 ---
