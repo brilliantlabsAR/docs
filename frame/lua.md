@@ -52,7 +52,6 @@ The Frame display is capable of rendering up to 16 colors at one time. These col
 
 ```lua
 -- Display 'Hello world' at x = 50 and y = 100
-frame.display.clear()
 frame.display.text('Hello world', 50, 100)
 frame.display.show()
 ```
