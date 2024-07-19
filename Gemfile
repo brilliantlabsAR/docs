@@ -17,6 +17,9 @@ end
 platforms :mingw, :x64_mingw, :mswin, :jruby do
   gem "tzinfo", "~> 1.2"
   gem "tzinfo-data"
+
+  # this was required on a fresh install of Ruby on Windows (see https://github.com/jekyll/jekyll/issues/8523):
+  gem "webrick", "~> 1.8.1"
 end
 
 # Performance-booster for watching directories on Windows

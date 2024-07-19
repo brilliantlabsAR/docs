@@ -9,149 +9,98 @@ parent: Frame
 # Building Apps
 {: .no_toc }
 
----
+## How do apps run on Frame?
+In case you've come to Frame development with any preconceptions from the world of wearable Android devices, let's step back and go over how Frame is different.  Unlike some other devices, Frame is not based on Android and is in fact built on a very power-efficient and somewhat low-level system on a chip.  Whereas on Android you may develop a app, package it up in an apk, send it to a device, and then launch and run it on the device, Frame is different.
 
-## AR Studio
-{: .no_toc }
+In general, apps do not run on Frame, instead Frame acts as a peripheral accessory for "host" apps running on a computer or mobile device.  These apps then talk to Frame over Bluetooth to get it to do things like take photos or access the microphone or display text and graphics on its screen.
 
-AR studio is an extension for VSCode designed for both Frame and Monocle. It lets you quickly start writing apps and testing them on your device. Download it [here](https://marketplace.visualstudio.com/items?itemName=brilliantlabs.brilliant-ar-studio), or simply search for Brilliant AR Studio from within the VSCode extensions tab.
+For example, the Noa app on your phone is the "host" app, and it talks to Frame over Bluetooth.  It registers itself to be called when you wake your Frame by tapping it, and then it instructs the Frame to send over photo and microsoft data which it then uses to generate a response.  It then processes the response and tells Frame exactly what to display on its screen.  Very little of the code for Noa actually runs on the Frame.  Rather, the Noa app on your phone is the one that runs the code that calls on Frame.
 
-![Brilliant AR Studio for VSCode](/frame/images/frame-vs-code-extension.png)
+As such, there is no concept of an app launcher on Frame, or any other way to "install" an app on Frame.  Instead, you build the host app, and then use it to control Frame.  To share with other Frame users, publish your host app to the App Store or Google Play, or open source it or however you would normally share an app for your platform.  Of course if you build something cool, let us know and we will be happy to share it with the community.  We will eventually have a gallery of Frame apps to share with the world, although we're not quite there yet.
 
-Once you have AR Studio installed, you can try an example using the following steps:
+## How to get started
 
-1. Open the Command Palette using **Ctrl-Shift-P** (or **Cmd-Shift-P** on Mac)
+Read on for a better understanding of the platform and the various ways to build apps for Frame.  Or, to keep it simple:
 
-1. Type and select **Brilliant AR Studio: Initialize new project folder**
+* If you're interested in building apps for Frame, and you're using one of the platforms supported by our SDKs, then definitely start with the SDK.  Check out the [SDK documentation here](/frame/building-apps-sdk) to get started.  Then read up on the [Lua API documentation here](/frame/building-apps-lua-api) to do even more.
+* If you're using a platform that isn't supported by our SDKs, your best bet is to use the Lua API directly over Bluetooth.  Check out the [Bluetooth LE API documentation here](/frame/building-apps-bluetooth-specs) and the [Lua API documentation here](/frame/building-apps-lua-api) to get started.
 
-1. Select Frame, and give your project a name
+## Ways to Build for Frame
+Frame has several integration points you can use to create apps:
 
-1. Copy the following example code into `main.lua`:
+* Customize the firmware **(not recommended)**
+    * Very advanced, requires experience with hardware development
+    * Gives you complete control
+* Talk to the Frame over BTLE to run Lua on the device
+    * Use any platform that can talk to Bluetooth
+    * Gives you full control
+    * Can be tedious to get started, best if you have experience developing with Bluetooth LE
+* Use one of our platform SDKs to use Frame from your own mobile or desktop computer app **(recommended)**
+    * Build apps for one of our supported platforms:
+        * Python from a Mac, Linux, or Windows computer
+        * Swift from a Mac or iOS device *(coming soon)*
+        * Kotlin from Android *(coming soon)*
+        * Flutter for mobile (and computer?) *(coming soon)*
+        * React Native for mobile (and computer?) *(coming soon)*
+    * Common tasks are simplified and handled for you
+    * Your app is in control and uses Frame as an accessory
+    * Best way to get started
+* Create tools for the Noa AI agent to call *(coming later)*
+    * Simple HTTP REST interface, no hardware required
+    * Only supports Noa, not for running code on Frame
+    * Will be available in the future
 
-    ```lua
-    function change_text()
-        frame.display.clear()
-        frame.display.text('Frame tapped!', 50, 100)
-        frame.display.show()
-    end
+The most common structure is to build an iOS or Android mobile app which uses our SDKs to communicate with the Frame over Bluetooth.  Your app is in control and uses Frame as an accessory, with the Lua and BTLE details mostly abstracted away for you.
 
-    frame.imu.tap_callback(change_text)
-    frame.display.clear()
-    frame.display.text('Tap the side of Frame', 50, 100)
-    frame.display.show()
-    ```
+Let's walk through each of these options in order.
 
-1. Save the file, and press the **Connect** button
+### Customize the firmware
 
-1. VSCode will then connect to your Frame (You may need to accept pairing if you aren't already paired)
+{ .warning }
+Frame is intended to be used with the officially provided firmware from Brilliant. Loading custom firmware will require destructive disassembly of your Frame hardware to access the physical debug port.
 
-1. Right click on `main.lua` and select **Upload to device**
+Frame is developed by hackers for hackers, so even though we don't encourage it for most users, you are welcome to customize the firmware if you want.  The official Frame firmware is open source, and you can find it [on GitHub](https://github.com/brilliantlabsAR/frame-codebase).
 
-1. Your app should now be running on Frame
+For more details on how to customize the firmware, see the [hardware documentation](/frame/hardware#Customizing-the-firmware).
+TODO: confirm this link
 
----
 
-## Bluetooth
+### Talk to the Frame Over Bluetooth Low Energy to Run Lua on the Device
 
-Once you're ready to start making your own host side apps, it's useful to understand how Frame's Bluetooth works under the hood.
+Frame is designed to be used with a host app running on a computer or mobile device.  The host app talks to Frame over Bluetooth Low Energy (BTLE) and runs Lua code on the device.
 
-### Pairing & connecting
+So if you're comfortable with Bluetooth LE, you can use any platform that can talk to Bluetooth to control Frame.  This is the most flexible option, and gives you complete control over your interaction with the device.  However, it can be more difficult to get started, and requires a good understanding of Bluetooth LE.
 
-Frame uses BLE bonding and must pair with a host device before any communication can take place.
+Check out the full documentation for [communicating with Frame over Bluetooth LE](/frame/building-apps-bluetooth-specs).
 
-If already paired, Frame must be reset using the pinhole button on the charging dock before it can be paired to a new host side device. Host side devices must also remove bonding before a new bonding can be accepted.
+Once you're using BTLE to communicate with the Frame, what can you actually tell it to do?  That's where Lua comes in.  Lua is a tiny and extensible scripting language that's designed to be power efficient and quick to learn. Frame features a complete Lua virtual machine.  You can execute Lua scripts on the device, or use the Lua REPL over the BTLE interface to interact with the device.
 
-![Bluetooth connection sequence diagram](/frame/images/frame-bluetooth-connection-diagram.drawio.svg)
+Be sure to check out the [full Lua API reference](/frame/building-apps-lua-api) for more on what you can do with Lua on Frame.
 
-### Sending Lua
+While the main way you'll use Lua on Frame is via host apps that send it over Bluetooth, it can be helpful while learning to directly write and execute Lua code on Frame using the [AR Studio extension for VSCode](/frame/building-apps-lua-api#ar-studio).
 
-Frame has a single BLE service containing two characteristics. One for transmitting and one for receiving data.
 
-- Service UUID: 7A230001-5475-A6A4-654C-8431F6AD49C4
-- RX characteristic UUID: 7A230002-5475-A6A4-654C-8431F6AD49C4
-- TX characteristic UUID: 7A230003-5475-A6A4-654C-8431F6AD49C4
+### Use One of Our Platform SDKs from Your Own Mobile or Computer App **(recommended)**
 
-Lua strings can be sent on the TX characteristic as UTF-8 strings, and responses are returned back on the RX characteristic. The host device must enable notification on the RX characteristic in order to receive data.
+{ .info }
+This is the recommended option for quickly and reliably building Frame apps.  However the platform SDKs are a work in progress and not all platforms and use cases are supported yet.  At the moment python is the first platform to launch in preview.
 
-Frame does not contain a complete Lua REPL, but rather evaluates every message and only returns a message if it resulted in the Lua `print()` function being called, or an error. This keeps the RX channel free of excess messages and echoed characters that would otherwise need to be filtered by the host side app.
+We've wrapped the low-level bluetooth and Lua APIs into a set of platform SDKs for a number of popular development platforms.  This allows you to build your own mobile or computer app for Frame, without having to write all the low-level boilerplate to make it work.
 
-```lua
-print('hello world') -- Returns 'hello world' on the RX characteristic
+For example, instead of having to write code to find and connect to Frame over Bluetooth, send it Lua code, and then handle the response, you can use the SDK to do that for you.
 
-print(1 + 2) -- Returns 3
+It's still useful to [learn the Lua API](/frame/building-apps-lua-api), as you will occasionally need to use it directly.  For example, the `main.lua` script which runs at wakeup, or when you are doing something that isn't wrapped by the SDK.
 
-a = 1 + 2 -- Evaluates 1 + 2 and stores it in a, but does not return anything
+Check out [the SDK documentation here](/frame/building-apps-sdk) to see how to use the SDK to build your own app.
 
-1 + 2 -- Returns an error because 1 + 2 hasn't been assigned to anything
-```
 
-The length of TX data is limited to a maximum size of the host's chosen MTU length - 3 bytes. This number also determines the maximum length of a Lua string that can be evaluated at a time. For larger scripts, they must first be saved to the device using the [file system API](/frame/lua#file-system) using several `f:write()` operations, and then executed using `require()`.
+### Create Tools for the Noa AI Agent to Call *(coming soon)*
 
-Responses are also limited to the MTU length. Should you want to return very long strings, they should be broken up into smaller `print()` statements.
+{ .info }
+This is something we're working on but which won't be available for a while.  If you're interested in this option, let us know and we'll keep you posted.
 
-![Bluetooth connection sequence diagram](/frame/images/frame-bluetooth-sending-lua-diagram.drawio.svg)
+In the future, an even simpler way to integrate with Frame will be to write REST API's that the Noa AI agent can call.  This is entirely web-based, so you don't even need Frame hardware to get started.
 
-### Sending Data
+For example, you could write a REST API that the Noa AI agent can call to send a Discord message on your behalf.  You would define the triggers and parameters in a way similar to the OpenAI assistant tools (function calling), and then register that with us through a web interface.  When a user enables your tool, they would be able to use it in their Noa chat.  For example if they ask to send a Discord message, the Noa AI agent would call your REST API, and your server would send that message on behalf of the user.
 
-Sometimes it may be more efficient to send raw byte data rather than strings. For example when transmitting graphical or microphone data. These can be sent on the same TX characteristic by simply appending a byte of value `1` at the start of the payload. This will trigger a callback function if one has already been assigned by `frame.bluetooth.receive_callback()`. The total length of byte data that can be transmitted is therefore MTU - 4 bytes.
-
-Raw byte data can also be returned to the host device using the `frame.bluetooth.send()` function. This data is also limited to MTU - 4 bytes in length, and will be prepended by a value of `1` in the first byte of the payload.
-
-![Bluetooth connection sequence diagram](/frame/images/frame-bluetooth-sending-bytes-diagram.drawio.svg)
-
-### Control characters
-
-While a Lua script is running, Frame will ignore any other Lua strings that are sent over Bluetooth (note that raw byte data can still be sent to trigger callbacks in the user logic). The following control signals can be sent on the TX characteristic to exit or restart the script:
-
-- Sending a single byte of value `3` will terminate any running script or loop.
-- Sending a single byte of value `4` will clear all variables, and run `main.lua` if it exists. Same as a reboot.
-
-### Firmware updates
-
-Frame contains a mechanism for updating the complete system firmware via a built in bootloader. To enter the bootloader, call `frame.update()`. The device will then reboot and advertise with the name "Frame update".
-
-To understand how the bootloader process works in closer detail, visit the [Nordic DFU documentation](https://infocenter.nordicsemi.com/topic/sdk_nrf5_v17.1.0/lib_bootloader_modules.html).
-
-If no activity commences on the bootloader for more than 5 minutes, it will timeout and return back to the application firmware. If the firmware update process is interrupted, and the application firmware becomes invalid, the bootloader will wait forever until a valid firmware update is completed.
-
-Unlike the application firmware, the bootloader will continue to operate even while Frame is on charge. It's therefore possible to update while the device is docked to the charging cradle. In this case, once the update completes, the firmware will reload and then go to sleep right away.
-
-The latest release file of the official firmware is available from the [Frame codebase releases page](https://github.com/brilliantlabsAR/frame-codebase/releases) which you can include in your own host apps along with the DFU mechanism.
-
----
-
-## Frame utilities for Python
-
-[frameutils](https://github.com/brilliantlabsAR/frame-utilities-for-python/tree/main) for Python is a handy library for communicating with Frame and provides several tools for creating graphics that you can use in your Frame apps.
-
-Install it with pip:
-
-```
-pip3 install frameutils
-```
-
-### Bluetooth library
-
-The Bluetooth module of frameutils can be used to communicate with Frame from any Python desktop app. It makes use of [Bleak](https://github.com/hbldh/bleak) under the hood.
-
-```python
-import asyncio
-from frameutils import Bluetooth
-
-async def main():
-    bluetooth = Bluetooth()
-    await bluetooth.connect()
-
-    print(await bluetooth.send_lua("print('hello world')", await_print=True))
-    print(await bluetooth.send_lua('print(1 + 2)', await_print=True))
-
-    await bluetooth.disconnect()
-
-asyncio.run(main())
-```
-
-See also the [test directory](https://github.com/brilliantlabsAR/frame-codebase/blob/main/tests/) for examples on how to use `frameutils`.
-
-### Font & graphics generation tool
-
-**Details coming soon**
+While we are excited about this option, it is still a ways off and we don't have a timeline for when it will be available.  If you're interested, please let us know and we'll keep you posted.

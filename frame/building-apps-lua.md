@@ -1,9 +1,9 @@
 ---
-title: Lua API
-description: A guide on how to use Lua on your Frame AR glasses.
+title: Lua API Reference
+description: A reference of Lua functionality avilable on your Frame AR glasses.
 image: /images/frame/frame-splash.png
-nav_order: 3
-parent: Frame
+nav_order: 2
+parent: Building Apps
 ---
 
 # Lua API
@@ -13,9 +13,10 @@ parent: Frame
 
 Lua is a tiny and extensible scripting language that's designed to be power efficient and quick to learn. Frame features a complete Lua virtual machine based on the latest public release of Lua. Dedicated hardware APIs allow direct access to all of Frame's peripherals at a high level so that developers can start building apps quickly and easily.
 
-There's no special cables or setup needed. Lua on Frame is accessed solely over Bluetooth, such that any user created host app can easily execute scripts by simply pushing Lua strings to the device.
+{: .warning }
+Note that the Lua virtual machine on the Frame has a very minimal standard library, so many guides on the internet about Lua may contain code that won't work on Frame.  It's best to think of Lua on Frame as a language syntax, not as a standard library.
 
-To learn more how the underlying Bluetooth communication with Frame works, check out the Bluetooth section of the [Building Apps](/frame/building-apps#bluetooth) page.
+There's no special cables or setup needed. Lua on Frame is accessed solely over Bluetooth, such that any user created host app can easily execute scripts by simply pushing Lua strings to the device.  To learn more how the underlying Bluetooth communication with Frame works, check out the Bluetooth section of the [Building Apps](/frame/building-apps#bluetooth) page.
 
 ---
 
@@ -25,7 +26,7 @@ To learn more how the underlying Bluetooth communication with Frame works, check
 This page describes all of the Frame specific Lua APIs available to the developer along with some helpful examples. Certain libraries allow for more low level access that can be used for debugging and hacking the various subsystems of Frame.
 
 {: .note }
-The API specification is still undergoing heavy development. Some of them may change over the coming month or so.
+The API specification is still undergoing heavy development. Some of them may change over time.
 
 1. TOC
 {:toc}
@@ -38,24 +39,94 @@ The display engine of allows drawing of text, sprites and vectors. These element
 
 The Frame display is capable of rendering up to 16 colors at one time. These colors are preset by default, however each color can be overridden by any 8bit YCbCr color using the `palette` command.
 
+{: .warning }
+The palette and vector commands are not yet implimented.
+
 | API&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
-| `frame.display.palette{}`                                             | *Details coming soon*
-| `frame.display.text(string, x, y, {color='WHITE', align='TOP_LEFT'})` | Prints the given `string` to the display at `x` and `y`. A `color` can optionally be provided to print the text in one of the 16 palette colors, and `align` can optionally be provided to jutify the text as either `'TOP_LEFT'`, `'TOP_CENTER'`, `'TOP_RIGHT'`, `'MIDDLE_LEFT'`, `'MIDDLE_CENTER'`, `'MIDDLE_RIGHT'`, `'BOTTOM_LEFT'`, `'BOTTOM_CENTER'`, or `'BOTTOM_RIGHT'`
-| `frame.display.bitmap()`                                              | *Details coming soon*
-| `frame.display.vector()`                                              | *Details coming soon*
+| `frame.display.palette{}`                                             | *Coming soon*
+| `frame.display.text(string, x, y, {color='WHITE'})`                   | Prints the given `string` to the display at `x` and `y`. A `color` can optionally be provided to print the text in one of the 16 palette colors.
+| `frame.display.bitmap(x, y, width, num_colors, color_offset, data)`   | Allows manually drawing to the screen.
+| `frame.display.vector()`                                              | *Coming soon*
 | `frame.display.show()`                                                | Shows the drawn objects on the display
 
+#### Buffering
 
-#### Example
-{: .no_toc }
+The Frame display has 2 buffers.  All writing to the display via `frame.display.text()`, `frame.display.bitmap()`, etc write to an off-screen buffer and are not visible.  This allows you to write mutiple actions at once.  When you have completed drawing and want to show it to the user, call `frame.display.show()` which will display the buffered graphics and clear a new off-screen buffer for whatever you want to draw next.
+
+#### frame.display.text
+`frame.display.text(string, x, y)` prints the given `string` to the display with its upper-left at position `x, y`.  All positions are 1-indexed, so possible values for x are between `1` and `640`, and possible values for y are between `1` and `400`.  text is variable width, not fixed-width.  Currently is is not possible to modify the font or font size.  There is no word-wrapping performed automatically.
 
 ```lua
 -- Display 'Hello world' at x = 50 and y = 100
-frame.display.clear()
 frame.display.text('Hello world', 50, 100)
 frame.display.show()
 ```
+
+#### frame.display.bitmap
+`frame.display.bitmap(x, y, width, num_colors, color_offset, data)` allows manually drawing to the screen.  The bitmap is positioned with its upper-left at `x, y` with width `width` and the height automatically determined by the length of the data.
+
+`num_colors` can be one of `2`, `4`, or `16`.  By including less colors in your bitmap, you can fit more pixels into a smaller data string.  `color_offset` is a number between 1 and 16.
+
+The `data` is a lua string which is just an array of bytes, but with multiple pixels packed in each byte based on the number of colors.  When drawing, the `color_offset` is added to palette index (wrapping around at 16).
+
+```plaintext
+Data as Lua string:
+"\x01\xFE"
+
+Data as bits:
+00000001 11111110
+
+If num_color = 16, then this maps to 4 pixels:
+as bits:        0000 0001  1111 1110
+palette index:     0    1    15   14
+
+If num_color = 4, then this maps to 8 pixels:
+as bits:        00 00 00 01  11 11 11 10
+palette index:   0  0  0  1   3  3  3  2
+
+If num_color = 2, then this maps to 16 pixels:
+as bits:        0 0 0 0 0 0 0 1  1 1 1 1 1 1 1 0
+palette index:  0 0 0 0 0 0 0 1  1 1 1 1 1 1 1 0
+```
+
+For example, to draw a red rectangle at position x = 100, y = 50, with width = 32 and height = 15:
+
+```lua
+frame.display.bitmap(100, 50, 32, 2, 3, string.rep("\xFF", 32 / 8 * 16))
+                     |    |   |   |  |   |"since each byte maps to 8 pixels, we divide the width 32 by 8"
+                     |    |   |   |  |   \"and multiply by the height of 16 to get the total data length"
+                     |    |   |   |  \"the 3rd color in the standard palette is red"
+                     |    |   |   \"we only need 2 color options, to pack 8 pixels per byte"
+                     |    |   \"the width is 32, after which it rolls onto the next line"
+                     |    \"top at 50px"
+                     \"left at 100px"
+```
+
+#### Default Palette
+From (AndroidArts: Arne Niklas Jansson)[https://www.androidarts.com/palette/16pal.htm] although the ssl cert is expired so duplicated here for easier access:
+<table>
+<tbody><tr>
+<td bgcolor="#000000"><font color="White">#0<br> VOID</font></td>
+<td bgcolor="#9D9D9D">#1<br> GRAY</td>
+<td bgcolor="#FFFFFF">#2<br> WHITE</td>
+<td bgcolor="#BE2633">#3<br> RED</td>
+<td bgcolor="#E06F8B">#4<br> MEAT</td>
+<td bgcolor="#493C2B"><font color="White">#5<br> DARKBROWN</font></td>
+<td bgcolor="#A46422">#6<br> BROWN</td>
+<td bgcolor="#EB8931">#7<br> ORANGE</td>
+</tr>
+<tr>
+<td bgcolor="#F7E26B">#8<br> YELLOW</td>
+<td bgcolor="#2F484E"><font color="White">#9<br> DARKGREEN</font></td>
+<td bgcolor="#44891A">#10<br> GREEN</td>
+<td bgcolor="#A3CE27">#11<br> SLIMEGREEN</td>
+<td bgcolor="#1B2632"><font color="White">#12<br> NIGHTBLUE</font></td>
+<td bgcolor="#005784"><font color="White">#13<br> SEABLUE</font></td>
+<td bgcolor="#31A2F2">#14<br> SKYBLUE</td>
+<td bgcolor="#B2DCEF">#15<br> CLOUDBLUE</td>
+</tr>
+</tbody></table>
 
 ---
 
@@ -101,6 +172,8 @@ end
 | `frame.camera.set_gain(gain)`               | Sets the gain value manually. Note that `camera.auto{}` will override this value. `gain` can be a value between `0` and `248`
 | `frame.camera.set_white_balance(r, g, b)`   | Sets the digital gains of the R, G and B channels for fine tuning white balance. `r`, `g` and `b` can be values between `0` and `1023`
 | `frame.camera.set_register(address, value)` | Allows for hacking the camera's internal registers. `address` can be any 16-bit register address of the camera, and `value` any 8-bit value to write to that address
+
+It is not recommended to manually call `frame.camera.sleep()` or `frame.camera.wake()`.
 
 ---
 
@@ -213,9 +286,20 @@ The file system API allows for writing and reading files to Frame's non-volatile
 | `frame.file.rename(name, new_name)` | Renames a file or directory of given `name` to `new_name`
 | `frame.file.listdir(directory)`     | Lists all files in the directory path given. E.g. `'/'` for the filesystem root directory. The list is returned as a table with `name`, `size`, and `type`
 | `frame.file.mkdir(pathname)`        | Creates a new directory with the given `pathname`
-| `f:read(*num_bytes)`                | Reads a number of bytes from a file. If no argument is give, the whole line is returned
+| `f:read(*num_bytes)`                | Reads a number of bytes from a file. If no argument is give, the whole line is returned.
 | `f:write(data)`                     | Writes data to the file. `data` must be a string and can contain any byte data
 | `f:close()`                         | Closes the file. It is important to close files once done writing, otherwise they may become courrupted
+
+#### Tips
+
+* On many online Lua guides, the examples allow `'r'`, `'w'`, or `'a'` as shorthard for `'read'`, `'write'`, or `'append'`, however Frame does not support that.  You need to spell out the whole word.
+* GitHub Copilot and ChatGPT will always generate incorrect code like `file.read()` rather than the correct `f:read()`.  Keep a close eye on the syntax.
+* `f:read()` reads until the end of the line, so you need to call it multiple times to get through the whole file.  It will return `nil` when it has reached the end of the file.
+* There is no function to check if a file exists.  Instead you can try to open the file for reading and see if it fails.
+
+{: .warning }
+There is (an open bug)[https://github.com/brilliantlabsAR/frame-codebase/issues/234] where `f:read(*num_bytes)` will not always respect the num_bytes limit.  Until that is resolved, your code should handle receiving up to 512 bytes at a time.
+
 
 #### Example
 {: .no_toc }
@@ -233,6 +317,17 @@ f:close()
 
 f = frame.file.open('/my_files/log.txt', 'append')
 f:write('Logged another line\n')
+f:close()
+
+-- Print the file contents (this simple version will fail if a line is longer than the MTU limit)
+f = frame.file.open('/my_files/log.txt', 'read')
+while true do
+    local line = f:read()
+    if line == nil then
+        break
+    end
+    print(line)
+end
 f:close()
 
 -- Print all the files in the directory
@@ -294,3 +389,47 @@ The system API provides miscellaneous functions such as `sleep` and `update`. It
 | `frame.stay_awake(enable)`            | Prevents Frame from going to sleep while it's docked onto the charging cradle. This can help during development where continious power is needed, however may degrade the display or cause burn-in if used for extended periods of time
 | `frame.fpga_read(address, num_bytes)` | Reads a number of bytes from the FPGA at the given address
 | `frame.fpga_write(address, data)`     | Writes data to the FPGA at a given address. `data` can be a string containing any byte values
+
+---
+
+## AR Studio
+{: .no_toc }
+
+While the main way you'll use Lua on Frame is via host apps that send it over Bluetooth, it can be helpful while learning to directly write and execute Lua code on Frame using the AR Studio extension for VSCode.
+
+AR studio is an extension for VSCode designed for both Frame and Monocle. It lets you quickly start writing apps and testing them on your device. Download it [here](https://marketplace.visualstudio.com/items?itemName=brilliantlabs.brilliant-ar-studio), or simply search for Brilliant AR Studio from within the VSCode extensions tab.
+
+![Brilliant AR Studio for VSCode](/frame/images/frame-vs-code-extension.png)
+
+Once you have AR Studio installed, you can try an example using the following steps:
+
+1. Open the Command Palette using **Ctrl-Shift-P** (or **Cmd-Shift-P** on Mac)
+
+1. Type and select **Brilliant AR Studio: Initialize new project folder**
+
+1. Select Frame, and give your project a name
+
+1. Copy the following example code into `main.lua`:
+
+    ```lua
+    function change_text()
+        frame.display.clear()
+        frame.display.text('Frame tapped!', 50, 100)
+        frame.display.show()
+    end
+
+    frame.imu.tap_callback(change_text)
+    frame.display.clear()
+    frame.display.text('Tap the side of Frame', 50, 100)
+    frame.display.show()
+    ```
+
+1. Save the file, and press the **Connect** button
+
+1. VSCode will then connect to your Frame (You may need to accept pairing if you aren't already paired)
+
+1. Right click on `main.lua` and select **Upload to device**
+
+1. Your app should now be running on Frame
+
+---
