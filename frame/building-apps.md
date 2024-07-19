@@ -4,17 +4,22 @@ description: A guide on how to develop your own applications for Frame.
 image: /images/frame/frame-splash.png
 nav_order: 2
 parent: Frame
+has_children: true
 ---
 
 # Building Apps
-{: .no_toc }
+
+1. TOC
+{:toc}
+
+---
 
 ## How do apps run on Frame?
 In case you've come to Frame development with any preconceptions from the world of wearable Android devices, let's step back and go over how Frame is different.  Unlike some other devices, Frame is not based on Android and is in fact built on a very power-efficient and somewhat low-level system on a chip.  Whereas on Android you may develop a app, package it up in an apk, send it to a device, and then launch and run it on the device, Frame is different.
 
 In general, apps do not run on Frame, instead Frame acts as a peripheral accessory for "host" apps running on a computer or mobile device.  These apps then talk to Frame over Bluetooth to get it to do things like take photos or access the microphone or display text and graphics on its screen.
 
-For example, the Noa app on your phone is the "host" app, and it talks to Frame over Bluetooth.  It registers itself to be called when you wake your Frame by tapping it, and then it instructs the Frame to send over photo and microsoft data which it then uses to generate a response.  It then processes the response and tells Frame exactly what to display on its screen.  Very little of the code for Noa actually runs on the Frame.  Rather, the Noa app on your phone is the one that runs the code that calls on Frame.
+For example, the Noa app on your phone is the "host" app, and it talks to Frame over Bluetooth.  It registers itself to be called when you wake your Frame by tapping it, and then it instructs the Frame to send over photo and microphone data which it then uses to generate a response.  It then processes the response and tells Frame exactly what to display on its screen.  Very little of the code for Noa actually runs on the Frame.  Rather, the Noa app on your phone is the one that runs the code that calls on Frame.
 
 As such, there is no concept of an app launcher on Frame, or any other way to "install" an app on Frame.  Instead, you build the host app, and then use it to control Frame.  To share with other Frame users, publish your host app to the App Store or Google Play, or open source it or however you would normally share an app for your platform.  Of course if you build something cool, let us know and we will be happy to share it with the community.  We will eventually have a gallery of Frame apps to share with the world, although we're not quite there yet.
 
@@ -22,20 +27,20 @@ As such, there is no concept of an app launcher on Frame, or any other way to "i
 
 Read on for a better understanding of the platform and the various ways to build apps for Frame.  Or, to keep it simple:
 
-* If you're interested in building apps for Frame, and you're using one of the platforms supported by our SDKs, then definitely start with the SDK.  Check out the [SDK documentation here](/frame/building-apps-sdk) to get started.  Then read up on the [Lua API documentation here](/frame/building-apps-lua-api) to do even more.
-* If you're using a platform that isn't supported by our SDKs, your best bet is to use the Lua API directly over Bluetooth.  Check out the [Bluetooth LE API documentation here](/frame/building-apps-bluetooth-specs) and the [Lua API documentation here](/frame/building-apps-lua-api) to get started.
+* If you're interested in building apps for Frame, and you're using one of the platforms supported by our SDKs, then definitely start with the SDK.  Check out the [SDK documentation here](/frame/building-apps-sdk) to get started.  Then read up on the [Lua API documentation here](/frame/building-apps-lua) to do even more.
+* If you're using a platform that isn't supported by our SDKs, your best bet is to use the Lua API directly over Bluetooth.  Check out the [Bluetooth LE API documentation here](/frame/building-apps-bluetooth-specs) and the [Lua API documentation here](/frame/building-apps-lua) to get started.
 
-## Ways to Build for Frame
+# Ways to Develop for Frame
 Frame has several integration points you can use to create apps:
 
-* Customize the firmware **(not recommended)**
+1. [Customize the firmware](#customize-the-firmware) **(not recommended)**
     * Very advanced, requires experience with hardware development
     * Gives you complete control
-* Talk to the Frame over BTLE to run Lua on the device
+2. [Talk to the Frame over BTLE to run Lua on the device](#talk-to-the-frame-over-bluetooth-low-energy-to-run-lua-on-the-device)
     * Use any platform that can talk to Bluetooth
     * Gives you full control
     * Can be tedious to get started, best if you have experience developing with Bluetooth LE
-* Use one of our platform SDKs to use Frame from your own mobile or desktop computer app **(recommended)**
+3. [Use one of our platform SDKs to use Frame from your own mobile or desktop computer app](#use-one-of-our-platform-sdks-from-your-own-mobile-or-computer-app-recommended) **(recommended)**
     * Build apps for one of our supported platforms:
         * Python from a Mac, Linux, or Windows computer
         * Swift from a Mac or iOS device *(coming soon)*
@@ -45,7 +50,7 @@ Frame has several integration points you can use to create apps:
     * Common tasks are simplified and handled for you
     * Your app is in control and uses Frame as an accessory
     * Best way to get started
-* Create tools for the Noa AI agent to call *(coming later)*
+4. [Create tools for the Noa AI agent to call](#create-tools-for-the-noa-ai-agent-to-call-coming-soon) *(coming later)*
     * Simple HTTP REST interface, no hardware required
     * Only supports Noa, not for running code on Frame
     * Will be available in the future
@@ -54,18 +59,18 @@ The most common structure is to build an iOS or Android mobile app which uses ou
 
 Let's walk through each of these options in order.
 
-### Customize the firmware
+## Customize the firmware
 
-{ .warning }
+
+{: .warning }
 Frame is intended to be used with the officially provided firmware from Brilliant. Loading custom firmware will require destructive disassembly of your Frame hardware to access the physical debug port.
 
 Frame is developed by hackers for hackers, so even though we don't encourage it for most users, you are welcome to customize the firmware if you want.  The official Frame firmware is open source, and you can find it [on GitHub](https://github.com/brilliantlabsAR/frame-codebase).
 
-For more details on how to customize the firmware, see the [hardware documentation](/frame/hardware#Customizing-the-firmware).
-TODO: confirm this link
+For more details on how to customize the firmware, see the [hardware documentation](/frame/hardware#customizing-the-firmware).
 
 
-### Talk to the Frame Over Bluetooth Low Energy to Run Lua on the Device
+## Talk to the Frame Over Bluetooth Low Energy to Run Lua on the Device
 
 Frame is designed to be used with a host app running on a computer or mobile device.  The host app talks to Frame over Bluetooth Low Energy (BTLE) and runs Lua code on the device.
 
@@ -75,28 +80,30 @@ Check out the full documentation for [communicating with Frame over Bluetooth LE
 
 Once you're using BTLE to communicate with the Frame, what can you actually tell it to do?  That's where Lua comes in.  Lua is a tiny and extensible scripting language that's designed to be power efficient and quick to learn. Frame features a complete Lua virtual machine.  You can execute Lua scripts on the device, or use the Lua REPL over the BTLE interface to interact with the device.
 
-Be sure to check out the [full Lua API reference](/frame/building-apps-lua-api) for more on what you can do with Lua on Frame.
+Be sure to check out the [full Lua API reference](/frame/building-apps-lua) for more on what you can do with Lua on Frame.
 
-While the main way you'll use Lua on Frame is via host apps that send it over Bluetooth, it can be helpful while learning to directly write and execute Lua code on Frame using the [AR Studio extension for VSCode](/frame/building-apps-lua-api#ar-studio).
+While the main way you'll use Lua on Frame is via host apps that send it over Bluetooth, it can be helpful while learning to directly write and execute Lua code on Frame using the [AR Studio extension for VSCode](/frame/building-apps-lua#ar-studio).
 
 
-### Use One of Our Platform SDKs from Your Own Mobile or Computer App **(recommended)**
+## Use One of Our Platform SDKs from Your Own Mobile or Computer App **(recommended)**
 
-{ .info }
+
+{: .note }
 This is the recommended option for quickly and reliably building Frame apps.  However the platform SDKs are a work in progress and not all platforms and use cases are supported yet.  At the moment python is the first platform to launch in preview.
 
 We've wrapped the low-level bluetooth and Lua APIs into a set of platform SDKs for a number of popular development platforms.  This allows you to build your own mobile or computer app for Frame, without having to write all the low-level boilerplate to make it work.
 
 For example, instead of having to write code to find and connect to Frame over Bluetooth, send it Lua code, and then handle the response, you can use the SDK to do that for you.
 
-It's still useful to [learn the Lua API](/frame/building-apps-lua-api), as you will occasionally need to use it directly.  For example, the `main.lua` script which runs at wakeup, or when you are doing something that isn't wrapped by the SDK.
+It's still useful to [learn the Lua API](/frame/building-apps-lua), as you will occasionally need to use it directly.  For example, the `main.lua` script which runs at wakeup, or when you are doing something that isn't wrapped by the SDK.
 
 Check out [the SDK documentation here](/frame/building-apps-sdk) to see how to use the SDK to build your own app.
 
 
-### Create Tools for the Noa AI Agent to Call *(coming soon)*
+## Create Tools for the Noa AI Agent to Call *(coming soon)*
 
-{ .info }
+
+{: .note }
 This is something we're working on but which won't be available for a while.  If you're interested in this option, let us know and we'll keep you posted.
 
 In the future, an even simpler way to integrate with Frame will be to write REST API's that the Noa AI agent can call.  This is entirely web-based, so you don't even need Frame hardware to get started.

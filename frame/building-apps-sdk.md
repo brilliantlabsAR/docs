@@ -4,6 +4,9 @@ description: A reference of Frame SDK functionality for building apps to talk to
 image: /images/frame/frame-splash.png
 nav_order: 1
 parent: Building Apps
+grand_parent: Frame
+nav_enabled: true
+
 ---
 
 # Frame App SDK
@@ -14,6 +17,7 @@ parent: Building Apps
 The most common structure is to build an iOS or Android mobile app which uses our SDKs to communicate with the Frame over Bluetooth.  Your app is in control and uses Frame as an accessory, with the Lua and BTLE details mostly abstracted away for you.
 
 ## Supported Platforms
+{: .no_toc }
 
 - [x] Python from a Mac, Linux, or Windows computer
 - [ ] Swift from a Mac or iOS device
@@ -22,12 +26,22 @@ The most common structure is to build an iOS or Android mobile app which uses ou
 - [ ] React Native for mobile (and computer?)
 
 ### Status
+{: .no_toc }
+
 | Python            | Swift             | Kotlin            | Flutter           | React native      |
 |:------------------|:------------------|:------------------|:------------------|:------------------|
 | Basic library available, full SDK in preview | Coming soon | Coming soon |  Coming soon | Coming soon |
 
+---
+
+* TOC
+{:toc .text-epsilon}
+
+---
 
 ## Installation
+
+Installation of the SDK depends on the platform you are targeting.  For this section and all sections below, expand the platform you are targeting to see details specific to that platform.
 
 <details markdown="block">
 <summary>Python</summary>
@@ -49,9 +63,6 @@ pip3 install frameutils
 ## Basic Communication
 
 Where available, all Frame communication happens via async functions.
-
-<details markdown="block">
-<summary>Python</summary>
 
 ### Python SDK Basics
 
@@ -78,6 +89,7 @@ asyncio.run(main())
 ```
 
 #### Using `frameutils` for Direct Bluetooth Communication
+{: .no_toc }
 
 {: .note }
 This is the only usage supported by the current version `0.1.11` on pip.  The rest of this SDK documentation is for the newer preview that is currently [available on Github](https://github.com/OkGoDoIt/frame-utilities-for-python/tree/add-long-communication).
@@ -102,8 +114,6 @@ async def main():
 asyncio.run(main())
 ```
 
-</details>
-
 ### Sending Lua to the Frame
 
 ```python
@@ -121,6 +131,7 @@ You can send Lua code to run on your Frame.  You do not need to worry about the 
 <summary>Python</summary>
 
 #### Python
+{: .no_toc }
 
 ```python
 async def run_lua(self, lua_string: str, await_print: bool = False, checked: bool = False, timeout: Optional[float] = 10) -> Optional[str]
@@ -140,14 +151,14 @@ print(f"Frame has been on for {time_since_reboot}.")
 print(await frame.run_lua("text = 'Look ma, no MTU limit! ';text=text..text;text=text..text;text=text..text;text=text..text;print(text)", await_print = True))
 
 # let long running commands run in parallel
-await(frame.run_lua("spinning_my_wheels = 0;while true do;spinning_my_wheels=spinning_my_wheels+1;end", checked=False))
+await frame.run_lua("spinning_my_wheels = 0;while true do;spinning_my_wheels=spinning_my_wheels+1;end", checked=False)
 print("Frame is currently spinning its wheels, but python keeps going")
 
 # raises a timeout exception after 10 seconds
-await(frame.run_lua("spinning_my_wheels = 0;while true do;spinning_my_wheels=spinning_my_wheels+1;end", checked=True, timeout=10))
+await frame.run_lua("spinning_my_wheels = 0;while true do;spinning_my_wheels=spinning_my_wheels+1;end", checked=True, timeout=10)
 
 # raises an exception with the Lua syntax error
-await(frame.run_lua("Syntax?:Who$needs!syntax?", checked=True))
+await frame.run_lua("Syntax?:Who$needs!syntax?", checked=True)
 ```
 
 </details>
@@ -169,6 +180,7 @@ As with `run_lua()`, you do not need to worry about the MTU limit in either dire
 <summary>Python</summary>
 
 #### Python
+{: .no_toc }
 
 ```python
 async def evaluate(self, lua_expression: str, timeout: Optional[float] = 10) -> str
@@ -192,6 +204,8 @@ print(await frame.evaluate("not_defined"))
 
 </details>
 
+---
+
 ## System Functions
 
 ### Get Battery Level
@@ -206,6 +220,7 @@ Gets the Frame battery level as an integer from 0 to 100.  Equivalent to `await 
 <summary>Python</summary>
 
 #### Python
+{: .no_toc }
 ```python
 async def get_battery_level(self) -> int
 ```
@@ -233,6 +248,7 @@ Sleeps for a given number of seconds. If no argument is given, Frame will go to 
 <summary>Python</summary>
 
 #### Python
+{: .no_toc }
 ```python
 async def sleep(self, seconds: Optional[float])
 ```
@@ -267,6 +283,7 @@ There is no way to read the current value, only to set a new value.
 <summary>Python</summary>
 
 #### Python
+{: .no_toc }
 ```python
 async def stay_awake(self, value: bool)
 ```
@@ -294,13 +311,14 @@ Sends a break signal to the device which will break any currently executing Lua 
 <summary>Python</summary>
 
 #### Python
+{: .no_toc }
 ```python
 async def send_break_signal(self, show_me:bool=False)
 ```
 
 Example:
 ```python
-await(frame.run_lua("spinning_my_wheels = 0;while true do;spinning_my_wheels=spinning_my_wheels+1;end", checked=False))
+await frame.run_lua("spinning_my_wheels = 0;while true do;spinning_my_wheels=spinning_my_wheels+1;end", checked=False)
 print("Frame is currently spinning its wheels, but python keeps going")
 
 await frame.bluetooth.send_break_signal()
@@ -326,6 +344,7 @@ Sends a reset signal to the device which will reset the Lua virtual machine.  Th
 <summary>Python</summary>
 
 #### Python
+{: .no_toc }
 ```python
 async def send_reset_signal(self, show_me:bool=False)
 ```
@@ -362,6 +381,7 @@ Sometimes it's useful for debugging to see all raw data that is transmitted to F
 <summary>Python</summary>
 
 #### Python
+{: .no_toc }
 ```python
 def set_print_debugging(self, value: bool)
 ```
@@ -384,9 +404,8 @@ print(await frame.evaluate("'Hello world!'"))
 async frame.bluetooth.wait_for_data(timeout: float = 30.0) -> bytes
 ```
 
-Blocks until data has been received from Frame via `frame.bluetooth.send()`.  This is used for example when waiting for Frame to transmit data from a photo or audio.
+Blocks until data has been received from Frame [via `frame.bluetooth.send()`](/frame/building-apps-bluetooth-specs/#sending-data).  This is used for example when waiting for Frame to transmit data from a photo or audio.
 
-TODO: link to documentation for sending data
 This waits for bluetooth send data, not `print()` statements.  If you want to send data beyond what fits in the MTU, then you can send data in multiple chunks by prepending each chunk with `\001` (0x01) and sending a final chunk with `\002` (0x02).  You can optionally include the total chunk count in the final message for reliability checking (for example, if you send 3 chunks, then the final message should be `\0023`).
 
 * `timeout` *(float)*: The maximum number of seconds to wait for data.  Defaults to 30 seconds.
@@ -395,6 +414,7 @@ This waits for bluetooth send data, not `print()` statements.  If you want to se
 <summary>Python</summary>
 
 #### Python
+{: .no_toc }
 ```python
 async def wait_for_data(self, timeout: float = 30.0) -> bytes
 ```
@@ -423,6 +443,8 @@ print(full_file_data.decode())
 
 </details>
 
+---
+
 ## Filesystem
 
 Filesystem functions are available via `Frame.files`.
@@ -443,6 +465,7 @@ Write a file to the device's storage.  If the file already exists, it will be ov
 <summary>Python</summary>
 
 #### Python
+{: .no_toc }
 ```python
 async def write_file(self, path: str, data: bytes, checked: bool = False)
 ```
@@ -477,6 +500,7 @@ Raises an exception if the file does not exist.
 <summary>Python</summary>
 
 #### Python
+{: .no_toc }
 ```python
 async def read_file(self, path: str) -> bytes
 ```
@@ -505,6 +529,7 @@ Delete a file on the device.  Returns `True` if the file was deleted, `False` if
 * `path` *(string)*: The full path to the file to delete.  Even if no leading '/' is included, the path is relative to the root of the filesystem.
 
 #### Python
+{: .no_toc }
 ```python
 async def delete_file(self, path: str) -> bool
 ```
@@ -531,6 +556,7 @@ Check if a file exists on the device.  Returns `True` if the file exists, `False
 <summary>Python</summary>
 
 #### Python
+{: .no_toc }
 ```python
 async def file_exists(self, path: str) -> bool
 ```
@@ -543,6 +569,8 @@ print(f"Main.lua {'exists' if exists else 'does not exist'}")
 ```
 
 </details>
+
+---
 
 ## Camera
 
@@ -571,6 +599,7 @@ By default, the image is rotated to the correct orientation and some metadata is
 <summary>Python</summary>
 
 #### Python
+{: .no_toc }
 ```python
 async def take_photo(self, autofocus_seconds: Optional[int] = 3, quality: int = MEDIUM_QUALITY, autofocus_type: str = AUTOFOCUS_TYPE_AVERAGE) -> bytes
 ```
@@ -614,6 +643,7 @@ By default, the image is rotated to the correct orientation and some metadata is
 <summary>Python</summary>
 
 #### Python
+{: .no_toc }
 
 ```python
 async def save_photo(self, path: str, autofocus_seconds: Optional[int] = 3, quality: int = MEDIUM_QUALITY, autofocus_type: str = AUTOFOCUS_TYPE_AVERAGE)
@@ -631,18 +661,20 @@ await f.camera.save_photo("frame-test-photo-2.jpg", autofocus_seconds=3, quality
 
 </details>
 
+---
+
 ## Display
 
-{ .note }
+{: .note }
 The display functions are currently in a private branch for further testing and will be added soon.
 
 ## Microphone
 
-{ .warning }
+{: .warning }
 The microphone functions have not yet been written.
 
 ## Motion
 
-{ .warning }
+{: .warning }
 The IMU functions have not yet been written.
 

@@ -1,9 +1,12 @@
 ---
 title: Lua API Reference
-description: A reference of Lua functionality avilable on your Frame AR glasses.
+description: A reference of Lua functionality available on your Frame AR glasses.
 image: /images/frame/frame-splash.png
 nav_order: 2
 parent: Building Apps
+grand_parent: Frame
+redirect_from:
+  - /frame/lua
 ---
 
 # Lua API
@@ -13,10 +16,10 @@ parent: Building Apps
 
 Lua is a tiny and extensible scripting language that's designed to be power efficient and quick to learn. Frame features a complete Lua virtual machine based on the latest public release of Lua. Dedicated hardware APIs allow direct access to all of Frame's peripherals at a high level so that developers can start building apps quickly and easily.
 
-{: .warning }
-Note that the Lua virtual machine on the Frame has a very minimal standard library, so many guides on the internet about Lua may contain code that won't work on Frame.  It's best to think of Lua on Frame as a language syntax, not as a standard library.
+{: .note }
+Note that the Lua virtual machine on the Frame has a very minimal standard library, so some guides on the internet about Lua may contain code that won't work on Frame. It's best to think of Lua on Frame as a language syntax, not as a standard library.
 
-There's no special cables or setup needed. Lua on Frame is accessed solely over Bluetooth, such that any user created host app can easily execute scripts by simply pushing Lua strings to the device.  To learn more how the underlying Bluetooth communication with Frame works, check out the Bluetooth section of the [Building Apps](/frame/building-apps#bluetooth) page.
+There's no special cables or setup needed. Lua on Frame is accessed solely over Bluetooth, such that any user created host app can easily execute scripts by simply pushing Lua strings to the device. To learn more how the underlying Bluetooth communication with Frame works, check out the [Talking to the Frame over Bluetooth](/frame/building-apps-bluetooth-specs) page.
 
 ---
 
@@ -39,8 +42,8 @@ The display engine of allows drawing of text, sprites and vectors. These element
 
 The Frame display is capable of rendering up to 16 colors at one time. These colors are preset by default, however each color can be overridden by any 8bit YCbCr color using the `palette` command.
 
-{: .warning }
-The palette and vector commands are not yet implimented.
+{: .note }
+The palette and vector commands are not yet implemented.
 
 | API&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
@@ -52,10 +55,10 @@ The palette and vector commands are not yet implimented.
 
 #### Buffering
 
-The Frame display has 2 buffers.  All writing to the display via `frame.display.text()`, `frame.display.bitmap()`, etc write to an off-screen buffer and are not visible.  This allows you to write mutiple actions at once.  When you have completed drawing and want to show it to the user, call `frame.display.show()` which will display the buffered graphics and clear a new off-screen buffer for whatever you want to draw next.
+The Frame display has 2 buffers. All writing to the display via `frame.display.text()`, `frame.display.bitmap()`, etc write to an off-screen buffer and are not visible. This allows you to write multiple actions at once. When you have completed drawing and want to show it to the user, call `frame.display.show()` which will display the buffered graphics and clear a new off-screen buffer for whatever you want to draw next.
 
 #### frame.display.text
-`frame.display.text(string, x, y)` prints the given `string` to the display with its upper-left at position `x, y`.  All positions are 1-indexed, so possible values for x are between `1` and `640`, and possible values for y are between `1` and `400`.  text is variable width, not fixed-width.  Currently is is not possible to modify the font or font size.  There is no word-wrapping performed automatically.
+`frame.display.text(string, x, y)` prints the given `string` to the display with its upper-left at position `x, y`. All positions are 1-indexed, so possible values for `x` are between 1 and 640, and possible values for `y` are between 1 and 400. Text is variable width, not fixed-width. Currently it is not possible to modify the font or font size. There is no word-wrapping performed automatically.
 
 ```lua
 -- Display 'Hello world' at x = 50 and y = 100
@@ -64,11 +67,11 @@ frame.display.show()
 ```
 
 #### frame.display.bitmap
-`frame.display.bitmap(x, y, width, num_colors, color_offset, data)` allows manually drawing to the screen.  The bitmap is positioned with its upper-left at `x, y` with width `width` and the height automatically determined by the length of the data.
+`frame.display.bitmap(x, y, width, num_colors, color_offset, data)` allows manually drawing to the screen. The bitmap is positioned with its upper-left at `x, y` with width `width` and the height automatically determined by the length of the data.
 
-`num_colors` can be one of `2`, `4`, or `16`.  By including less colors in your bitmap, you can fit more pixels into a smaller data string.  `color_offset` is a number between 1 and 16.
+`num_colors` can be one of `2`, `4`, or `16`. By including less colors in your bitmap, you can fit more pixels into a smaller data string. `color_offset` is a number between 1 and 16.
 
-The `data` is a lua string which is just an array of bytes, but with multiple pixels packed in each byte based on the number of colors.  When drawing, the `color_offset` is added to palette index (wrapping around at 16).
+The `data` is a lua string which is just an array of bytes, but with multiple pixels packed in each byte based on the number of colors. When drawing, the `color_offset` is added to palette index (wrapping around at 16).
 
 ```plaintext
 Data as Lua string:
@@ -104,27 +107,27 @@ frame.display.bitmap(100, 50, 32, 2, 3, string.rep("\xFF", 32 / 8 * 16))
 ```
 
 #### Default Palette
-From (AndroidArts: Arne Niklas Jansson)[https://www.androidarts.com/palette/16pal.htm] although the ssl cert is expired so duplicated here for easier access:
+From [AndroidArts: Arne Niklas Jansson](https://www.androidarts.com/palette/16pal.htm) although the ssl cert is expired so duplicated here for easier access:
 <table>
 <tbody><tr>
-<td bgcolor="#000000"><font color="White">#0<br> VOID</font></td>
-<td bgcolor="#9D9D9D">#1<br> GRAY</td>
-<td bgcolor="#FFFFFF">#2<br> WHITE</td>
-<td bgcolor="#BE2633">#3<br> RED</td>
-<td bgcolor="#E06F8B">#4<br> MEAT</td>
-<td bgcolor="#493C2B"><font color="White">#5<br> DARKBROWN</font></td>
-<td bgcolor="#A46422">#6<br> BROWN</td>
-<td bgcolor="#EB8931">#7<br> ORANGE</td>
+<td style="background-color: #000000;"><font color="White">#0<br> VOID</font></td>
+<td style="background-color: #9D9D9D;"><font color="Black">#1<br> GRAY</font></td>
+<td style="background-color: #FFFFFF;"><font color="Black">#2<br> WHITE</font></td>
+<td style="background-color: #BE2633;"><font color="Black">#3<br> RED</font></td>
+<td style="background-color: #E06F8B;"><font color="Black">#4<br> MEAT</font></td>
+<td style="background-color: #493C2B;"><font color="White">#5<br> DARKBROWN</font></td>
+<td style="background-color: #A46422;"><font color="Black">#6<br> BROWN</font></td>
+<td style="background-color: #EB8931;"><font color="Black">#7<br> ORANGE</font></td>
 </tr>
 <tr>
-<td bgcolor="#F7E26B">#8<br> YELLOW</td>
-<td bgcolor="#2F484E"><font color="White">#9<br> DARKGREEN</font></td>
-<td bgcolor="#44891A">#10<br> GREEN</td>
-<td bgcolor="#A3CE27">#11<br> SLIMEGREEN</td>
-<td bgcolor="#1B2632"><font color="White">#12<br> NIGHTBLUE</font></td>
-<td bgcolor="#005784"><font color="White">#13<br> SEABLUE</font></td>
-<td bgcolor="#31A2F2">#14<br> SKYBLUE</td>
-<td bgcolor="#B2DCEF">#15<br> CLOUDBLUE</td>
+<td style="background-color: #F7E26B;"><font color="Black">#8<br> YELLOW</font></td>
+<td style="background-color: #2F484E;"><font color="White">#9<br> DARKGREEN</font></td>
+<td style="background-color: #44891A;"><font color="Black">#10<br> GREEN</font></td>
+<td style="background-color: #A3CE27;"><font color="Black">#11<br> SLIMEGREEN</font></td>
+<td style="background-color: #1B2632;"><font color="White">#12<br> NIGHTBLUE</font></td>
+<td style="background-color: #005784;"><font color="White">#13<br> SEABLUE</font></td>
+<td style="background-color: #31A2F2;"><font color="Black">#14<br> SKYBLUE</font></td>
+<td style="background-color: #B2DCEF;"><font color="Black">#15<br> CLOUDBLUE</font></td>
 </tr>
 </tbody></table>
 
@@ -138,7 +141,7 @@ The camera capability of Frame allows for capturing and downloading of single JP
 |:---------|:------------|
 | `frame.camera.capture{quality_factor=50}`                                                          | Captures a single image from the camera. The `quality_factor` option can help reduce file sizes by adjusting the JPEG quality. The four possible options are `10`, `25`, `50`, and `100`. Higher values represent higher quality, but also larger file sizes.
 | `frame.camera.read(num_bytes)`                                                                     | Reads out a number of bytes from the camera capture memory as a byte string. Once all bytes have been read, `nil` will be returned
-| `frame.camera.auto{metering='AVERAGE', exposure=0, shutter_kp=0.1, gain_kp=1.0, gain_limit=248.0}` | Runs the automatic exposure and gain algorithm. This funtion must be called every 100ms for the best performance. `metering` can be one of three modes, `SPOT`, `CENTER_WEIGHTED`, or `AVERAGE`. `exposure` can be a value between `-2.0` and `2.0` where lower values will return slightly darker images, and higher values will return slightly brighter images. `shutter_kp` and `gain_kp` allow fine tuning of the auto exposure algorithm. Higher values can make reaching the desired exposure faster, but may result in instability and oscilliation of the control loop. These values are generally more sensitive when using the `SPOT` or `CENTER_WEIGHTED` metering modes. `gain_limit` can be used to cap the gain to below the maximum of `248`. This is useful to reduce noise in darker scenes and results in faster exposure when going from darker to brighter scenes.
+| `frame.camera.auto{metering='AVERAGE', exposure=0, shutter_kp=0.1, gain_kp=1.0, gain_limit=248.0}` | Runs the automatic exposure and gain algorithm. This funtion must be called every 100ms for the best performance. `metering` can be one of three modes, `SPOT`, `CENTER_WEIGHTED`, or `AVERAGE`. `exposure` can be a value between `-2.0` and `2.0` where lower values will return slightly darker images, and higher values will return slightly brighter images. `shutter_kp` and `gain_kp` allow fine tuning of the auto exposure algorithm. Higher values can make reaching the desired exposure faster, but may result in instability and oscillation of the control loop. These values are generally more sensitive when using the `SPOT` or `CENTER_WEIGHTED` metering modes. `gain_limit` can be used to cap the gain to below the maximum of `248`. This is useful to reduce noise in darker scenes and results in faster exposure when going from darker to brighter scenes.
 
 #### Example
 {: .no_toc }
@@ -173,13 +176,13 @@ end
 | `frame.camera.set_white_balance(r, g, b)`   | Sets the digital gains of the R, G and B channels for fine tuning white balance. `r`, `g` and `b` can be values between `0` and `1023`
 | `frame.camera.set_register(address, value)` | Allows for hacking the camera's internal registers. `address` can be any 16-bit register address of the camera, and `value` any 8-bit value to write to that address
 
-It is not recommended to manually call `frame.camera.sleep()` or `frame.camera.wake()`.
+It is not necessary to manually call `frame.camera.sleep()` or `frame.camera.wake()`.
 
 ---
 
 ### Microphone
 
-The microphone on Frame allows for streaming audio to a host device in real-time. Transfers are limited by the Bluetooth bandwith which is typically around 40kBps under good signal conditions. The audio bitrate for a given `sample_rate` and `bit_depth` is: `sample_rate * bit_depth / 8` bytes per second. An internal 32k buffer automatically compensates for additional tasks that might otherwise briefly block Bluetooth transfers. If this buffer limit is exceeded however, then discontinuities in audio might occour.
+The microphone on Frame allows for streaming audio to a host device in real-time. Transfers are limited by the Bluetooth bandwith which is typically around 40kBps under good signal conditions. The audio bitrate for a given `sample_rate` and `bit_depth` is: `sample_rate * bit_depth / 8` bytes per second. An internal 32k buffer automatically compensates for additional tasks that might otherwise briefly block Bluetooth transfers. If this buffer limit is exceeded however, then discontinuities in audio might occur.
 
 | API&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
@@ -228,7 +231,7 @@ The tap gesture will always wake up Frame from `frame.sleep()`.
 | API | Description |
 |:---------|:------------|
 | `frame.imu.direction()`           | Returns a table containing the `roll`, `pitch` and `heading` angles of the wearer's head position 
-| `frame.imu.tap_callback(handler)` | Assigns a callback to the tap gesture. `handler` must be a function, or can be `nil` to deactive the callback
+| `frame.imu.tap_callback(handler)` | Assigns a callback to the tap gesture. `handler` must be a function, or can be `nil` to deactivate the callback
 
 | Low&nbsp;level&nbsp;functions | Description |
 |:---------|:------------|
@@ -251,12 +254,12 @@ frame.imu.tap_callback(tapped)
 
 ### Bluetooth
 
-The Bluetooth API allows for sending and receiving raw byte data over Bluetooth. For a full description of how this can be used, check out the [Bluetooth section](/frame/building-apps#bluetooth) of the Building Apps page.
+The Bluetooth API allows for sending and receiving raw byte data over Bluetooth. For a full description of how this can be used, check out the [Talking to the Frame over Bluetooth](/frame/building-apps-bluetooth-specs) page.
 
 | API | Description |
 |:---------|:------------|
 | `frame.bluetooth.address()`                 | Returns the device MAC address as a 17 character string. E.g. `4E:87:B5:0C:64:0F`
-| `frame.bluetooth.receive_callback(handler)` | Assigns a callback to handle received Bluetooth data. `handler` must be a function, or can be `nil` to deactive the callback
+| `frame.bluetooth.receive_callback(handler)` | Assigns a callback to handle received Bluetooth data. `handler` must be a function, or can be `nil` to deactivate the callback
 | `frame.bluetooth.max_length()`              | Returns the maximum length of data that can be sent or received in a single transfer
 | `frame.bluetooth.send(data)`                | Sends data to the host device. `data` must be a string, but can contain byte values including 0x00 values anywhere in the string. The total length of the string must be less than or equal to `frame.bluetooth.max_length()`
 
@@ -288,17 +291,17 @@ The file system API allows for writing and reading files to Frame's non-volatile
 | `frame.file.mkdir(pathname)`        | Creates a new directory with the given `pathname`
 | `f:read(*num_bytes)`                | Reads a number of bytes from a file. If no argument is give, the whole line is returned.
 | `f:write(data)`                     | Writes data to the file. `data` must be a string and can contain any byte data
-| `f:close()`                         | Closes the file. It is important to close files once done writing, otherwise they may become courrupted
+| `f:close()`                         | Closes the file. It is important to close files once done writing, otherwise they may become corrupted
 
 #### Tips
 
-* On many online Lua guides, the examples allow `'r'`, `'w'`, or `'a'` as shorthard for `'read'`, `'write'`, or `'append'`, however Frame does not support that.  You need to spell out the whole word.
+* On many online Lua guides, the examples allow `'r'`, `'w'`, or `'a'` as shorthand for `'read'`, `'write'`, or `'append'`, however Frame does not support that.  You need to spell out the whole word.
 * GitHub Copilot and ChatGPT will always generate incorrect code like `file.read()` rather than the correct `f:read()`.  Keep a close eye on the syntax.
 * `f:read()` reads until the end of the line, so you need to call it multiple times to get through the whole file.  It will return `nil` when it has reached the end of the file.
 * There is no function to check if a file exists.  Instead you can try to open the file for reading and see if it fails.
 
 {: .warning }
-There is (an open bug)[https://github.com/brilliantlabsAR/frame-codebase/issues/234] where `f:read(*num_bytes)` will not always respect the num_bytes limit.  Until that is resolved, your code should handle receiving up to 512 bytes at a time.
+There is [an open bug](https://github.com/brilliantlabsAR/frame-codebase/issues/234) where `f:read(*num_bytes)` will not always respect the num_bytes limit.  Until that is resolved, your code should handle receiving up to 512 bytes at a time.
 
 
 #### Example
@@ -386,7 +389,7 @@ The system API provides miscellaneous functions such as `sleep` and `update`. It
 
 | Low&nbsp;level&nbsp;functions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
-| `frame.stay_awake(enable)`            | Prevents Frame from going to sleep while it's docked onto the charging cradle. This can help during development where continious power is needed, however may degrade the display or cause burn-in if used for extended periods of time
+| `frame.stay_awake(enable)`            | Prevents Frame from going to sleep while it's docked onto the charging cradle. This can help during development where continuous power is needed, however may degrade the display or cause burn-in if used for extended periods of time
 | `frame.fpga_read(address, num_bytes)` | Reads a number of bytes from the FPGA at the given address
 | `frame.fpga_write(address, data)`     | Writes data to the FPGA at a given address. `data` can be a string containing any byte values
 
