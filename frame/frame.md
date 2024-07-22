@@ -49,7 +49,7 @@ Noa is available on both Apple App Store for iOS and Google Play Store for Andro
 </div>
 
 <div style="text-align:center" markdown="1">
-**Check out the getting started with Noa video [here](https://youtu.be/mOoaD1hvi5c)**
+**Check out the getting started with Noa playlist [here](https://www.youtube.com/watch?v=olNhbZTx6Lw&list=PLfbaC5GRVJJgSPdN-KWndTld35tihu1Ic)**
 </div>
 
 ## Developer?
