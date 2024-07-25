@@ -444,7 +444,7 @@ Filesystem functions are available via `Frame.files`.
 ### Write File
 
 ```python
-async frame.file.write_file(path: str, data: bytes, checked: bool = False)
+async frame.files.write_file(path: str, data: bytes, checked: bool = False)
 ```
 
 Write a file to the device's storage.  If the file already exists, it will be overwritten.  There are no length limits to the file, as it will be transferred reliably over multiple bluetooth transmissions.
@@ -465,13 +465,13 @@ async def write_file(self, path: str, data: bytes, checked: bool = False)
 Examples:
 
 ```python
-await frame.file.write_file("example_file.txt", b"Hello \"real\" world", checked=True)
+await frame.files.write_file("example_file.txt", b"Hello \"real\" world", checked=True)
 
 lyrics = "Never gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you"
-await frame.file.write_file("/music/rick_roll.txt", lyrics.encode(), checked=True)
+await frame.files.write_file("/music/rick_roll.txt", lyrics.encode(), checked=True)
 
 with open("icons.dat", "rb") as f:
-    await frame.file.write_file("/sprites/icons.dat", f.read())
+    await frame.files.write_file("/sprites/icons.dat", f.read())
 ```
 
 </details>
@@ -479,7 +479,7 @@ with open("icons.dat", "rb") as f:
 ### Read File
 
 ```python
-async frame.file.read_file(path: str) -> bytes
+async frame.files.read_file(path: str) -> bytes
 ```
 
 Reads a file from the device in full.  There are no length limits to the file, as it will be transferred reliably over multiple bluetooth transmissions.  Returns raw byte data.  If you want it as a string, then use `.decode()`.
@@ -501,11 +501,11 @@ Examples:
 
 ```python
 # print a text file
-print(await frame.file.read_file("example_file.txt").decode())
+print(await frame.files.read_file("example_file.txt").decode())
 
 # save a raw file locally
 with open("~/blob.bin", "wb") as f:
-    f.write(await frame.file.read_file("blob_on_frame.bin"))
+    f.write(await frame.files.read_file("blob_on_frame.bin"))
 ```
 
 </details>
@@ -513,12 +513,15 @@ with open("~/blob.bin", "wb") as f:
 ### Delete File
 
 ```python
-async frame.file.delete_file(path: str) -> bool
+async frame.files.delete_file(path: str) -> bool
 ```
 
 Delete a file on the device.  Returns `True` if the file was deleted, `False` if it didn't exist or failed to delete.
 
 * `path` *(string)*: The full path to the file to delete.  Even if no leading '/' is included, the path is relative to the root of the filesystem.
+
+<details markdown="block">
+<summary>Python</summary>
 
 #### Python
 {: .no_toc }
@@ -529,7 +532,7 @@ async def delete_file(self, path: str) -> bool
 Examples:
 
 ```python
-did_delete = await frame.file.delete_file("main.lua")
+did_delete = await frame.files.delete_file("main.lua")
 print(f"Deleted? {did_delete}")
 ```
 
@@ -537,7 +540,7 @@ print(f"Deleted? {did_delete}")
 
 ### File Exists?
 ```python
-async frame.file.file_exists(path: str) -> bool
+async frame.files.file_exists(path: str) -> bool
 ```
 
 Check if a file exists on the device.  Returns `True` if the file exists, `False` if it does not.  Does not work on directories, only files.
@@ -556,7 +559,7 @@ async def file_exists(self, path: str) -> bool
 Example:
 
 ```python
-exists = await frame.file.file_exists("main.lua")
+exists = await frame.files.file_exists("main.lua")
 print(f"Main.lua {'exists' if exists else 'does not exist'}")
 ```
 
@@ -657,18 +660,242 @@ await f.camera.save_photo("frame-test-photo-2.jpg", autofocus_seconds=3, quality
 
 ## Display
 
-{: .note }
-The display functions will be documented soon.
+Display functions are available via `frame.display`.
+
+The display engine of allows drawing of text, sprites and vectors. These elements can be layered atop one another simply in the order they are called, and then be displayed in one go using the `show()` function.
+
+The Frame display is capable of rendering up to 16 colors at one time. These colors are preset by default, however each color can be overridden.  See more information about the [palette here](/frame/building-apps-lua/#color-palette).
+
+### Write Text
+
+```python
+async frame.display.write_text(text: str, x: int = 1, y: int = 1, max_width: Optional[int] = 640, max_height: Optional[int] = None, align: Alignment = Alignment.TOP_LEFT)
+```
+
+Writes `text` to the display at the specified `x`,`y`position, optionally including word wrapping and alignment.  The text is not displayed until `frame.display.show()` is called.
+
+* `x` *(int)*: The x position to write the text at.
+* `y` *(int)*: The y position to write the text at.
+* `max_width` *(optional int)*: The maximum width for the text bounding box.  If text is wider than this, it will be word-wrapped onto multiple lines automatically.  Set to the full width of the display by default (640px), but can be overridden with `None`/`null` to disable word-wrapping.
+* `max_height` *(optional int)*: The maximum height for the text bounding box.  If text is taller than this, it will be cut off at that height.  Also useful for vertical alignment.  Set to the full height of the display by default (400px), but can be overridden with `None`/`null` to the vertical cutoff (which may result in errors if the text runs too far past the bottom of the display.
+* `align` *(Alignment)*: The alignment of the text, both horizontally if a `max_width` is provided, and vertically if a `max_height` is provided.  Can be any value in `frame.display.Alignment`:
+   * `frame.display.Alignment.TOP_LEFT` = "top_left" **(DEFAULT)**
+   * `frame.display.Alignment.TOP_CENTER` = "top_center"
+   * `frame.display.Alignment.TOP_RIGHT` = "top_right"
+   * `frame.display.Alignment.MIDDLE_LEFT` = "middle_left"
+   * `frame.display.Alignment.MIDDLE_CENTER` = "middle_center"
+   * `frame.display.Alignment.MIDDLE_RIGHT` = "middle_right"
+   * `frame.display.Alignment.BOTTOM_LEFT` = "bottom_left"
+   * `frame.display.Alignment.BOTTOM_CENTER` = "bottom_center"
+   * `frame.display.Alignment.BOTTOM_RIGHT` = "bottom_right"
+
+
+<details markdown="block">
+<summary>Python</summary>
+
+#### Python
+{: .no_toc }
+```python
+async def write_text(self, text: str, x: int = 1, y: int = 1, max_width: Optional[int] = 640, max_height: Optional[int] = None, align: Alignment = Alignment.TOP_LEFT):
+```
+
+Examples:
+
+```python
+await frame.display.write_text("Hello world", 50, 50)
+await frame.display.show()
+
+await frame.display.write_text("Top-left", align=Alignment.TOP_LEFT)
+await frame.display.write_text("Top-Center", align=Alignment.TOP_CENTER)
+await frame.display.write_text("Top-Right", align=Alignment.TOP_RIGHT)
+await frame.display.write_text("Middle-Left", align=Alignment.MIDDLE_LEFT)
+await frame.display.write_text("Middle-Center", align=Alignment.MIDDLE_CENTER)
+await frame.display.write_text("Middle-Right", align=Alignment.MIDDLE_RIGHT)
+await frame.display.write_text("Bottom-Left", align=Alignment.BOTTOM_LEFT)
+await frame.display.write_text("Bottom-Center", align=Alignment.BOTTOM_CENTER)
+await frame.display.write_text("Bottom-Right", align=Alignment.BOTTOM_RIGHT)
+await frame.display.show()
+
+await frame.display.write_text("I am longer text\nMultiple lines can be specified manually or word wrapping can occur automatically", align=Alignment.TOP_CENTER)
+await frame.display.show()
+
+# the following text will be horizontally and vertically centered within a box on the lower right of the screen
+# draw the outline
+await frame.display.draw_rect_filled(x=400, y=220, w=200, h=150, border_width=8, border_color=3, fill_color=15)
+# draw the text
+await frame.display.write_text("in the box", x=400, y=220, w=200, h=150, align=Alignment.MIDDLE_CENTER)
+await frame.display.show()
+```
+</details>
+
+### Show Text
+
+```python
+async frame.display.show_text(text: str, x: int = 1, y: int = 1, max_width: Optional[int] = 640, max_height: Optional[int] = None, align: Alignment = Alignment.TOP_LEFT)
+```
+
+`show_text` is the same as `write_text` except that it immediately displays the text on the screen.  It's equivalent to calling `frame.display.write_text()` and then `frame.display.show()`.
+
+Note that each time you call `show_text()`, it will clear any previous text and graphics.  If you want to add text to the screen without erasing what's already there, then you should use `write_text()` instead.
+
+### Scroll Text
+
+```python
+async frame.display.scroll_text(self, text: str, lines_per_frame: int = 5, delay: float = 0.12)
+```
+
+Animates scrolling text vertically.  Best when `text` is longer than the display height.  You can adjust the speed of the scroll by changing `lines_per_frame` and `delay`, but note that depending on how much text is on the screen, a `delay` below 0.12 seconds may result in graphical glitches due to hardware limitations.
+
+This function blocks until the text has finished scrolling, and includes a small margin on time on either end to make sure the text is fully readable.
+
+* `text` *(str)*: The text to scroll.  It is automatically wrapped to fit the display width.
+* `lines_per_frame` *(int)*: The number of vertical pixels to scroll per frame.  Defaults to 5.  Higher values scroll faster, but will be more jumpy.
+* `delay` *(float)*: The delay between frames in seconds.  Defaults to 0.12 seconds.  Lower values are faster, but may cause graphical glitches.
+
+<details markdown="block">
+<summary>Python</summary>
+
+#### Python
+{: .no_toc }
+```python
+async def scroll_text(self, text: str, lines_per_frame: int = 5, delay: float = 0.12)
+```
+
+Example:
+
+```python
+print("scrolling about to start")
+await frame.display.scroll_text("Never gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you\nNever gonna stop\nNever gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you")
+print("scrolling finished")
+
+print("scrolling slowly about to start")
+await frame.display.scroll_text("Never gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you\nNever gonna stop\nNever gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you", lines_per_frame=2)
+print("scrolling slowly finished")
+```
+
+</details>
+
+### Draw Rectangle
+
+```python
+frame.display.draw_rect(self, x: int, y: int, w: int, h: int, color: int = 1)
+```
+
+Draws a filled rectangle specified `color` at `x`,`y` with `w` width and `h` height.
+
+The rectangle is drawn in the current buffer, which is not displayed until you call `frame.display.show()`.
+
+Currently, the `x`, `y`, `w`, and `h` parameters are rounded down to the closest multiple of 8, for performance reasons.  This is likely to be changed in the future.
+
+* `x` *(int)*: The x position of the upper-left corner of the rectangle.
+* `y` *(int)*: The y position of the upper-left corner of the rectangle.
+* `w` *(int)*: The width of the rectangle.
+* `h` *(int)*: The height of the rectangle.
+* `color` *(int)*: The color of the rectangle.  Defaults to 1 (white).
+
+<details markdown="block">
+<summary>Python</summary>
+
+#### Python
+{: .no_toc }
+```python
+async def draw_rect(self, x: int, y: int, w: int, h: int, color: int = 1)
+```
+
+Example:
+
+```python
+# draws a white rectangle 200x200 pixels in the center of the screen
+await frame.display.draw_rect(220, 100, 200, 200)
+
+# draws a red rectangle 16x16 pixels in the center of the screen
+await frame.display.draw_rect(320-8, 200-8, 16, 16, 3)
+
+# show both rectangles
+await frame.display.show()
+```
+
+</details>
+
+### Draw Rectangle Filled
+
+```python
+frame.display.draw_rect_filled(self, x: int, y: int, w: int, h: int, border_width: int, border_color: int, fill_color: int)
+```
+
+Draws a filled rectangle with a border and fill color at `x`,`y` with `w` width and `h` height, with an inset border `border_width` pixels wide.  The total size of the rectangle including the border is `w`x`h`.
+
+Currently, the `x`, `y`, `w`, `h`, and `border_width` parameters are rounded down to the closest multiple of 8, for performance reasons.  This is likely to be changed in the future.
+
+* `x` *(int)*: The x position of the upper-left corner of the rectangle.
+* `y` *(int)*: The y position of the upper-left corner of the rectangle.
+* `w` *(int)*: The width of the rectangle.
+* `h` *(int)*: The height of the rectangle.
+* `border_width` *(int)*: The width of the border in pixels.
+* `border_color` *(int)*: The color of the border.
+* `fill_color` *(int)*: The color of the fill.
+
+<details markdown="block">
+<summary>Python</summary>
+
+#### Python
+{: .no_toc }
+```python
+async def draw_rect_filled(self, x: int, y: int, w: int, h: int, border_width: int, border_color: int, fill_color: int)
+```
+
+Example:
+
+```python
+# draws a dialog box with a border and text
+await frame.display.draw_rect_filled(x=100, y=100, w=200, h=200, border_width=8, border_color=1, fill_color=15)
+await frame.display.write_text("Hello world!", x=110, y=110, w=180, h=180, align=Alignment.MIDDLE_CENTER)
+await frame.display.show()
+```
+
+</details>
+
+### Additional Display Helpers
+
+While the above functions are the most common ones you'll use, there are a few other display-related functions and properties that you may find useful on occasion.
+
+#### Line Height
+{: .no_toc }
+
+```python
+frame.display.line_height: int = 60
+```
+
+The `line_height` property is used to get and set the height of each line of text in pixels.  It is 60 by default, however you may override that value to change the vertical spacing of the text in all text displaying functions.
+
+#### Get Text Width and Height
+{: .no_toc }
+
+```python
+frame.display.get_text_width(text: str) -> int
+frame.display.get_text_height(text: str) -> int
+```
+
+Gets the rendered width and height of text in pixels.  Text on Frame is variable width, so this is important for positioning text.  Note that these functions do not perform any text wrapping but do respect any manually-included line breaks, and you can use the outputs in your own word-wrapping or positioning logic.  The text height is affected by the `line_height` property.
+
+#### Wrap Text
+{: .no_toc }
+
+```python
+frame.display.wrap_text(self, text: str, max_width: int) -> str
+```
+
+Wraps text to fit within a specified width.  It does this by inserting line breaks at space characters, returning a string with extra '\n' characters where line wrapping is needed.
 
 ## Microphone
 
 {: .warning }
-The microphone functions have not yet been written.
+The microphone functions have not yet been implemented.
 
 ## Motion
 
 {: .warning }
-The IMU functions have not yet been written.
+The IMU functions have not yet been implemented.
 
 # Putting It All Together
 
