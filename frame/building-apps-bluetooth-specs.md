@@ -14,7 +14,7 @@ grand_parent: Frame
 
 You may want to communicate with the Frame manually over Bluetooth Low Energy if we don't yet have an SDK available for your preferred development language, or if you just want to understand what's going on under the hood.
 
-For ease of development, we recommend utilizing our SDKs instead.
+Once you're communicating with the Frame over Bluetooth, you can use the [Lua API Reference](/frame/building-apps-lua) to see everything you can tell it to do.
 
 1. TOC
 {:toc}
