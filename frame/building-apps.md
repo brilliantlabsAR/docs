@@ -17,11 +17,35 @@ has_children: true
 ## How do apps run on Frame?
 In case you've come to Frame development with any preconceptions from the world of wearable Android devices, let's step back and go over how Frame is different.  Unlike some other devices, Frame is not based on Android and is in fact built on a very power-efficient and somewhat low-level system on a chip.  Whereas on Android you may develop a app, package it up in an apk, send it to a device, and then launch and run it on the device, Frame is different.
 
-In general, apps do not run on Frame, instead Frame acts as a peripheral accessory for "host" apps running on a computer or mobile device.  These apps then talk to Frame over Bluetooth to get it to do things like take photos or access the microphone or display text and graphics on its screen.
+In general, apps do not run on Frame, instead Frame acts as a peripheral accessory for "host" apps running on a computer or mobile device.  These apps then talk to Frame over Bluetooth to get it to do things like take photos or access the microphone or display text and graphics on its screen.  There will be many scenarios where you will write Lua scripts that execute on Frame for performance reasons, but it's your host app that is generally driving the logic.
 
 For example, the Noa app on your phone is the "host" app, and it talks to Frame over Bluetooth.  It registers itself to be called when you wake your Frame by tapping it, and then it instructs the Frame to send over photo and microphone data which it then uses to generate a response.  It then processes the response and tells Frame exactly what to display on its screen.  Very little of the code for Noa actually runs on the Frame.  Rather, the Noa app on your phone is the one that runs the code that calls on Frame.
 
 As such, there is no concept of an app launcher on Frame, or any other way to "install" an app on Frame.  Instead, you build the host app, and then use it to control Frame.  To share with other Frame users, publish your host app to the App Store or Google Play, or open source it or however you would normally share an app for your platform.  Of course if you build something cool, let us know and we will be happy to share it with the community.  We will eventually have a gallery of Frame apps to share with the world, although we're not quite there yet.
+
+## A quick example
+Here's a quick python script to take a photo and also show the time and date on the Frame.
+
+```python
+import asyncio
+from frame_sdk import Frame
+from frame_sdk.display import Alignment
+import datetime
+
+async def main():
+    async with Frame() as f:
+        # take a photo and save to disk
+        await f.display.show_text("Taking photo...", align=Alignment.MIDDLE_CENTER)
+        await f.camera.save_photo("frame-test-photo.jpg")
+
+        # display battery level, time, and date
+        text_to_display = f"{await f.get_battery_level()}%\n"+datetime.datetime.now().strftime("%-I:%M %p\n%a, %B %d, %Y")
+        await f.display.show_text(text_to_display, align=Alignment.MIDDLE_CENTER)
+
+asyncio.run(main())
+```
+
+For a more complete example, check out the [SDK example](/frame/building-apps-sdk#putting-it-all-together).
 
 ## How to get started
 
@@ -33,37 +57,26 @@ Read on for a better understanding of the platform and the various ways to build
 # Ways to Develop for Frame
 Frame has several integration points you can use to create apps:
 
-1. [Customize the firmware](#customize-the-firmware) **(not recommended)**
-    * Very advanced, requires experience with hardware development
-    * Gives you complete control
+1. [Use one of our platform SDKs to use Frame from your own mobile or desktop computer app](#use-one-of-our-platform-sdks-from-your-own-mobile-or-computer-app-recommended) **(recommended)**
+    * Build apps for one of our supported platforms:
+        * Python from a Mac, Linux, or Windows computer
+        * Swift, Kotlin, Flutter, and React Native for mobile *(coming soon)*
+    * Common tasks are simplified and handled for you
+    * Your app is in control and uses Frame as an accessory
+    * Best way to get started
 2. [Talk to the Frame over BTLE to run Lua on the device](#talk-to-the-frame-over-bluetooth-low-energy-to-run-lua-on-the-device)
     * Use any platform that can talk to Bluetooth
     * Gives you full control
     * Can be tedious to get started, best if you have experience developing with Bluetooth LE
-3. [Use one of our platform SDKs to use Frame from your own mobile or desktop computer app](#use-one-of-our-platform-sdks-from-your-own-mobile-or-computer-app-recommended) **(recommended)**
-    * Build apps for one of our supported platforms:
-        * Python from a Mac, Linux, or Windows computer
-        * Swift from a Mac or iOS device *(coming soon)*
-        * Kotlin from Android *(coming soon)*
-        * Flutter for mobile (and computer?) *(coming soon)*
-        * React Native for mobile (and computer?) *(coming soon)*
-    * Common tasks are simplified and handled for you
-    * Your app is in control and uses Frame as an accessory
-    * Best way to get started
-4. [Create tools for the Noa AI agent to call](#create-tools-for-the-noa-ai-agent-to-call-coming-soon) *(coming later)*
-    * Simple HTTP REST interface, no hardware required
-    * Only supports Noa, not for running code on Frame
-    * Will be available in the future
+3. [Customize the firmware](#customize-the-firmware) **(not recommended)**
+    * Very advanced, requires experience with hardware development
+    * Gives you complete control
 
 The most common structure is to build an iOS or Android mobile app which uses our SDKs to communicate with the Frame over Bluetooth.  Your app is in control and uses Frame as an accessory, with the Lua and BTLE details mostly abstracted away for you.
 
 Let's walk through each of these options in order.
 
 ## Customize the firmware
-
-
-{: .warning }
-Frame is intended to be used with the officially provided firmware from Brilliant. Loading custom firmware will require destructive disassembly of your Frame hardware to access the physical debug port.
 
 Frame is developed by hackers for hackers, so even though we don't encourage it for most users, you are welcome to customize the firmware if you want.  The official Frame firmware is open source, and you can find it [on GitHub](https://github.com/brilliantlabsAR/frame-codebase).
 
