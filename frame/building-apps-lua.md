@@ -47,41 +47,54 @@ The vector command is not yet implemented.
 
 | API&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
-| `frame.display.text(string, x, y, {color='WHITE', spacing=4})`        | Prints the given `string` to the display at `x` and `y`. A `color` can optionally be provided to print the text in one of the [16 palette colors](#color-palette).  `spacing` can optionally be provided to adjust the character spacing of the printed text
-| `frame.display.bitmap(x, y, width, color_format, palette_offset, data)`   | Prints raw bitmap data to the display at co-ordinates `x` and `y`. `width` should be the width of the bitmap. `color_format` represents the total colors users, and should be either `2`, `4`, or `16`. `palette_offset` offsets the colors indexed from the palette. If no offset is desired, set this to `0`. `data` should be a string containing the bitmap data  [Details below](#sprite-engine).  
+| `frame.display.text(string, x, y, {color='WHITE', spacing=4})`        | Prints the given `string` to the display at `x` and `y`. A `color` can optionally be provided to print the text in one of the [16 palette colors](#color-palette).  `spacing` can optionally be provided to adjust the character spacing of the printed text.  [Details below](#displaying-text)
+| `frame.display.bitmap(x, y, width, color_format, palette_offset, data)`   | Prints raw bitmap data to the display at co-ordinates `x` and `y`. `width` should be the width of the bitmap. `color_format` should be either `2`, `4`, or `16`. `palette_offset` offsets the colors indexed from the palette. `data` should be a string containing the bitmap data.  [Details below](#sprite-engine)
 | `frame.display.vector()`                                              | *Coming soon*
-| `frame.display.show()`                                                | Shows the drawn objects on the display
+| `frame.display.show()`                                                | Shows the drawn objects on the display.  See [below](#buffering) for more details on how buffering works.
 
 #### Buffering
+{: .no_toc }
+
 The Frame display has 2 buffers. All writing to the display via `frame.display.text()`, `frame.display.bitmap()`, etc write to an off-screen buffer and are not visible. This allows you to write multiple actions at once. When you have completed drawing and want to show it to the user, call `frame.display.show()` which will display the buffered graphics and clear a new off-screen buffer for whatever you want to draw next.
 
-#### frame.display.text
-`frame.display.text(string, x, y)` prints the given `string` to the display with its upper-left at position `x, y`. All positions are 1-indexed, so possible values for `x` are between 1 and 640, and possible values for `y` are between 1 and 400. Text is variable width, not fixed-width. Currently it is not possible to modify the font or font size. There is no word-wrapping performed automatically.
+#### Displaying Text
+{: .no_toc }
+
+`frame.display.text(string, x, y, {color='WHITE', spacing=4})` prints the given `string` to the display with its upper-left at position `x, y`. All positions are 1-indexed, so possible values for `x` are between 1 and 640, and possible values for `y` are between 1 and 400. Text is variable width, not fixed-width. Currently it is not possible to modify the font or font size. There is no word-wrapping performed automatically.
+
+A `color` can optionally be provided to print the text in one of the [16 palette colors](#color-palette).  `spacing` can optionally be provided to adjust the character spacing of the printed text. The final argument may be omitted, in which case the default color of `WHITE` and spacing of 4 is used.
 
 ```lua
 -- Display 'Hello world' at x = 50 and y = 100
 frame.display.text('Hello world', 50, 100)
+-- Display 'Goodbye world' in red and with more spacing
+frame.display.text('Goodbye world', 50, 200, {color='RED', spacing=16})
+-- Show the buffered text
 frame.display.show()
 ```
 
 #### Sprite Engine
-`frame.display.bitmap(x, y, width, color_format, palette_offset, data)` allows manually drawing to the screen. The bitmap is positioned with its upper-left at `x, y` with width `width` and the height automatically determined by the length of the data.  `color_format` can be one of 2, 4, or 16. By including less colors in your bitmap, you can fit more pixels into a smaller data string. `palette_offset` is a number between 1 and 16.
+{: .no_toc }
+
+`frame.display.bitmap(x, y, width, color_format, palette_offset, data)` allows manually drawing to the screen. The bitmap is positioned with its upper-left at `x, y` with width `width` and the height automatically determined by the length of the data.  `color_format` can be one of 2, 4, or 16. By including less colors in your bitmap, you can fit more pixels into a smaller data string. `palette_offset` is a number between 0 and 15, where 0 means no offset.
 
 The sprite engine in Frame is capable of quickly rendering bitmap data to anywhere on the screen. Sprites data can be stored in one of three different color formats. 2 color, 4 color, and 16 color. 2 color mode will only use the first two colors in the color palette, but allows storing 8 pixels per byte of sprite data. 4 color will use the first four colors in the palette, but requires twice as much data per pixel. Finally, 16 color mode allows accessing the entire color palette, but requires 4 bits per pixel. Pixel data in Lua is simply represented as a long string of all the pixels. The `width` parameter tells the sprite engine when to move to the next line when rendering out each pixel from the string.
 
 Each pixel represented by the pixel data simply indexes one of the colors from the color palette. For 2 color mode, a bit (pixel) value of `1` will print a pixel of color `WHITE`. The internal font glyphs used by the `text()` function are essentially all 2 color sprites.
 
 <details markdown="block">
-<summary>Palette offsets</summary>
+<summary>Palette Offset Example</summary>
 To achieve different color drawings, the `palette_offset` feature is used. This value offsets how the colors are indexed during the render. Using the same 2 color example as above, but combined with a `palette_offset` value of 3, now indexes `PINK` instead of `WHITE` for all pixel values of `1`. The same works for all the other color modes. Note that the `VOID` color is never shifted. A pixel value of `0` will always index `VOID`, no matter the `palette_offset`.
 
-The example below shows how a single sprite can be shown in different colors using the `palette_offset` feature. Note how the color palette has been adjusted to repeat the same colors after index 5, but with red changed to green.
+The example below shows how a single sprite can be shown in different colors using the `palette_offset` feature. Note how the color palette [has been adjusted](#low-level-display-commands) to repeat the same colors after index 5, but with red changed to green.
 
 ![Frame display sprite engine example](/frame/images/frame-sprite-engine.drawio.png)
 </details>
 
 The `data` is a lua string which is just an array of bytes, but with multiple pixels packed in each byte based on the number of colors. When drawing, the `palette_offset` is added to palette index (wrapping around at 16).
 
+<details markdown="block">
+<summary>Data String Detailed Examples</summary>
 ```plaintext
 Data as Lua string:
 "\x01\xFE"
@@ -101,6 +114,7 @@ If num_color = 2, then this maps to 16 pixels:
 as bits:        0 0 0 0 0 0 0 1  1 1 1 1 1 1 1 0
 palette index:  0 0 0 0 0 0 0 1  1 1 1 1 1 1 1 0
 ```
+</details>
 
 For example, to draw a red rectangle at position x = 100, y = 50, with width = 32 and height = 15:
 
@@ -128,14 +142,14 @@ The Frame display is capable of rendering up to 16 colors at a time. Each color 
 
 The `assign_color()` function simplifies color selection by allowing the user to enter regular 24bit RGB values which are internally converted to the YCbCr colorspace. Note however that the color actually rendered will be rounded to one of the above colors.
 
-From [AndroidArts: Arne Niklas Jansson](https://www.androidarts.com/palette/16pal.htm), duplicated here for easier access:
+Here's the default palette, as names and indices:
 <table>
 <tbody><tr>
 <td style="background-color: #000000;"><font color="White">#0<br> VOID</font></td>
-<td style="background-color: #9D9D9D;"><font color="Black">#1<br> GRAY</font></td>
-<td style="background-color: #FFFFFF;"><font color="Black">#2<br> WHITE</font></td>
+<td style="background-color: #FFFFFF;"><font color="Black">#1<br> WHITE</font></td>
+<td style="background-color: #9D9D9D;"><font color="Black">#2<br> GRAY</font></td>
 <td style="background-color: #BE2633;"><font color="Black">#3<br> RED</font></td>
-<td style="background-color: #E06F8B;"><font color="Black">#4<br> MEAT</font></td>
+<td style="background-color: #E06F8B;"><font color="Black">#4<br> PINK</font></td>
 <td style="background-color: #493C2B;"><font color="White">#5<br> DARKBROWN</font></td>
 <td style="background-color: #A46422;"><font color="Black">#6<br> BROWN</font></td>
 <td style="background-color: #EB8931;"><font color="Black">#7<br> ORANGE</font></td>
@@ -144,7 +158,7 @@ From [AndroidArts: Arne Niklas Jansson](https://www.androidarts.com/palette/16pa
 <td style="background-color: #F7E26B;"><font color="Black">#8<br> YELLOW</font></td>
 <td style="background-color: #2F484E;"><font color="White">#9<br> DARKGREEN</font></td>
 <td style="background-color: #44891A;"><font color="Black">#10<br> GREEN</font></td>
-<td style="background-color: #A3CE27;"><font color="Black">#11<br> SLIMEGREEN</font></td>
+<td style="background-color: #A3CE27;"><font color="Black">#11<br> LIGHTGREEN</font></td>
 <td style="background-color: #1B2632;"><font color="White">#12<br> NIGHTBLUE</font></td>
 <td style="background-color: #005784;"><font color="White">#13<br> SEABLUE</font></td>
 <td style="background-color: #31A2F2;"><font color="Black">#14<br> SKYBLUE</font></td>
@@ -153,6 +167,7 @@ From [AndroidArts: Arne Niklas Jansson](https://www.androidarts.com/palette/16pa
 </tbody></table>
 
 #### Low-Level Display Commands
+{: .no_toc }
 
 | Low&nbsp;level&nbsp;functions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
@@ -199,6 +214,7 @@ end
 ```
 
 #### Low-Level Camera Commands
+{: .no_toc }
 
 | Low&nbsp;level&nbsp;functions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
@@ -329,6 +345,7 @@ The file system API allows for writing and reading files to Frame's non-volatile
 | `f:close()`                         | Closes the file. It is important to close files once done writing, otherwise they may become corrupted
 
 #### Tips
+{: .no_toc }
 
 * On many online Lua guides, the examples allow `'r'`, `'w'`, or `'a'` as shorthand for `'read'`, `'write'`, or `'append'`, however Frame does not support that.  You need to spell out the whole word.
 * GitHub Copilot and ChatGPT will always generate incorrect code like `file.read()` rather than the correct `f:read()`.  Keep a close eye on the syntax.
