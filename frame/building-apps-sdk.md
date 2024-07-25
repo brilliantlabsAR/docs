@@ -292,12 +292,10 @@ await frame.stay_awake(True)
 ### Send Break Signal
 
 ```python
-async frame.bluetooth.send_break_signal(show_me: boolean = False)
+async frame.bluetooth.send_break_signal()
 ```
 
 Sends a break signal to the device which will break any currently executing Lua script.
-
-* `show_me` *(boolean)*: For debugging.  If `True`, the exact bytes sent to the device will be printed.
 
 <details markdown="block">
 <summary>Python</summary>
@@ -305,7 +303,7 @@ Sends a break signal to the device which will break any currently executing Lua 
 #### Python
 {: .no_toc }
 ```python
-async def send_break_signal(self, show_me:bool=False)
+async def send_break_signal(self)
 ```
 
 Example:
@@ -325,12 +323,10 @@ print(await frame.evaluate("'I\\m back!'"))
 ### Send Reset Signal
 
 ```python
-async frame.bluetooth.send_reset_signal(show_me: boolean = False)
+async frame.bluetooth.send_reset_signal()
 ```
 
 Sends a reset signal to the device which will reset the Lua virtual machine.  This clears all variables and functions, and resets the stack.  It does not clear the filesystem.
-
-* `show_me` *(boolean)*: For debugging.  If `True`, the exact bytes sent to the device will be printed.
 
 <details markdown="block">
 <summary>Python</summary>
@@ -338,7 +334,7 @@ Sends a reset signal to the device which will reset the Lua virtual machine.  Th
 #### Python
 {: .no_toc }
 ```python
-async def send_reset_signal(self, show_me:bool=False)
+async def send_reset_signal(self)
 ```
 
 Example:
