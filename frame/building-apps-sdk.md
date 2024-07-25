@@ -30,7 +30,7 @@ The most common structure is to build an iOS or Android mobile app which uses ou
 
 | Python            | Swift             | Kotlin            | Flutter           | React native      |
 |:------------------|:------------------|:------------------|:------------------|:------------------|
-| Basic library available, full SDK in preview | Coming soon | Coming soon |  Coming soon | Coming soon |
+| Available, mostly complete | Coming soon | Coming soon |  Coming soon | Coming soon |
 
 ---
 
@@ -49,37 +49,6 @@ The `frame-sdk` library is available [on PyPI](https://pypi.org/project/frame-sd
 
 ```sh
 pip3 install frame-sdk
-```
-
-</details>
-
-
-## Basic Communication
-
-Where available, all Frame communication happens via async functions.
-
-### Python SDK Basics
-
-Make sure to `import asyncio` and only use Frame in async functions.  The Frame class handles the connection for you, all you have to do is wrap any code in `async with Frame() as frame:` and then use that `frame` object to call any of the functions.  Once that `frame` object goes out of scope (after the `with` statement or on an exception), the connection is automatically closed.
-
-```python
-import asyncio
-from frame_sdk import Frame
-
-
-async def main():
-    # the with statement handles the connection and disconnection to Frame
-    async with Frame() as frame:
-        print("connected")
-        # f is a connected Frame device, so you can call await f.<whatever>
-        # for example, let's get the current battery level
-        print(f"Frame battery: {await frame.get_battery_level()}%")
-
-    # outside of the with statement, the connection is automatically closed
-    print("disconnected")
-
-# make sure you run it asynchronously
-asyncio.run(main())
 ```
 
 <details markdown="block">
@@ -108,6 +77,34 @@ async def main():
 asyncio.run(main())
 ```
 </details>
+
+## Basic Communication
+
+Where available, all Frame communication happens via async functions.
+
+### Python SDK Basics
+
+Make sure to `import asyncio` and only use Frame in async functions.  The Frame class handles the connection for you, all you have to do is wrap any code in `async with Frame() as frame:` and then use that `frame` object to call any of the functions.  Once that `frame` object goes out of scope (after the `with` statement or on an exception), the connection is automatically closed.
+
+```python
+import asyncio
+from frame_sdk import Frame
+
+
+async def main():
+    # the with statement handles the connection and disconnection to Frame
+    async with Frame() as frame:
+        print("connected")
+        # f is a connected Frame device, so you can call await f.<whatever>
+        # for example, let's get the current battery level
+        print(f"Frame battery: {await frame.get_battery_level()}%")
+
+    # outside of the with statement, the connection is automatically closed
+    print("disconnected")
+
+# make sure you run it asynchronously
+asyncio.run(main())
+```
 
 ### Sending Lua to the Frame
 
