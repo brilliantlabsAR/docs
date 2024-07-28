@@ -885,8 +885,104 @@ Wraps text to fit within a specified width.  It does this by inserting line brea
 
 ## Microphone
 
-{: .warning }
-The microphone functions have not yet been implemented.
+The microphone is accessible via the `frame.microphone` object.  The microphone on Frame allows for streaming audio to a host device in real-time.
+
+### Record Audio
+```python
+async frame.microphone.record_audio(self, silence_cutoff_length_in_seconds: Optional[int] = 3, max_length_in_seconds: int = 30) -> np.ndarray
+```
+
+Records audio from the microphone and returns it as a numpy array of int16 or int8 depending on the `bit_depth`.
+
+* `silence_cutoff_length_in_seconds` *(int)*: The length of silence in seconds to allow before stopping the recording.  Defaults to 3 seconds, however you can set to None to disable silence detection.  Uses the `silence_threshold` to adjust sensitivity.
+* `max_length_in_seconds` *(int)*: The maximum length of the recording in seconds, regardless of silence.  Defaults to 30 seconds.
+
+<details markdown="block">
+<summary>Python</summary>
+
+#### Python
+{: .no_toc }
+```python
+async def record_audio(self, silence_cutoff_length_in_seconds: Optional[int] = 3, max_length_in_seconds: int = 30) -> np.ndarray
+```
+
+Examples:
+
+```python
+# record audio for up to 30 seconds, or until 3 seconds of silence is detected
+audio = await frame.microphone.record_audio()
+
+# record audio for 5 seconds without silence detection
+audio = await frame.microphone.record_audio(silence_cutoff_length_in_seconds=None, max_length_in_seconds=5)
+```
+
+</details>
+
+### Save Audio File
+```python
+async frame.microphone.save_audio_file(self, filename: str, silence_cutoff_length_in_seconds: int = 3, max_length_in_seconds: int = 30) -> float
+```
+
+Records audio from the microphone and saves it to a file in PCM Wav format.  Returns the number of seconds of audio recorded.
+
+* `filename` *(str)*: The name of the file to save the audio to.  Regardless of any filename extension, the file will be saved as a PCM wav file.
+* `silence_cutoff_length_in_seconds` *(int)*: The length of silence in seconds to allow before stopping the recording.  Defaults to 3 seconds, however you can set to None to disable silence detection.  Uses the `silence_threshold` to adjust sensitivity.
+* `max_length_in_seconds` *(int)*: The maximum length of the recording in seconds, regardless of silence.  Defaults to 30 seconds.
+
+<details markdown="block">
+<summary>Python</summary>
+
+#### Python
+{: .no_toc }
+```python
+async def save_audio_file(self, filename: str, silence_cutoff_length_in_seconds: int = 3, max_length_in_seconds: int = 30) -> float
+```
+
+Examples:
+
+```python
+# record audio for up to 30 seconds, or until 3 seconds of silence is detected
+await frame.microphone.save_audio_file("audio.wav")
+
+# record audio for 5 seconds without silence detection
+await frame.microphone.save_audio_file("audio.wav", silence_cutoff_length_in_seconds=None, max_length_in_seconds=5)
+```
+
+</details>
+
+### Play Audio
+```python
+frame.microphone.play_audio(self, audio_data: np.ndarray, sample_rate: Optional[int] = None, bit_depth: Optional[int] = None)
+async frame.microphone.play_audio_async(self, audio_data: np.ndarray, sample_rate: Optional[int] = None, bit_depth: Optional[int] = None)
+```
+
+Helpers to play audio from `record_audio()` on your computer.  `play_audio` blocks until playback is complete, while `play_audio_async` plays the audio in a coroutine.
+
+* `audio_data` *(np.ndarray)*: The audio data to play, as returned from `record_audio()`.
+* `sample_rate` *(int)*: The sample rate of the audio data, in case it's different from the current `sample_rate`.
+* `bit_depth` *(int)*: The bit depth of the audio data, in case it's different from the current `bit_depth`.
+
+### Sample Rate and Bit Depth
+
+```python
+frame.microphone.sample_rate: int = 8000
+frame.microphone.bit_depth: int = 16
+```
+
+The `sample_rate` property is used to get and set the sample rate of the microphone.  It is 8000 by default, however you may override that value to change the sample rate of the microphone.  Valid values are 8000 and 16000.
+
+The `bit_depth` property is used to get and set the bit depth of the microphone.  It is 16 by default, however you may override that value to change the bit depth of the microphone.  Valid values are 8 and 16.
+
+Transfers are limited by the Bluetooth bandwidth which is typically around 40kBps under good signal conditions. The audio bitrate for a given `sample_rate` and `bit_depth` is: `sample_rate * bit_depth / 8` bytes per second. An internal 32k buffer automatically compensates for additional tasks that might otherwise briefly block Bluetooth transfers. If this buffer limit is exceeded however, then discontinuities in audio might occur.
+
+### Silence Threshold
+
+```python
+frame.microphone.silence_threshold: float = 0.02
+```
+
+The `silence_threshold` property is used to get and set the threshold for detecting silence in the audio stream.  Valid values are between 0 and 1.  0.02 is the default, however you may adjust this value to be more or less sensitive to sound.
+
 
 ## Motion
 
