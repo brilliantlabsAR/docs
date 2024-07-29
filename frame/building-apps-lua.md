@@ -1,9 +1,12 @@
 ---
-title: Lua API
-description: A guide on how to use Lua on your Frame AR glasses.
+title: Lua API Reference
+description: A reference of Lua functionality available on your Frame AR glasses.
 image: /images/frame/frame-splash.png
-nav_order: 3
-parent: Frame
+nav_order: 2
+parent: Building Apps
+grand_parent: Frame
+redirect_from:
+  - /frame/lua
 ---
 
 # Lua API
@@ -13,9 +16,10 @@ parent: Frame
 
 Lua is a tiny and extensible scripting language that's designed to be power efficient and quick to learn. Frame features a complete Lua virtual machine based on the latest public release of Lua. Dedicated hardware APIs allow direct access to all of Frame's peripherals at a high level so that developers can start building apps quickly and easily.
 
-There's no special cables or setup needed. Lua on Frame is accessed solely over Bluetooth, such that any user created host app can easily execute scripts by simply pushing Lua strings to the device.
+{: .note }
+Note that the Lua virtual machine on the Frame has a subset of the standard library, so some guides on the internet about Lua may contain code that won't work on Frame without modification.  Specifically, Lua's standard `io` and `os` libraries are not present on Frame.
 
-To learn more how the underlying Bluetooth communication with Frame works, check out the Bluetooth section of the [Building Apps](/frame/building-apps#bluetooth) page.
+There's no special cables or setup needed. Lua on Frame is accessed solely over Bluetooth, such that any user created host app can easily execute scripts by simply pushing Lua strings to the device. To learn more how the underlying Bluetooth communication with Frame works, check out the [Talking to the Frame over Bluetooth](/frame/building-apps-bluetooth-specs) page.
 
 ---
 
@@ -25,7 +29,7 @@ To learn more how the underlying Bluetooth communication with Frame works, check
 This page describes all of the Frame specific Lua APIs available to the developer along with some helpful examples. Certain libraries allow for more low level access that can be used for debugging and hacking the various subsystems of Frame.
 
 {: .note }
-The API specification is still undergoing heavy development. Some of them may change over the coming month or so.
+The API specification is still undergoing heavy development. Some of them may change over time.
 
 1. TOC
 {:toc}
@@ -34,54 +38,144 @@ The API specification is still undergoing heavy development. Some of them may ch
 
 ### Display
 
-The display engine of allows drawing of text, sprites and vectors. These elements can be layered atop one another simply in the order they are called, and then be displayed in one go using the `show()` function.
+The display engine allows drawing of text, sprites and vectors. These elements can be layered atop one another simply in the order they are called, and then be displayed in one go using the `show()` function.
 
 The Frame display is capable of rendering up to 16 colors at one time. These colors are preset by default, however each color can be overridden.
 
+{: .note }
+The vector command is not yet implemented.
+
 | API&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
-| `frame.display.text(string, x, y, {color='WHITE', spacing=4})` | Prints the given `string` to the display at co-ordinates `x` and `y`. A `color` can optionally be provided to print the text in one of the palette colors. Valid options for `color` are: `WHITE` ,`GREY` ,`RED` ,`PINK` ,`DARKBROWN` ,`BROWN` ,`ORANGE` ,`YELLOW` ,`DARKGREEN` ,`GREEN` ,`LIGHTGREEN` ,`NIGHTBLUE` ,`SEABLUE` ,`SKYBLUE` or `CLOUDBLUE`. `spacing` can optionally be provided to adjust the character spacing of the printed text
-| `frame.display.vector()`                                       | *Details coming soon*
-| `frame.display.show()`                                         | Shows the drawn objects on the display
+| `frame.display.text(string, x, y, {color='WHITE', spacing=4})`        | Prints the given `string` to the display at `x` and `y`. A `color` can optionally be provided to print the text in one of the [16 palette colors](#color-palette).  `spacing` can optionally be provided to adjust the character spacing of the printed text.  [Details below](#displaying-text)
+| `frame.display.bitmap(x, y, width, color_format, palette_offset, data)`   | Prints raw bitmap data to the display at coordinates `x` and `y`. `width` should be the width of the bitmap. `color_format` should be either `2`, `4`, or `16`. `palette_offset` offsets the colors indexed from the palette. `data` should be a string containing the bitmap data.  [Details below](#sprite-engine)
+| `frame.display.vector()`                                              | *Coming soon*
+| `frame.display.show()`                                                | Shows the drawn objects on the display.  See [below](#buffering) for more details on how buffering works.
 
-#### Example
+#### Buffering
 {: .no_toc }
+
+The Frame display has 2 buffers. All writing to the display via `frame.display.text()`, `frame.display.bitmap()`, etc write to an off-screen buffer and are not visible. This allows you to write multiple actions at once. When you have completed drawing and want to show it to the user, call `frame.display.show()` which will display the buffered graphics and clear a new off-screen buffer for whatever you want to draw next.
+
+#### Displaying Text
+{: .no_toc }
+
+`frame.display.text(string, x, y, {color='WHITE', spacing=4})` prints the given `string` to the display with its upper-left at position `x, y`. All positions are 1-indexed, so possible values for `x` are between 1 and 640, and possible values for `y` are between 1 and 400. Text is variable width, not fixed-width. Currently it is not possible to modify the font or font size. There is no word-wrapping performed automatically.
+
+A `color` can optionally be provided to print the text in one of the [16 palette colors](#color-palette).  `spacing` can optionally be provided to adjust the character spacing of the printed text. The final argument may be omitted, in which case the default color of `WHITE` and spacing of 4 is used.
 
 ```lua
 -- Display 'Hello world' at x = 50 and y = 100
 frame.display.text('Hello world', 50, 100)
+-- Display 'Goodbye world' in red and with more spacing
+frame.display.text('Goodbye world', 50, 200, {color='RED', spacing=16})
+-- Show the buffered text
 frame.display.show()
 ```
 
-| Low&nbsp;level&nbsp;functions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
-|:---------|:------------|
-| `frame.display.assign_color(color, r, g, b)`                            | Changes the rendered color in slot `color` with a new color given by the components `r`, `g,` and `b`. Valid options for `color` are: `VOID`, `WHITE` ,`GREY` ,`RED` ,`PINK` ,`DARKBROWN` ,`BROWN` ,`ORANGE` ,`YELLOW` ,`DARKGREEN` ,`GREEN` ,`LIGHTGREEN` ,`NIGHTBLUE` ,`SEABLUE` ,`SKYBLUE` or `CLOUDBLUE`. Note that changing the `VOID` color will change the rendered background color of the display. The RGB components are internally converted to a 10bit YCbCr value that represents the true colorspace of the display. There may therefore be rounding errors for certain RGB combinations
-| `frame.display.assign_color_ycbcr(color, y, cb, cr)`                    | Same as above, however the `y`, `cb`, and `cr` represent the true 10bit colorspace of the display. Each component has a range of 4, 3, and 3 bits respectively
-| `frame.display.bitmap(x, y, width, color_format, palette_offset, data)` | Prints raw bitmap data to the display at co-ordinates `x` and `y`. `width` should be the width of the bitmap. `color_format` represents the total colors users, and should be either `2`, `4`, or `16`. `palette_offset` offsets the colors indexed from the palette. If no offset is desired, set this to `0`. `data` should be a string containing the bitmap data
-| `frame.display.set_brightness(brightness)`                              | Sets the brightness of the display. Valid options for `brightness` are `-2`, `-1`, `0`, `1`, or `2`. Note that higher brightness levels increase the likely-hood of burn-in if static pixels are shown for long periods of time on the display
-| `frame.display.set_register(register, value)`                           | Allows hacking of the display registers. `register` and `value` should both be 8bit values
+#### Sprite Engine
+{: .no_toc }
+
+`frame.display.bitmap(x, y, width, color_format, palette_offset, data)` allows manually drawing to the screen. The bitmap is positioned with its upper-left at `x, y` with width `width` and the height automatically determined by the length of the data.  `color_format` can be one of 2, 4, or 16. By including less colors in your bitmap, you can fit more pixels into a smaller data string. `palette_offset` is a number between 0 and 15, where 0 means no offset.
+
+The sprite engine in Frame is capable of quickly rendering bitmap data to anywhere on the screen. Sprite data can be stored in one of three different color formats. 2 color, 4 color, and 16 color. 2 color mode will only use the first two colors in the color palette, but allows storing 8 pixels per byte of sprite data. 4 color will use the first four colors in the palette, but requires twice as much data per pixel. Finally, 16 color mode allows accessing the entire color palette, but requires 4 bits per pixel. Pixel data in Lua is simply represented as a long string of all the pixels. The `width` parameter tells the sprite engine when to move to the next line when rendering out each pixel from the string.
+
+Each pixel represented by the pixel data simply indexes one of the colors from the color palette. For 2 color mode, a bit (pixel) value of `1` will print a pixel of color `WHITE`. The internal font glyphs used by the `text()` function are essentially all 2 color sprites.
+
+<details markdown="block">
+<summary>Palette Offset Example</summary>
+To achieve different color drawings, the `palette_offset` feature is used. This value offsets how the colors are indexed during the render. Using the same 2 color example as above, but combined with a `palette_offset` value of 3, now indexes `PINK` instead of `WHITE` for all pixel values of `1`. The same works for all the other color modes. Note that the `VOID` color is never shifted. A pixel value of `0` will always index `VOID`, no matter the `palette_offset`.
+
+The example below shows how a single sprite can be shown in different colors using the `palette_offset` feature. Note how the color palette [has been adjusted](#low-level-display-commands) to repeat the same colors after index 5, but with red changed to green.
+
+![Frame display sprite engine example](/frame/images/frame-sprite-engine.drawio.png)
+</details>
+
+The `data` is a lua string which is just an array of bytes, but with multiple pixels packed in each byte based on the number of colors. When drawing, the `palette_offset` is added to palette index (wrapping around at 16).
+
+<details markdown="block">
+<summary>Data String Detailed Examples</summary>
+```plaintext
+Data as Lua string:
+"\x01\xFE"
+
+Data as bits:
+00000001 11111110
+
+If num_color = 16, then this maps to 4 pixels:
+as bits:        0000 0001  1111 1110
+palette index:     0    1    15   14
+
+If num_color = 4, then this maps to 8 pixels:
+as bits:        00 00 00 01  11 11 11 10
+palette index:   0  0  0  1   3  3  3  2
+
+If num_color = 2, then this maps to 16 pixels:
+as bits:        0 0 0 0 0 0 0 1  1 1 1 1 1 1 1 0
+palette index:  0 0 0 0 0 0 0 1  1 1 1 1 1 1 1 0
+```
+</details>
+
+For example, to draw a red rectangle at position x = 100, y = 50, with width = 32 and height = 15:
+
+```lua
+frame.display.bitmap(100, 50, 32, 2, 3, string.rep("\xFF", 32 / 8 * 16))
+                     |    |   |   |  |   |"Since each byte maps to 8 pixels, we divide the width 32 by 8"
+                     |    |   |   |  |   \"and multiply by the height of 16 to get the total data length."
+                     |    |   |   |  |    "We fill that data with "\xFF" (aka 255), to fill all pixels."
+                     |    |   |   |  \"the 3rd color in the standard palette is red"
+                     |    |   |   \"we only need 2 color options, to pack 8 pixels per byte"
+                     |    |   \"the width is 32, after which it rolls onto the next line"
+                     |    \"top at 50px"
+                     \"left at 100px"
+```
 
 #### Color Palette
 {: .no_toc }
 
 The Frame display is capable of rendering up to 16 colors at a time. Each color is indexed 0-15, and are named in the following order: `VOID`, `WHITE` ,`GREY` ,`RED` ,`PINK` ,`DARKBROWN` ,`BROWN` ,`ORANGE` ,`YELLOW` ,`DARKGREEN` ,`GREEN` ,`LIGHTGREEN` ,`NIGHTBLUE` ,`SEABLUE` ,`SKYBLUE` or `CLOUDBLUE`. `VOID` represents the background (normally black) color. Each color can be overridden per frame to any 10bit YCbCr color from the colorspace shown below. This space contains a total of 1024 possible colors.
 
+<details markdown="block">
+<summary>Frame display YCbCr colorspace</summary>
 ![Frame display YCbCr colorspace](/frame/images/frame-ycbcr-colorspace.png)
+</details>
 
 The `assign_color()` function simplifies color selection by allowing the user to enter regular 24bit RGB values which are internally converted to the YCbCr colorspace. Note however that the color actually rendered will be rounded to one of the above colors.
 
-#### Sprite Engine
+Here's the default palette, as names and indices:
+<table>
+<tbody><tr>
+<td style="background-color: #000000;"><font color="White">#0<br> VOID</font></td>
+<td style="background-color: #FFFFFF;"><font color="Black">#1<br> WHITE</font></td>
+<td style="background-color: #9D9D9D;"><font color="Black">#2<br> GRAY</font></td>
+<td style="background-color: #BE2633;"><font color="Black">#3<br> RED</font></td>
+<td style="background-color: #E06F8B;"><font color="Black">#4<br> PINK</font></td>
+<td style="background-color: #493C2B;"><font color="White">#5<br> DARKBROWN</font></td>
+<td style="background-color: #A46422;"><font color="Black">#6<br> BROWN</font></td>
+<td style="background-color: #EB8931;"><font color="Black">#7<br> ORANGE</font></td>
+</tr>
+<tr>
+<td style="background-color: #F7E26B;"><font color="Black">#8<br> YELLOW</font></td>
+<td style="background-color: #2F484E;"><font color="White">#9<br> DARKGREEN</font></td>
+<td style="background-color: #44891A;"><font color="Black">#10<br> GREEN</font></td>
+<td style="background-color: #A3CE27;"><font color="Black">#11<br> LIGHTGREEN</font></td>
+<td style="background-color: #1B2632;"><font color="White">#12<br> NIGHTBLUE</font></td>
+<td style="background-color: #005784;"><font color="White">#13<br> SEABLUE</font></td>
+<td style="background-color: #31A2F2;"><font color="Black">#14<br> SKYBLUE</font></td>
+<td style="background-color: #B2DCEF;"><font color="Black">#15<br> CLOUDBLUE</font></td>
+</tr>
+</tbody></table>
+
+#### Low-Level Display Commands
 {: .no_toc }
 
-The sprite engine in Frame is capable of quickly rendering bitmap data to anywhere on the screen. Sprites data can be stored in one of three different color formats. 2 color, 4 color, and 16 color. 2 color mode will only use the first two colors in the color palette, but allows storing 8 pixels per byte of sprite data. 4 color will use the first four colors in the palette, but requires twice as much data per pixel. Finally, 16 color mode allows accessing the entire color palette, but requires 4 bits per pixel. Pixel data in Lua is simply represented as a long string of all the pixels. The `width` parameter tells the sprite engine when to move to the next line when rendering out each pixel from the string.
+| Low&nbsp;level&nbsp;functions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
+|:---------|:------------|
+| `frame.display.assign_color(color, r, g, b)`                            | Changes the rendered color in slot `color` with a new color given by the components `r`, `g,` and `b`. Valid options for `color` are: `VOID`, `WHITE` ,`GREY` ,`RED` ,`PINK` ,`DARKBROWN` ,`BROWN` ,`ORANGE` ,`YELLOW` ,`DARKGREEN` ,`GREEN` ,`LIGHTGREEN` ,`NIGHTBLUE` ,`SEABLUE` ,`SKYBLUE` or `CLOUDBLUE`. Note that changing the `VOID` color will change the rendered background color of the display. The RGB components are internally converted to a 10bit YCbCr value that represents the true colorspace of the display. There may therefore be rounding errors for certain RGB combinations
+| `frame.display.assign_color_ycbcr(color, y, cb, cr)`                    | Same as above, however the `y`, `cb`, and `cr` represent the true 10bit colorspace of the display. Each component has a range of 4, 3, and 3 bits respectively
+| `frame.display.set_brightness(brightness)`                              | Sets the brightness of the display. Valid options for `brightness` are `-2`, `-1`, `0`, `1`, or `2`. Note that higher brightness levels increase the likelihood of burn-in if static pixels are shown for long periods of time on the display
+| `frame.display.set_register(register, value)`                           | Allows hacking of the display registers. `register` and `value` should both be 8bit values
 
-Each pixel represented by the pixel data simply indexes one of the colors from the color palette. For 2 color mode, a bit (pixel) value of `1` will print a pixel of color `WHITE`. The internal font glyphs used by the `text()` function are essentially all 2 color sprites.
-
-To achieve different color text, the `palette_offset` feature is used. This value offsets how the colors are indexed during the render. Using the same 2 color example as above, but combined with a `palette_offset` value of 3, now indexes `PINK` instead of `WHITE` for all pixel values of `1`. The same works for all the other color modes. Note that the `VOID` color is never shifted. A pixel value of `0` will always index `VOID`, no matter the `palette_offset`.
-
-The example below shows how a single sprite can be shown in different colors using the `palette_offset` feature. Note how the color palette has been adjusted to repeat the same colors after index 5, but with red changed to green.
-
-![Frame display sprite engine example](/frame/images/frame-sprite-engine.drawio.png)
 
 ---
 
@@ -119,6 +213,9 @@ while true do
 end
 ```
 
+#### Low-Level Camera Commands
+{: .no_toc }
+
 | Low&nbsp;level&nbsp;functions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
 | `frame.camera.sleep()`                      | Puts the camera to sleep and reduces power consumption. Note the `frame.sleep()` function will automatically put the camera to sleep
@@ -127,6 +224,8 @@ end
 | `frame.camera.set_gain(gain)`               | Sets the gain value manually. Note that `camera.auto{}` will override this value. `gain` can be a value between `0` and `248`
 | `frame.camera.set_white_balance(r, g, b)`   | Sets the digital gains of the R, G and B channels for fine tuning white balance. `r`, `g` and `b` can be values between `0` and `1023`
 | `frame.camera.set_register(address, value)` | Allows for hacking the camera's internal registers. `address` can be any 16-bit register address of the camera, and `value` any 8-bit value to write to that address
+
+It is not necessary to manually call `frame.camera.sleep()` or `frame.camera.wake()`.
 
 ---
 
@@ -161,7 +260,7 @@ while true do
     if data ~= '' then
         -- Try to send the data as fast as possible
         while true do
-            -- If the Bluetooth is busy, this simply trys again until it gets through
+            -- If the Bluetooth is busy, this simply tries again until it gets through
             if (pcall(frame.bluetooth.send, data)) then
                 break
             end
@@ -191,7 +290,7 @@ The tap gesture will always wake up Frame from `frame.sleep()`.
 {: .no_toc }
 
 ```lua
-print(frame.imu.direction()['pitch']) -- Prints the angle of the wears head (up or down)
+print(frame.imu.direction()['pitch']) -- Prints the angle of the wearer's head (up or down)
 
 function tapped() -- Prints 'tapped' whenever the user taps the side of their Frame
     print('tapped')
@@ -204,7 +303,7 @@ frame.imu.tap_callback(tapped)
 
 ### Bluetooth
 
-The Bluetooth API allows for sending and receiving raw byte data over Bluetooth. For a full description of how this can be used, check out the [Bluetooth section](/frame/building-apps#bluetooth) of the Building Apps page.
+The Bluetooth API allows for sending and receiving raw byte data over Bluetooth. For a full description of how this can be used, check out the [Talking to the Frame over Bluetooth](/frame/building-apps-bluetooth-specs) page.
 
 | API | Description |
 |:---------|:------------|
@@ -234,14 +333,26 @@ The file system API allows for writing and reading files to Frame's non-volatile
 
 | API&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
-| `frame.file.open(filename, mode)`   | Opens a file and returns a file object. `filename` can be any name, and `mode` can be either `'read'`, `'write'`, or `'append'`.
+| `frame.file.open(filename, mode)`   | Opens a file and returns a file object. `filename` can be any name, and `mode` can be either `'read'`, `'write'`, or `'append'`
 | `frame.file.remove(name)`           | Removes a file or directory of given `name`
 | `frame.file.rename(name, new_name)` | Renames a file or directory of given `name` to `new_name`
 | `frame.file.listdir(directory)`     | Lists all files in the directory path given. E.g. `'/'` for the filesystem root directory. The list is returned as a table with `name`, `size`, and `type`
 | `frame.file.mkdir(pathname)`        | Creates a new directory with the given `pathname`
-| `f:read(*num_bytes)`                | Reads a number of bytes from a file. If no argument is give, the whole line is returned
+| `f:read(*num_bytes)`                | Reads a number of bytes from a file. If no argument is given, the whole line is returned
 | `f:write(data)`                     | Writes data to the file. `data` must be a string and can contain any byte data
 | `f:close()`                         | Closes the file. It is important to close files once done writing, otherwise they may become corrupted
+
+#### Tips
+{: .no_toc }
+
+* On many online Lua guides, the examples allow `'r'`, `'w'`, or `'a'` as shorthand for `'read'`, `'write'`, or `'append'`, however Frame does not support that.  You need to spell out the whole word.
+* GitHub Copilot and ChatGPT will always generate incorrect code like `file.read()` rather than the correct `f:read()`.  Keep a close eye on the syntax.
+* `f:read()` reads until the end of the line, so you need to call it multiple times to get through the whole file.  It will return `nil` when it has reached the end of the file.
+* There is no function to check if a file exists.  Instead you can try to open the file for reading and see if it fails.
+
+{: .warning }
+There is [an open bug](https://github.com/brilliantlabsAR/frame-codebase/issues/234) where `f:read(*num_bytes)` will not always respect the num_bytes limit.  Until that is resolved, your code should handle receiving up to 512 bytes at a time.
+
 
 #### Example
 {: .no_toc }
@@ -259,6 +370,17 @@ f:close()
 
 f = frame.file.open('/my_files/log.txt', 'append')
 f:write('Logged another line\n')
+f:close()
+
+-- Print the file contents (this simple version will fail if a line is longer than the MTU limit)
+f = frame.file.open('/my_files/log.txt', 'read')
+while true do
+    local line = f:read()
+    if line == nil then
+        break
+    end
+    print(line)
+end
 f:close()
 
 -- Print all the files in the directory
@@ -320,3 +442,47 @@ The system API provides miscellaneous functions such as `sleep` and `update`. It
 | `frame.stay_awake(enable)`            | Prevents Frame from going to sleep while it's docked onto the charging cradle. This can help during development where continuous power is needed, however may degrade the display or cause burn-in if used for extended periods of time
 | `frame.fpga_read(address, num_bytes)` | Reads a number of bytes from the FPGA at the given address
 | `frame.fpga_write(address, data)`     | Writes data to the FPGA at a given address. `data` can be a string containing any byte values
+
+---
+
+## AR Studio
+{: .no_toc }
+
+While the main way you'll use Lua on Frame is via host apps that send it over Bluetooth, it can be helpful while learning to directly write and execute Lua code on Frame using the AR Studio extension for VSCode.
+
+AR studio is an extension for VSCode designed for both Frame and Monocle. It lets you quickly start writing apps and testing them on your device. Download it [here](https://marketplace.visualstudio.com/items?itemName=brilliantlabs.brilliant-ar-studio), or simply search for Brilliant AR Studio from within the VSCode extensions tab.
+
+![Brilliant AR Studio for VSCode](/frame/images/frame-vs-code-extension.png)
+
+Once you have AR Studio installed, you can try an example using the following steps:
+
+1. Open the Command Palette using **Ctrl-Shift-P** (or **Cmd-Shift-P** on Mac)
+
+1. Type and select **Brilliant AR Studio: Initialize new project folder**
+
+1. Select Frame, and give your project a name
+
+1. Copy the following example code into `main.lua`:
+
+    ```lua
+    function change_text()
+        frame.display.clear()
+        frame.display.text('Frame tapped!', 50, 100)
+        frame.display.show()
+    end
+
+    frame.imu.tap_callback(change_text)
+    frame.display.clear()
+    frame.display.text('Tap the side of Frame', 50, 100)
+    frame.display.show()
+    ```
+
+1. Save the file, and press the **Connect** button
+
+1. VSCode will then connect to your Frame (You may need to accept pairing if you aren't already paired)
+
+1. Right click on `main.lua` and select **Upload to device**
+
+1. Your app should now be running on Frame
+
+---
