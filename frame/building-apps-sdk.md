@@ -355,6 +355,42 @@ print(await frame.evaluate("data"))
 
 </details>
 
+### Run On Wake
+
+```python
+async frame.run_on_wake(lua_script: Optional[str] = None, callback: Optional[Callable[[], None ]] = None) -> None
+```
+
+Runs the specified lua_script and/or callback when the Frame wakes up from sleep (via a tap gesture).  This allows your to define the "home "screen", for example by displaying the battery or time when the frame is woken.  In the Noa app, this is where you see the "Tap me in..." message.
+
+Any `lua_script` or `callback` will clear any previously set run on wake commands.  To remove all run on wake commands, pass `None`/`null` for both `lua_script` and `callback`.
+
+* `lua_script` *(string)*: The lua script to run on the Frame when the Frame wakes up.  This runs even if the Frame is not connected via bluetooth at the time of the wakeup.
+* `callback` *(callable)*: A callback function locally to run when the Frame wakes up.  This will only run if the Frame is connected via bluetooth at the time of the wakeup.
+
+<details markdown="block">
+<summary>Python</summary>
+
+#### Python
+{: .no_toc }
+```python
+async def run_on_wake(self, lua_script: Optional[str] = None, callback: Optional[Callable[[], None ]] = None) -> None
+```
+
+Example:
+
+```python
+# set a wake screen via script, so when you tap to wake the frame, it shows the battery level and then goes back to sleep after 10 seconds of inactivity
+await f.run_on_wake(lua_script="""frame.display.text('Battery: ' .. frame.battery_level() ..  '%', 10, 10);
+                    frame.display.show();
+                    frame.sleep(10);
+                    frame.display.text(' ',1,1);
+                    frame.display.show();
+                    frame.sleep()""")
+```
+
+</details>
+
 ### Set Print Debugging
 
 ```python
@@ -737,7 +773,7 @@ Note that each time you call `show_text()`, it will clear any previous text and 
 ### Scroll Text
 
 ```python
-async frame.display.scroll_text(self, text: str, lines_per_frame: int = 5, delay: float = 0.12)
+async frame.display.scroll_text(text: str, lines_per_frame: int = 5, delay: float = 0.12)
 ```
 
 Animates scrolling text vertically.  Best when `text` is longer than the display height.  You can adjust the speed of the scroll by changing `lines_per_frame` and `delay`, but note that depending on how much text is on the screen, a `delay` below 0.12 seconds may result in graphical glitches due to hardware limitations.
@@ -774,7 +810,7 @@ print("scrolling slowly finished")
 ### Draw Rectangle
 
 ```python
-frame.display.draw_rect(self, x: int, y: int, w: int, h: int, color: int = 1)
+frame.display.draw_rect(x: int, y: int, w: int, h: int, color: int = 1)
 ```
 
 Draws a filled rectangle specified `color` at `x`,`y` with `w` width and `h` height.
@@ -816,7 +852,7 @@ await frame.display.show()
 ### Draw Rectangle Filled
 
 ```python
-frame.display.draw_rect_filled(self, x: int, y: int, w: int, h: int, border_width: int, border_color: int, fill_color: int)
+frame.display.draw_rect_filled(x: int, y: int, w: int, h: int, border_width: int, border_color: int, fill_color: int)
 ```
 
 Draws a filled rectangle with a border and fill color at `x`,`y` with `w` width and `h` height, with an inset border `border_width` pixels wide.  The total size of the rectangle including the border is `w`x`h`.
@@ -878,7 +914,7 @@ Gets the rendered width and height of text in pixels.  Text on Frame is variable
 {: .no_toc }
 
 ```python
-frame.display.wrap_text(self, text: str, max_width: int) -> str
+frame.display.wrap_text(text: str, max_width: int) -> str
 ```
 
 Wraps text to fit within a specified width.  It does this by inserting line breaks at space characters, returning a string with extra '\n' characters where line wrapping is needed.
@@ -889,7 +925,7 @@ The microphone is accessible via the `frame.microphone` object.  The microphone 
 
 ### Record Audio
 ```python
-async frame.microphone.record_audio(self, silence_cutoff_length_in_seconds: Optional[int] = 3, max_length_in_seconds: int = 30) -> np.ndarray
+async frame.microphone.record_audio(silence_cutoff_length_in_seconds: Optional[int] = 3, max_length_in_seconds: int = 30) -> np.ndarray
 ```
 
 Records audio from the microphone and returns it as a numpy array of int16 or int8 depending on the `bit_depth`.
@@ -920,7 +956,7 @@ audio = await frame.microphone.record_audio(silence_cutoff_length_in_seconds=Non
 
 ### Save Audio File
 ```python
-async frame.microphone.save_audio_file(self, filename: str, silence_cutoff_length_in_seconds: int = 3, max_length_in_seconds: int = 30) -> float
+async frame.microphone.save_audio_file(filename: str, silence_cutoff_length_in_seconds: int = 3, max_length_in_seconds: int = 30) -> float
 ```
 
 Records audio from the microphone and saves it to a file in PCM Wav format.  Returns the number of seconds of audio recorded.
@@ -952,8 +988,8 @@ await frame.microphone.save_audio_file("audio.wav", silence_cutoff_length_in_sec
 
 ### Play Audio
 ```python
-frame.microphone.play_audio(self, audio_data: np.ndarray, sample_rate: Optional[int] = None, bit_depth: Optional[int] = None)
-async frame.microphone.play_audio_async(self, audio_data: np.ndarray, sample_rate: Optional[int] = None, bit_depth: Optional[int] = None)
+frame.microphone.play_audio(audio_data: np.ndarray, sample_rate: Optional[int] = None, bit_depth: Optional[int] = None)
+async frame.microphone.play_audio_async(audio_data: np.ndarray, sample_rate: Optional[int] = None, bit_depth: Optional[int] = None)
 ```
 
 Helpers to play audio from `record_audio()` on your computer.  `play_audio` blocks until playback is complete, while `play_audio_async` plays the audio in a coroutine.
@@ -986,8 +1022,119 @@ The `silence_threshold` property is used to get and set the threshold for detect
 
 ## Motion
 
+Motion data is available via the `frame.motion` object.  The motion data is collected by the accelerometer and compass on the Frame.  You may also register a callback for when the user taps the Frame.
+
+### Get Direction
+
+```python
+async frame.motion.get_direction() -> Direction
+```
+
+Gets the current orientation of the Frame.  Returns a `Direction` object.
+
+The `Direction` object contains the following properties:
+
+| Property     | Type   | Range         | Description                                      | Examples |
+|--------------|--------|---------------|--------------------------------------------------|---------------|
+| `roll`       | float  | -180 to 180   | The roll angle of the Frame, in degrees.         | 20.0 (right side up, head tilted to the left), -20.0 (left side up, head tilted to the right)          |
+| `pitch`      | float  | -180 to 180   | The pitch angle of the Frame, in degrees.        | 40.0 (nose pulled down, looking at the floor), -40.0 (nose pulled up, looking towards the ceiling)          |
+| `heading`    | float  | 0 to 360      | The heading angle of the Frame, in degrees.      | *not yet implemented*      |
+| `amplitude()`| float  | >= 0          | Returns the amplitude of the motion vector.      | 0 (looking straight ahead), 20 (a bit away from looking straight ahead)           |
+
+The `roll`, `pitch`, and `heading` properties represent the orientation of the Frame in 3D space. The `amplitude()` method returns the magnitude of the motion vector, which can be useful for detecting the intensity of movements.
+
+A standard "looking forward" position has a roll of 0 and a pitch of 0.
+
 {: .warning }
-The IMU functions have not yet been implemented.
+The compass data is not yet implemented, so the heading value will always be 0.  You can still get the pitch and roll values, however.
+
+<details markdown="block">
+<summary>Python</summary>
+
+#### Python
+{: .no_toc }
+
+```python
+async def get_direction(self) -> Direction
+```
+
+Example:
+
+```python
+direction = await frame.motion.get_direction()
+print(direction)
+
+intensity_of_motion = 0
+prev_direction = await f.motion.get_direction()
+for _ in range(10):
+    await asyncio.sleep(0.1)
+    direction = await f.motion.get_direction()
+    intensity_of_motion = max(intensity_of_motion, (direction-prev_direction).amplitude())
+    prev_direction = direction
+print(f"Intensity of motion: {intensity_of_motion}")
+await f.display.show_text(f"Intensity of motion: {intensity_of_motion}", align=Alignment.MIDDLE_CENTER)
+```
+
+</details>
+
+### Run On Tap
+
+```python
+async frame.motion.run_on_tap(lua_script: Optional[str] = None, callback: Optional[Callable[[], None]] = None) -> None
+```
+
+Run a Lua script and/or callback when the user taps the Frame.  Replaces any previously set callbacks.  If None is provided for both `lua_script` and `callback`, then previously set callbacks will be removed.
+
+* `lua_script` *(str)*: A Lua script to run on the Frame when the user taps the Frame.  This runs even if the Frame is not connected via bluetooth at the time of the tap.
+* `callback` *(Callable[[], None]])*: A callback function to run locally when the user taps the Frame.  This will only run if the Frame is connected via bluetooth at the time of the tap.
+
+<details markdown="block">
+<summary>Python</summary>
+
+#### Python
+{: .no_toc }
+```python
+async def run_on_tap(self, lua_script: Optional[str] = None, callback: Optional[Callable[[], None]] = None) -> None:
+```
+
+Example:
+```python
+def on_tap(self):
+    print("Frame was tapped!")
+
+# assign both a local callback and a lua script.  Or you could just do one or the other.
+await f.motion.run_on_tap(lua_script="frame.display.text('I was tapped!',1,1);frame.display.show();", callback=on_tap)
+```
+
+</details>
+
+### Wait For Tap
+```python
+async frame.motion.wait_for_tap() -> None
+```
+
+Blocks until the user taps the Frame.
+
+<details markdown="block">
+<summary>Python</summary>
+
+#### Python
+{: .no_toc }
+```python
+async def wait_for_tap(self) -> None
+```
+
+Example:
+```python
+print("Waiting for tap...")
+await f.display.show_text("Tap me to continue", align=Alignment.MIDDLE_CENTER)
+await f.motion.wait_for_tap()
+print("Tap received!")
+await f.display.show_text("tap complete", align=Alignment.MIDDLE_CENTER)
+```
+
+</details>
+
 
 # Putting It All Together
 
@@ -1026,6 +1173,10 @@ async def main():
         # It will also automatically handle responses that are too long for the MTU automatically.
         print(await f.evaluate("1+2"))
 
+        print("Tap the Frame to continue...")
+        await f.display.show_text("Tap the Frame to take a photo", align=Alignment.MIDDLE_CENTER)
+        await f.motion.wait_for_tap()
+
         # take a photo and save to disk
         await f.display.show_text("Taking photo...", align=Alignment.MIDDLE_CENTER)
         await f.camera.save_photo("frame-test-photo.jpg")
@@ -1035,6 +1186,36 @@ async def main():
         # or get the raw bytes
         photo_bytes = await f.camera.take_photo(autofocus_seconds=1)
 
+        print("About to record until you stop talking")
+        await f.display.show_text("Say something...", align=Alignment.MIDDLE_CENTER)
+		# record audio to a file
+        length = await f.microphone.save_audio_file("test-audio.wav")
+        print(f"Recorded {length:01.1f} seconds: \"./test-audio.wav\"")
+        await f.display.show_text(f"Recorded {length:01.1f} seconds", align=Alignment.MIDDLE_CENTER)
+        await asyncio.sleep(3)
+
+        # or get the audio directly in memory
+        await f.display.show_text("Say something else...", align=Alignment.MIDDLE_CENTER)
+        audio_data = await f.microphone.record_audio(max_length_in_seconds=10)
+        await f.display.show_text(f"Playing back {len(audio_data) / f.microphone.sample_rate:01.1f} seconds of audio", align=Alignment.MIDDLE_CENTER)
+        # you can play back the audio on your computer
+        f.microphone.play_audio(audio_data)
+        # or process it using other audio handling libraries, upload to a speech-to-text service, etc.
+
+        print("Move around to track intensity of your motion")
+        await f.display.show_text("Move around to track intensity of your motion", align=Alignment.MIDDLE_CENTER)
+        intensity_of_motion = 0
+        prev_direction = await f.motion.get_direction()
+        for _ in range(10):
+            await asyncio.sleep(0.1)
+            direction = await f.motion.get_direction()
+            intensity_of_motion = max(intensity_of_motion, (direction-prev_direction).amplitude())
+            prev_direction = direction
+        print(f"Intensity of motion: {intensity_of_motion:01.2f}")
+        await f.display.show_text(f"Intensity of motion: {intensity_of_motion:01.2f}", align=Alignment.MIDDLE_CENTER)
+        print("Tap the Frame to continue...")
+        await f.motion.wait_for_tap()
+		
         # Show the full palette
         width = 640 // 4
         height = 400 // 4
@@ -1044,7 +1225,9 @@ async def main():
             await f.display.draw_rect(tile_x*width+1, tile_y*height+1, width, height, color)
             await f.display.write_text(f"{color}", tile_x*width+width//2+1, tile_y*height+height//2+1)
         await f.display.show()
-        await asyncio.sleep(5)
+
+        print("Tap the Frame to continue...")
+        await f.motion.wait_for_tap()
 
         # scroll some long text
         await f.display.scroll_text("Never gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you")
@@ -1069,7 +1252,25 @@ async def main():
         # now show what we've been drawing to the buffer
         await f.display.show()
 
+        # set a wake screen via script, so when you tap to wake the frame, it shows the battery and time
+        await f.run_on_wake("""frame.display.text('Battery: ' .. frame.battery_level() ..  '%', 10, 10);
+                            if frame.time.utc() > 10000 then
+                                local time_now = frame.time.date();
+                                frame.display.text(time_now['hour'] .. ':' .. time_now['minute'], 300, 160);
+                                frame.display.text(time_now['month'] .. '/' .. time_now['day'] .. '/' .. time_now['year'], 300, 220) 
+                            end;
+                            frame.display.show();
+                            frame.sleep(10);
+                            frame.display.text(' ',1,1);
+                            frame.display.show();
+                            frame.sleep()""")
+
+        # tell frame to sleep after 10 seconds then clear the screen and go to sleep, without blocking for that
+        await f.run_lua("frame.sleep(10);frame.display.text(' ',1,1);frame.display.show();frame.sleep()")
+
     print("disconnected")
+
+
 
 asyncio.run(main())
 
