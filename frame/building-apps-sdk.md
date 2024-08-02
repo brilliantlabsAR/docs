@@ -22,7 +22,7 @@ The most common structure is to build an iOS or Android mobile app which uses ou
 - [x] Python from a Mac, Linux, or Windows computer
 - [ ] Swift from a Mac or iOS device
 - [ ] Kotlin from Android
-- [x] Flutter for mobile (and computer?)
+- [x] Flutter for mobile (iOS and Adnroid)
 - [ ] React Native for mobile (and computer?)
 
 ### Status
@@ -32,6 +32,10 @@ The most common structure is to build an iOS or Android mobile app which uses ou
 |:------------------|:------------------|:------------------|:------------------|:------------------|
 | [![Available on PyPI](https://img.shields.io/pypi/v/frame_sdk)](https://pypi.org/project/frame-sdk/) | Coming soon | Coming soon | [![Available on Pub.dev](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2FOkGoDoIt%2Fframe-sdk-flutter%2Fmaster%2Fpubspec.yaml&query=version&prefix=v&label=pub.dev)](https://pub.dev/packages/frame_sdk)
  | Coming soon |
+
+The Python SDK is feature-complete, but will be updated continuously as the underlying platform capabilities change.
+
+The Flutter SDK is an early preview and may be incomplete or unstable.  Please report any issues to us on discord and we will fix them ASAP.
 
 ---
 
