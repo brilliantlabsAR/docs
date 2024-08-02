@@ -22,7 +22,7 @@ The most common structure is to build an iOS or Android mobile app which uses ou
 - [x] Python from a Mac, Linux, or Windows computer
 - [ ] Swift from a Mac or iOS device
 - [ ] Kotlin from Android
-- [ ] Flutter for mobile (and computer?)
+- [x] Flutter for mobile (and computer?)
 - [ ] React Native for mobile (and computer?)
 
 ### Status
@@ -30,7 +30,8 @@ The most common structure is to build an iOS or Android mobile app which uses ou
 
 | Python            | Swift             | Kotlin            | Flutter           | React native      |
 |:------------------|:------------------|:------------------|:------------------|:------------------|
-| Available, mostly complete | Coming soon | Coming soon |  Coming soon | Coming soon |
+| [![Available on PyPI](https://img.shields.io/pypi/v/frame_sdk)](https://pypi.org/project/frame-sdk/) | Coming soon | Coming soon | [![Available on Pub.dev](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2FOkGoDoIt%2Fframe-sdk-flutter%2Fmaster%2Fpubspec.yaml&query=version&prefix=v&label=pub.dev)](https://pub.dev/packages/frame_sdk)
+ | Coming soon |
 
 ---
 
@@ -78,6 +79,14 @@ asyncio.run(main())
 ```
 </details>
 
+### Flutter
+
+The `frame_sdk` library is available [on pub.dev](https://pub.dev/packages/frame_sdk)).
+
+```sh
+flutter pub add frame_sdk
+```
+
 ## Basic Communication
 
 Where available, all Frame communication happens via async functions.
@@ -105,6 +114,60 @@ async def main():
 # make sure you run it asynchronously
 asyncio.run(main())
 ```
+
+### Flutter SDK Basics
+
+Make sure to `import 'package:frame_sdk/frame_sdk.dart';`.  You may also need to import `package:frame_sdk/bluetooth.dart`, `package:frame_sdk/display.dart`, `package:frame_sdk/camera.dart`, or `package:frame_sdk/motion.dart` to access types, enums, and constants.
+
+At some point early in your app's execution, you should call `BrilliantBluetooth.requestPermission();` to prompt the user to provide Bluetooth permission.
+
+You can see an example Flutter usage in [the package's example page](https://pub.dev/packages/frame_sdk/example).  Here's a very simplified example:
+
+```dart
+// other imports
+import 'package:frame_sdk/frame_sdk.dart';
+
+void main() {
+  // Request bluetooth permission
+  BrilliantBluetooth.requestPermission();
+  runApp(const MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late final Frame frame;
+
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState();
+    frame = Frame();
+
+    runExample();
+  }
+
+  Future<void> runExample() async {
+    // connect
+    await frame.connect();
+    // Check if connected
+    print("Connected: ${frame.isConnected}");
+    // Get battery level
+    int batteryLevel = await frame.getBatteryLevel();
+    print("Frame battery: $batteryLevel%");
+
+    // ... continue here ...
+  }
+
+  // Future<void> initPlatformState() and other boilerplate flutter here
+}
+```
+
 
 ### Sending Lua to the Frame
 
@@ -155,6 +218,46 @@ await frame.run_lua("Syntax?:Who$needs!syntax?", checked=True)
 
 </details>
 
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+
+```dart
+Future<String?> runLua(String luaString,
+      {bool awaitPrint = false,
+      bool checked = false,
+      Duration? timeout,
+      bool withoutHelpers = false}) async
+```
+
+Examples:
+
+```dart
+// basic usage
+await frame.runLua("frame.display.text('Hello world', 50, 100);frame.display.show()");
+
+// return data via print()
+String curTime = await frame.runLua("print(frame.time.utc())", awaitPrint: true);
+print("Frame epoch time is $curTime.");
+
+// both the lua code you send and any replies sent back via print() can be of any length
+print(await frame.runLua("text = 'Look ma, no MTU limit! ';text=text..text;text=text..text;text=text..text;text=text..text;print(text)", awaitPrint: true));
+
+// let long running commands run in parallel
+await frame.runLua("spinning_my_wheels = 0;while true do;spinning_my_wheels=spinning_my_wheels+1;end", checked: false);
+print("Frame is currently spinning its wheels, but Dart keeps going");
+
+// raises a timeout exception after 10 seconds
+await frame.runLua("spinning_my_wheels = 0;while true do;spinning_my_wheels=spinning_my_wheels+1;end", checked: true, timeout: Duration(seconds: 10));
+
+// raises an exception with a Lua syntax error
+await frame.runLua("Syntax?:Who\$needs!syntax?", checked: true);
+```
+
+</details>
+
 ### Evaluating a Lua expression on the Frame
 
 ```python
@@ -196,6 +299,35 @@ print(await frame.evaluate("not_defined"))
 
 </details>
 
+
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+
+```dart
+Future<String> evaluate(String luaExpression) async
+```
+
+Examples:
+
+```dart
+print(await frame.evaluate("1+2"));
+// prints 3
+
+print(await frame.evaluate("frame.battery_level() > 50"));
+// prints True or False
+
+print(await frame.evaluate("'w00t'"));
+// prints w00t
+
+// will throw an exception if there is no value returned or if there is a syntax error
+print(await frame.evaluate("not_defined"));
+```
+
+</details>
+
 ---
 
 ## System Functions
@@ -225,6 +357,23 @@ print(f"Frame battery: {await frame.get_battery_level()}%")
 
 </details>
 
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<int> getBatteryLevel()
+```
+
+Example:
+
+```dart
+int batteryLevel = await frame.getBatteryLevel();
+print("Frame battery: $batteryLevel%");
+```
+
+</details>
 
 ### Sleep
 
@@ -259,6 +408,29 @@ print("Frame is sleeping, but python is still running")
 
 </details>
 
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<void> sleep([double? seconds])
+```
+
+Examples:
+
+```dart
+// wait for 5 seconds
+await frame.sleep(5);
+print("Frame is sleeping, but Dart is still running");
+
+// wait until tapped
+await frame.sleep();
+print("Frame is sleeping, but Dart is still running");
+```
+
+</details>
+
 ### Stay Awake
 
 ```python
@@ -285,6 +457,24 @@ Example:
 ```python
 await frame.stay_awake(True)
 # don't forget to turn this back off or you may damage your Frame
+```
+
+</details>
+
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<void> stayAwake(bool value)
+```
+
+Example:
+
+```dart
+await frame.stayAwake(true);
+// don't forget to turn this back off or you may damage your Frame
 ```
 
 </details>
@@ -320,6 +510,29 @@ print(await frame.evaluate("'I\\m back!'"))
 
 </details>
 
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<void> sendBreakSignal()
+```
+
+Example:
+```dart
+await frame.runLua("spinning_my_wheels = 0;while true do;spinning_my_wheels=spinning_my_wheels+1;end", checked: false);
+print("Frame is currently spinning its wheels, but Dart keeps going");
+
+await frame.bluetooth.sendBreakSignal();
+print("Now Frame has been broken out of its loop and we can talk to it again");
+
+print(await frame.evaluate("'I\\'m back!'"));
+// prints I'm back!
+```
+
+</details>
+
 ### Send Reset Signal
 
 ```python
@@ -351,6 +564,33 @@ print("Frame has been reset")
 print(await frame.evaluate("data"))
 # raises an exception
 # TODO: (or returns nil? not actually sure)
+```
+
+</details>
+
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<void> sendResetSignal()
+```
+
+Example:
+
+```dart
+await frame.runLua("data = 1", checked: true);
+print(await frame.evaluate("data"));
+// prints 1
+
+
+await frame.bluetooth.sendResetSignal();
+print("Frame has been reset");
+
+print(await frame.evaluate("data"));
+// raises an exception
+// TODO: (or returns nil? not actually sure)
 ```
 
 </details>
@@ -391,6 +631,31 @@ await f.run_on_wake(lua_script="""frame.display.text('Battery: ' .. frame.batter
 
 </details>
 
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<void> runOnWake({String? luaScript, void Function()? callback})
+```
+
+Example:
+
+```dart
+// set a wake screen via script, so when you tap to wake the frame, it shows the battery level and then goes back to sleep after 10 seconds of inactivity
+await frame.runOnWake(
+  luaScript: """frame.display.text('Battery: ' .. frame.battery_level() ..  '%', 10, 10);
+                    frame.display.show();
+                    frame.sleep(10);
+                    frame.display.text(' ',1,1);
+                    frame.display.show();
+                    frame.sleep()""",
+);
+```
+
+</details>
+
 ### Set Print Debugging
 
 ```python
@@ -418,6 +683,27 @@ print(await frame.evaluate("'Hello world!'"))
 # prints:
 # b'print(\'Hello world!\')'
 # Hello world!
+```
+
+</details>
+
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+void setPrintDebugging(bool value)
+```
+
+Example:
+
+```dart
+frame.bluetooth.setPrintDebugging(true);
+print(await frame.evaluate("'Hello world!'"));
+// prints:
+// b'print(\'Hello world!\')'
+// Hello world!
 ```
 
 </details>
@@ -467,6 +753,39 @@ print(full_file_data.decode())
 
 </details>
 
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<Uint8List> waitForData({Duration timeout = const Duration(seconds: 30)})
+```
+
+Examples:
+
+```dart
+await frame.runLua("""
+local mtu = frame.bluetooth.max_length()
+local f = frame.file.open("example_file.txt", "read")
+local chunkIndex = 0
+while true do
+    local this_chunk = f:read(mtu-1)
+    if this_chunk == nil then
+        break
+    end
+    frame.bluetooth.send('\\001' .. this_chunk)
+    chunkIndex = chunkIndex + 1
+end
+frame.bluetooth.send('\\002' .. chunkIndex)
+""", checked: false);
+
+Uint8List full_file_data = await frame.bluetooth.waitForData();
+print(utf8.decode(full_file_data));
+```
+
+</details>
+
 ---
 
 ## Filesystem
@@ -508,6 +827,23 @@ with open("icons.dat", "rb") as f:
 
 </details>
 
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<void> writeFile(String path, Uint8List data, {bool checked = false})
+```
+
+Example:
+
+```dart
+await frame.files.writeFile("greeting.txt", utf8.encode("Hello world"));
+```
+
+</details>
+
 ### Read File
 
 ```python
@@ -542,6 +878,24 @@ with open("~/blob.bin", "wb") as f:
 
 </details>
 
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<Uint8List> readFile(String path)
+```
+
+Example:
+
+```dart
+String fileContent = utf8.decode(await frame.files.readFile("greeting.txt"));
+print(fileContent);
+```
+
+</details>
+
 ### Delete File
 
 ```python
@@ -570,6 +924,24 @@ print(f"Deleted? {did_delete}")
 
 </details>
 
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<bool> deleteFile(String path)
+```
+
+Example:
+
+```dart
+bool didDelete = await frame.files.deleteFile("main.lua");
+print("Deleted? $didDelete");
+```
+
+</details>
+
 ### File Exists?
 ```python
 async frame.files.file_exists(path: str) -> bool
@@ -593,6 +965,24 @@ Example:
 ```python
 exists = await frame.files.file_exists("main.lua")
 print(f"Main.lua {'exists' if exists else 'does not exist'}")
+```
+
+</details>
+
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<bool> fileExists(String path)
+```
+
+Example:
+
+```dart
+bool exists = await frame.files.fileExists("main.lua");
+print("Main.lua ${exists ? 'exists' : 'does not exist'}");
 ```
 
 </details>
@@ -684,6 +1074,40 @@ await f.camera.save_photo("frame-test-photo.jpg")
 
 # or with more control
 await f.camera.save_photo("frame-test-photo-2.jpg", autofocus_seconds=3, quality=f.camera.HIGH_QUALITY, autofocus_type=f.camera.AUTOFOCUS_TYPE_CENTER_WEIGHTED)
+```
+
+</details>
+
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<Uint8List> takePhoto({int? autofocusSeconds = 3, PhotoQuality quality = PhotoQuality.medium, AutoFocusType autofocusType = AutoFocusType.average})
+```
+
+Examples:
+
+```dart
+// Take a photo
+Uint8List photoBytes = await frame.camera.takePhoto();
+
+// Take a photo with more control
+Uint8List photoBytes = await frame.camera.takePhoto(
+  autofocusSeconds: 2,
+  quality: PhotoQuality.high,
+  autofocusType: AutoFocusType.centerWeighted
+);
+
+// Turn off auto-rotation and metadata
+frame.camera.autoProcessPhoto = false;
+// Take a very fast photo
+Uint8List photoBytes = await frame.camera.takePhoto(
+  autofocusSeconds: null,
+  quality: PhotoQuality.low
+);
+print(photoBytes.length);
 ```
 
 </details>
