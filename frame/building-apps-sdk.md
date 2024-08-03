@@ -25,13 +25,14 @@ The most common structure is to build an iOS or Android mobile app which uses ou
 - [x] Flutter for mobile (iOS and Adnroid)
 - [ ] React Native for mobile (and computer?)
 
+For each section below, you may expand the platform you are targeting to see details specific to that platform, including function signatures and examples.
+
 ### Status
 {: .no_toc }
 
 | Python            | Swift             | Kotlin            | Flutter           | React native      |
 |:------------------|:------------------|:------------------|:------------------|:------------------|
-| [![Available on PyPI](https://img.shields.io/pypi/v/frame_sdk)](https://pypi.org/project/frame-sdk/) | Coming soon | Coming soon | [![Available on Pub.dev](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2FOkGoDoIt%2Fframe-sdk-flutter%2Fmaster%2Fpubspec.yaml&query=version&prefix=v&label=pub.dev)](https://pub.dev/packages/frame_sdk)
- | Coming soon |
+| [![Available on PyPI](https://img.shields.io/pypi/v/frame_sdk)](https://pypi.org/project/frame-sdk/) | Coming soon | Coming soon | [![Available on Pub.dev](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2FOkGoDoIt%2Fframe-sdk-flutter%2Fmaster%2Fpubspec.yaml&query=version&prefix=v&label=pub.dev)](https://pub.dev/packages/frame_sdk) | Coming soon |
 
 The Python SDK is feature-complete, but will be updated continuously as the underlying platform capabilities change.
 
@@ -85,7 +86,7 @@ asyncio.run(main())
 
 ### Flutter
 
-The `frame_sdk` library is available [on pub.dev](https://pub.dev/packages/frame_sdk)).
+The `frame_sdk` library is available [on pub.dev](https://pub.dev/packages/frame_sdk).
 
 ```sh
 flutter pub add frame_sdk
@@ -93,7 +94,7 @@ flutter pub add frame_sdk
 
 ## Basic Communication
 
-Where available, all Frame communication happens via async functions.
+Where available, most Frame communication happens via async functions.
 
 ### Python SDK Basics
 
@@ -171,7 +172,6 @@ class _MyAppState extends State<MyApp> {
   // Future<void> initPlatformState() and other boilerplate flutter here
 }
 ```
-
 
 ### Sending Lua to the Frame
 
@@ -379,15 +379,15 @@ print("Frame battery: $batteryLevel%");
 
 </details>
 
-### Sleep
+### Delay
 
 ```python
-async frame.sleep(seconds: Optional[float])
+async frame.delay(seconds: float)
 ```
 
-Sleeps for a given number of seconds. If no argument is given, Frame will go to sleep until a tap gesture wakes it up.  This does not block, so your calling code will continue even while Frame sleeps.
+Delays execution on Frame for a given number of seconds.  Technically this sends a sleep command, but it doesn't actually change the power mode.  This function does not block, returning immediately.
 
-* `seconds` *(optional float)*: Seconds do sleep at a float, such as 1.25 or 0.01.  If not specified (or `None`/`null`), Frame will go to sleep until a tap gesture wakes it up.
+* `seconds` *(float)*: Seconds to delay.
 
 <details markdown="block">
 <summary>Python</summary>
@@ -395,19 +395,15 @@ Sleeps for a given number of seconds. If no argument is given, Frame will go to 
 #### Python
 {: .no_toc }
 ```python
-async def sleep(self, seconds: Optional[float])
+async def delay(self, seconds: float)
 ```
 
 Examples:
 
 ```python
 # wait for 5 seconds
-await frame.sleep(5)
-print("Frame is sleeping, but python is still running")
-
-# wait until tapped
-await frame.sleep()
-print("Frame is sleeping, but python is still running")
+await frame.delay(5)
+print("Frame is paused, but python is still running")
 ```
 
 </details>
@@ -418,19 +414,75 @@ print("Frame is sleeping, but python is still running")
 #### Flutter
 {: .no_toc }
 ```dart
-Future<void> sleep([double? seconds])
+Future<void> delay(double seconds)
 ```
 
 Examples:
 
 ```dart
 // wait for 5 seconds
-await frame.sleep(5);
-print("Frame is sleeping, but Dart is still running");
+await frame.delay(5);
+print("Frame is paused, but Dart is still running");
+```
 
-// wait until tapped
+</details>
+
+### Sleep
+
+```python
+async frame.sleep(deep_sleep: bool = False) -> None
+```
+
+Puts the Frame into sleep mode.  There are two modes: normal and deep.
+
+Normal sleep mode can still receive bluetooth data, and is essentially the same as clearing the display and putting the camera in low power mode.  The Frame will retain the time and date, and any functions and variables will stay in memory.
+
+Deep sleep mode saves additional power, but has more limitations.  The Frame will not retain the time and date, and any functions and variables will not stay in memory.  Blue data will not be received.  The only way to wake the Frame from deep sleep is to tap it.
+
+The difference in power usage is fairly low, so it's often best to use normal sleep mode unless you need the extra power savings.
+
+* `deep_sleep` *(boolean)*: `True` for deep sleep, `False` for normal sleep.  Defaults to `False`.
+
+<details markdown="block">
+<summary>Python</summary>
+
+#### Python
+{: .no_toc }
+
+```python
+async def sleep(self, deep_sleep: bool = False) -> None
+```
+
+Examples:
+
+```python
+# put the Frame into normal sleep mode
+await frame.sleep()
+
+# put the Frame into deep sleep mode
+await frame.sleep(True)
+```
+
+</details>
+
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+
+```dart
+Future<void> sleep({bool deepSleep = false})
+```
+
+Examples:
+
+```dart
+// put the Frame into normal sleep mode
 await frame.sleep();
-print("Frame is sleeping, but Dart is still running");
+
+// put the Frame into deep sleep mode
+await frame.sleep(deepSleep: true);
 ```
 
 </details>
@@ -660,13 +712,15 @@ await frame.runOnWake(
 
 </details>
 
-### Set Print Debugging
+### Set Print Debugging (Python)
 
 ```python
 frame.bluetooth.set_print_debugging(value: bool)
 ```
 
-Sometimes it's useful for debugging to see all raw data that is transmitted to Frame, as well as the raw data received from Frame.  This function allows you to turn that on or off.
+In Python, sometimes it's useful for debugging to see all raw data that is transmitted to Frame, as well as the raw data received from Frame.  This function allows you to turn that on or off.
+
+For Flutter, debug info is logged to the Logger, so set the log level or subscribe to the logger to see logging instead.
 
 * `value` *(boolean)*: `True` to enable, `False` to disable.
 
@@ -687,27 +741,6 @@ print(await frame.evaluate("'Hello world!'"))
 # prints:
 # b'print(\'Hello world!\')'
 # Hello world!
-```
-
-</details>
-
-<details markdown="block">
-<summary>Flutter</summary>
-
-#### Flutter
-{: .no_toc }
-```dart
-void setPrintDebugging(bool value)
-```
-
-Example:
-
-```dart
-frame.bluetooth.setPrintDebugging(true);
-print(await frame.evaluate("'Hello world!'"));
-// prints:
-// b'print(\'Hello world!\')'
-// Hello world!
 ```
 
 </details>
@@ -843,7 +876,13 @@ Future<void> writeFile(String path, Uint8List data, {bool checked = false})
 Example:
 
 ```dart
-await frame.files.writeFile("greeting.txt", utf8.encode("Hello world"));
+await frame.files.writeFile("example_file.txt", utf8.encode('Hello "real" world'), checked: true);
+
+String lyrics = "Never gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you";
+await frame.files.writeFile("/music/rick_roll.txt", utf8.encode(lyrics), checked: true);
+
+ByteData data = await rootBundle.load('assets/icons.dat');
+await frame.files.writeFile("/sprites/icons.dat", data.buffer.asUint8List());
 ```
 
 </details>
@@ -1004,16 +1043,18 @@ The `frame.camera.auto_sleep` function is currently ignored pending further test
 ### Take Photo
 
 ```python
-async frame.camera.take_photo(autofocus_seconds: Optional[int] = 3, quality: int = MEDIUM_QUALITY, autofocus_type: str = AUTOFOCUS_TYPE_AVERAGE) -> bytes:
+async frame.camera.take_photo(autofocus_seconds: Optional[int] = 3, quality: Quality = Quality.MEDIUM, autofocus_type: AutofocusType = AutofocusType.AVERAGE) -> bytes:
 ```
 
 Take a photo with the camera and return the photo data in jpeg format as bytes.
 
 By default, the image is rotated to the correct orientation and some metadata is added.  If you want to skip these, then set `frame.camera.auto_process_photo` to `False`.  This will result in a photo that is rotated 90 degrees clockwise and has no metadata.
 
+You'll need to import `Quality` and `AutofocusType` from `frame.camera` to use these.
+
 * `autofocus_seconds` *(optional int)*: If `autofocus_seconds` is provided, the camera will attempt to set exposure and other setting automatically for the specified number of seconds before taking a photo.  Defaults to 3 seconds.  If you want to skip autofocus altogether, then set this to `None`/`null`.
-* `quality` *(int)*: The quality of the photo to take.  Defaults to `frame.camera.MEDIUM_QUALITY`.  Values are `frame.camera.LOW_QUALITY` (10), `frame.camera.MEDIUM_QUALITY` (25), `frame.camera.HIGH_QUALITY` (50), and `frame.camera.FULL_QUALITY` (100).
-* `autofocus_type` *(str)*: The type of autofocus to use.  Defaults to `frame.camera.AUTOFOCUS_TYPE_AVERAGE`.  Values are `frame.camera.AUTOFOCUS_TYPE_AVERAGE` ("AVERAGE"), `frame.camera.AUTOFOCUS_TYPE_SPOT` ("SPOT"), and `frame.camera.AUTOFOCUS_TYPE_CENTER_WEIGHTED` ("CENTER_WEIGHTED").
+* `quality` *(Quality)*: The quality of the photo to take.  Defaults to `Quality.MEDIUM`.  Values are `Quality.LOW` (10), `Quality.MEDIUM` (25), `Quality.HIGH` (50), and `Quality.FULL` (100).
+* `autofocus_type` *(AutofocusType)*: The type of autofocus to use.  Defaults to `AutofocusType.AVERAGE`.  Values are `AutofocusType.AVERAGE` ("AVERAGE"), `AutofocusType.SPOT` ("SPOT"), and `AutofocusType.CENTER_WEIGHTED` ("CENTER_WEIGHTED").
 
 
 <details markdown="block">
@@ -1022,62 +1063,27 @@ By default, the image is rotated to the correct orientation and some metadata is
 #### Python
 {: .no_toc }
 ```python
-async def take_photo(self, autofocus_seconds: Optional[int] = 3, quality: int = MEDIUM_QUALITY, autofocus_type: str = AUTOFOCUS_TYPE_AVERAGE) -> bytes
+async def take_photo(self, autofocus_seconds: Optional[int] = 3, quality: Quality = Quality.MEDIUM, autofocus_type: AutofocusType = AutofocusType.AVERAGE) -> bytes
 ```
 
 Examples:
 
 ```python
+from frame.camera import Quality, AutofocusType
+
 # take a photo
 photo_bytes = await frame.camera.take_photo()
 
 # take a photo with more control and save to disk
-photo_bytes = await frame.camera.take_photo(autofocus_seconds=2, quality=frame.camera.HIGH_QUALITY, autofocus_type=frame.camera.AUTOFOCUS_TYPE_CENTER_WEIGHTED)
+photo_bytes = await frame.camera.take_photo(autofocus_seconds=2, quality=Quality.HIGH, autofocus_type=AutofocusType.CENTER_WEIGHTED)
 with open("photo.jpg", "wb") as file:
     file.write(photo_bytes)
 
 # turn off auto-rotation and metadata
 frame.camera.auto_process_photo = False
 # take a very fast photo
-photo_bytes = await frame.camera.take_photo(autofocus_seconds=None, quality=frame.camera.LOW_QUALITY)
+photo_bytes = await frame.camera.take_photo(autofocus_seconds=None, quality=Quality.LOW)
 print(len(photo_bytes))
-```
-
-</details>
-
-### Save Photo
-
-```python
-async frame.camera.save_photo(path: str, autofocus_seconds: Optional[int] = 3, quality: int = MEDIUM_QUALITY, autofocus_type: str = AUTOFOCUS_TYPE_AVERAGE)
-```
-
-Take a photo with the camera and save it to disk as a jpeg image.  This is the same as calling `frame.camera.take_photo()` and then saving the bytes to disk.
-
-By default, the image is rotated to the correct orientation and some metadata is added.  If you want to skip these, then set `frame.camera.auto_process_photo` to `False`.  This will result in a photo that is rotated 90 degrees clockwise and has no metadata.
-
-* `path` *(string)*: The local path to save the photo.  The photo is always saved in jpeg format regardless of the extension you specify.
-* `autofocus_seconds` *(optional int)*: If `autofocus_seconds` is provided, the camera will attempt to set exposure and other setting automatically for the specified number of seconds before taking a photo.  Defaults to 3 seconds.  If you want to skip autofocus altogether, then set this to `None`/`null`.
-* `quality` *(int)*: The quality of the photo to take.  Defaults to `frame.camera.MEDIUM_QUALITY`.  Values are `frame.camera.LOW_QUALITY` (10), `frame.camera.MEDIUM_QUALITY` (25), `frame.camera.HIGH_QUALITY` (50), and `frame.camera.FULL_QUALITY` (100).
-* `autofocus_type` *(str)*: The type of autofocus to use.  Defaults to `frame.camera.AUTOFOCUS_TYPE_AVERAGE`.  Values are `frame.camera.AUTOFOCUS_TYPE_AVERAGE` ("AVERAGE"), `frame.camera.AUTOFOCUS_TYPE_SPOT` ("SPOT"), and `frame.camera.AUTOFOCUS_TYPE_CENTER_WEIGHTED` ("CENTER_WEIGHTED").
-
-<details markdown="block">
-<summary>Python</summary>
-
-#### Python
-{: .no_toc }
-
-```python
-async def save_photo(self, path: str, autofocus_seconds: Optional[int] = 3, quality: int = MEDIUM_QUALITY, autofocus_type: str = AUTOFOCUS_TYPE_AVERAGE)
-```
-
-Examples:
-
-```python
-# take a photo and save to disk
-await f.camera.save_photo("frame-test-photo.jpg")
-
-# or with more control
-await f.camera.save_photo("frame-test-photo-2.jpg", autofocus_seconds=3, quality=f.camera.HIGH_QUALITY, autofocus_type=f.camera.AUTOFOCUS_TYPE_CENTER_WEIGHTED)
 ```
 
 </details>
@@ -1088,12 +1094,14 @@ await f.camera.save_photo("frame-test-photo-2.jpg", autofocus_seconds=3, quality
 #### Flutter
 {: .no_toc }
 ```dart
-Future<Uint8List> takePhoto({int? autofocusSeconds = 3, PhotoQuality quality = PhotoQuality.medium, AutoFocusType autofocusType = AutoFocusType.average})
+Future<Uint8List> takePhoto({int? autofocusSeconds = 3, PhotoQuality quality = PhotoQuality.medium, AutoFocusType autofocusType = AutoFocusType.average}) async
 ```
 
 Examples:
 
 ```dart
+import 'package:frame/camera.dart';
+
 // Take a photo
 Uint8List photoBytes = await frame.camera.takePhoto();
 
@@ -1116,6 +1124,76 @@ print(photoBytes.length);
 
 </details>
 
+### Save Photo
+
+```python
+async frame.camera.save_photo(path: str, autofocus_seconds: Optional[int] = 3, quality: Quality = Quality.MEDIUM, autofocus_type: AutofocusType = AutofocusType.AVERAGE)
+```
+
+Take a photo with the camera and save it to disk as a jpeg image.  This is the same as calling `frame.camera.take_photo()` and then saving the bytes to disk.
+
+By default, the image is rotated to the correct orientation and some metadata is added.  If you want to skip these, then set `frame.camera.auto_process_photo` to `False`.  This will result in a photo that is rotated 90 degrees clockwise and has no metadata.
+
+You'll need to import `Quality` and `AutofocusType` from `frame.camera` to use these.
+
+* `path` *(string)*: The local path to save the photo.  The photo is always saved in jpeg format regardless of the extension you specify.
+* `autofocus_seconds` *(optional int)*: If `autofocus_seconds` is provided, the camera will attempt to set exposure and other setting automatically for the specified number of seconds before taking a photo.  Defaults to 3 seconds.  If you want to skip autofocus altogether, then set this to `None`/`null`.
+* `quality` *(Quality)*: The quality of the photo to take.  Defaults to `Quality.MEDIUM`.  Values are `Quality.LOW` (10), `Quality.MEDIUM` (25), `Quality.HIGH` (50), and `Quality.FULL` (100).
+* `autofocus_type` *(AutofocusType)*: The type of autofocus to use.  Defaults to `AutofocusType.AVERAGE`.  Values are `AutofocusType.AVERAGE` ("AVERAGE"), `AutofocusType.SPOT` ("SPOT"), and `AutofocusType.CENTER_WEIGHTED` ("CENTER_WEIGHTED").
+
+<details markdown="block">
+<summary>Python</summary>
+
+#### Python
+{: .no_toc }
+
+```python
+async def save_photo(self, path: str, autofocus_seconds: Optional[int] = 3, quality: Quality = Quality.MEDIUM, autofocus_type: AutofocusType = AutofocusType.AVERAGE)
+```
+
+Examples:
+
+```python
+from frame.camera import Quality, AutofocusType
+
+# take a photo and save to disk
+await f.camera.save_photo("frame-test-photo.jpg")
+
+# or with more control
+await f.camera.save_photo("frame-test-photo-2.jpg", autofocus_seconds=3, quality=Quality.HIGH, autofocus_type=AutofocusType.CENTER_WEIGHTED)
+```
+
+</details>
+
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<void> savePhoto(String path, {int? autofocusSeconds = 3, PhotoQuality quality = PhotoQuality.medium, AutoFocusType autofocusType = AutoFocusType.average}) async
+```
+
+Examples:
+
+```dart
+import 'package:frame/camera.dart';
+
+// take a photo and save to disk
+await frame.camera.savePhoto("frame-test-photo.jpg");
+
+// or with more control
+await frame.camera.savePhoto(
+  "frame-test-photo-2.jpg",
+  autofocusSeconds: 3,
+  quality: PhotoQuality.high,
+  autofocusType: AutoFocusType.centerWeighted
+);
+
+```
+
+</details>
+
 ---
 
 ## Display
@@ -1129,7 +1207,7 @@ The Frame display is capable of rendering up to 16 colors at one time. These col
 ### Write Text
 
 ```python
-async frame.display.write_text(text: str, x: int = 1, y: int = 1, max_width: Optional[int] = 640, max_height: Optional[int] = None, align: Alignment = Alignment.TOP_LEFT)
+async frame.display.write_text(text: str, x: int = 1, y: int = 1, max_width: Optional[int] = 640, max_height: Optional[int] = None, align: Alignment = Alignment.TOP_LEFT, color: PaletteColors = PaletteColors.WHITE)
 ```
 
 Writes `text` to the display at the specified `x`,`y`position, optionally including word wrapping and alignment.  The text is not displayed until `frame.display.show()` is called.
@@ -1139,16 +1217,16 @@ Writes `text` to the display at the specified `x`,`y`position, optionally includ
 * `max_width` *(optional int)*: The maximum width for the text bounding box.  If text is wider than this, it will be word-wrapped onto multiple lines automatically.  Set to the full width of the display by default (640px), but can be overridden with `None`/`null` to disable word-wrapping.
 * `max_height` *(optional int)*: The maximum height for the text bounding box.  If text is taller than this, it will be cut off at that height.  Also useful for vertical alignment.  Set to the full height of the display by default (400px), but can be overridden with `None`/`null` to the vertical cutoff (which may result in errors if the text runs too far past the bottom of the display.
 * `align` *(Alignment)*: The alignment of the text, both horizontally if a `max_width` is provided, and vertically if a `max_height` is provided.  Can be any value in `frame.display.Alignment`:
-   * `frame.display.Alignment.TOP_LEFT` = "top_left" **(DEFAULT)**
-   * `frame.display.Alignment.TOP_CENTER` = "top_center"
-   * `frame.display.Alignment.TOP_RIGHT` = "top_right"
-   * `frame.display.Alignment.MIDDLE_LEFT` = "middle_left"
-   * `frame.display.Alignment.MIDDLE_CENTER` = "middle_center"
-   * `frame.display.Alignment.MIDDLE_RIGHT` = "middle_right"
-   * `frame.display.Alignment.BOTTOM_LEFT` = "bottom_left"
-   * `frame.display.Alignment.BOTTOM_CENTER` = "bottom_center"
-   * `frame.display.Alignment.BOTTOM_RIGHT` = "bottom_right"
-
+   * `frame.display.Alignment.TOP_LEFT` = Alignment.TOP_LEFT **(DEFAULT)**
+   * `frame.display.Alignment.TOP_CENTER` = Alignment.TOP_CENTER
+   * `frame.display.Alignment.TOP_RIGHT` = Alignment.TOP_RIGHT
+   * `frame.display.Alignment.MIDDLE_LEFT` = Alignment.MIDDLE_LEFT
+   * `frame.display.Alignment.MIDDLE_CENTER` = Alignment.MIDDLE_CENTER
+   * `frame.display.Alignment.MIDDLE_RIGHT` = Alignment.MIDDLE_RIGHT
+   * `frame.display.Alignment.BOTTOM_LEFT` = Alignment.BOTTOM_LEFT
+   * `frame.display.Alignment.BOTTOM_CENTER` = Alignment.BOTTOM_CENTER
+   * `frame.display.Alignment.BOTTOM_RIGHT` = Alignment.BOTTOM_RIGHT
+* `color` *(PaletteColors)*: The color of the text.  Defaults to `PaletteColors.WHITE`.
 
 <details markdown="block">
 <summary>Python</summary>
@@ -1156,7 +1234,7 @@ Writes `text` to the display at the specified `x`,`y`position, optionally includ
 #### Python
 {: .no_toc }
 ```python
-async def write_text(self, text: str, x: int = 1, y: int = 1, max_width: Optional[int] = 640, max_height: Optional[int] = None, align: Alignment = Alignment.TOP_LEFT):
+async def write_text(self, text: str, x: int = 1, y: int = 1, max_width: Optional[int] = 640, max_height: Optional[int] = None, align: Alignment = Alignment.TOP_LEFT, color: PaletteColors = PaletteColors.WHITE):
 ```
 
 Examples:
@@ -1181,17 +1259,66 @@ await frame.display.show()
 
 # the following text will be horizontally and vertically centered within a box on the lower right of the screen
 # draw the outline
-await frame.display.draw_rect_filled(x=400, y=220, w=200, h=150, border_width=8, border_color=3, fill_color=15)
+await frame.display.draw_rect_filled(x=400, y=220, w=200, h=150, border_width=8, border_color=PaletteColors.RED, fill_color=PaletteColors.CLOUDBLUE)
 # draw the text
-await frame.display.write_text("in the box", x=400, y=220, w=200, h=150, align=Alignment.MIDDLE_CENTER)
+await frame.display.write_text("in the box", x=400, y=220, w=200, h=150, align=Alignment.MIDDLE_CENTER, color=PaletteColors.YELLOW)
 await frame.display.show()
 ```
 </details>
 
+
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<void> writeText(String text,
+    {int x = 1,
+    int y = 1,
+    int? maxWidth = 640,
+    int? maxHeight,
+    PaletteColors? color,
+    Alignment2D align = Alignment2D.topLeft})
+```
+
+Examples:
+
+```dart
+await frame.display.writeText("Hello world", x: 50, y: 50);
+await frame.display.show();
+
+await frame.display.writeText("Top-left", align: Alignment2D.topLeft);
+await frame.display.writeText("Top-Center", align: Alignment2D.topCenter);
+await frame.display.writeText("Top-Right", align: Alignment2D.topRight);
+await frame.display.writeText("Middle-Left", align: Alignment2D.middleLeft);
+await frame.display.writeText("Middle-Center", align: Alignment2D.middleCenter);
+await frame.display.writeText("Middle-Right", align: Alignment2D.middleRight);
+await frame.display.writeText("Bottom-Left", align: Alignment2D.bottomLeft);
+await frame.display.writeText("Bottom-Center", align: Alignment2D.bottomCenter);
+await frame.display.writeText("Bottom-Right", align: Alignment2D.bottomRight);
+await frame.display.show();
+
+await frame.display.writeText(
+    "I am longer text\nMultiple lines can be specified manually or word wrapping can occur automatically",
+    align: Alignment2D.topCenter);
+await frame.display.show();
+
+// the following text will be horizontally and vertically centered within a box on the lower right of the screen
+// draw the outline
+await frame.display.drawRectFilled(
+    x: 400, y: 220, w: 200, h: 150, borderWidth: 8, borderColor: PaletteColors.red, fillColor: PaletteColors.white);
+// draw the text
+await frame.display.writeText("in the box", x: 400, y: 220, maxWidth: 200, maxHeight: 150, align: Alignment2D.middleCenter, color: PaletteColors.yellow);
+await frame.display.show();
+```
+</details>
+
+
 ### Show Text
 
 ```python
-async frame.display.show_text(text: str, x: int = 1, y: int = 1, max_width: Optional[int] = 640, max_height: Optional[int] = None, align: Alignment = Alignment.TOP_LEFT)
+async frame.display.show_text(text: str, x: int = 1, y: int = 1, max_width: Optional[int] = 640, max_height: Optional[int] = None, align: Alignment = Alignment.TOP_LEFT, color: PaletteColors = PaletteColors.WHITE)
 ```
 
 `show_text` is the same as `write_text` except that it immediately displays the text on the screen.  It's equivalent to calling `frame.display.write_text()` and then `frame.display.show()`.
@@ -1201,7 +1328,7 @@ Note that each time you call `show_text()`, it will clear any previous text and 
 ### Scroll Text
 
 ```python
-async frame.display.scroll_text(text: str, lines_per_frame: int = 5, delay: float = 0.12)
+async frame.display.scroll_text(text: str, lines_per_frame: int = 5, delay: float = 0.12, color: PaletteColors = PaletteColors.WHITE)
 ```
 
 Animates scrolling text vertically.  Best when `text` is longer than the display height.  You can adjust the speed of the scroll by changing `lines_per_frame` and `delay`, but note that depending on how much text is on the screen, a `delay` below 0.12 seconds may result in graphical glitches due to hardware limitations.
@@ -1211,6 +1338,7 @@ This function blocks until the text has finished scrolling, and includes a small
 * `text` *(str)*: The text to scroll.  It is automatically wrapped to fit the display width.
 * `lines_per_frame` *(int)*: The number of vertical pixels to scroll per frame.  Defaults to 5.  Higher values scroll faster, but will be more jumpy.
 * `delay` *(float)*: The delay between frames in seconds.  Defaults to 0.12 seconds.  Lower values are faster, but may cause graphical glitches.
+* `color` *(PaletteColors)*: The color of the text.  Defaults to `PaletteColors.WHITE`.
 
 <details markdown="block">
 <summary>Python</summary>
@@ -1218,7 +1346,7 @@ This function blocks until the text has finished scrolling, and includes a small
 #### Python
 {: .no_toc }
 ```python
-async def scroll_text(self, text: str, lines_per_frame: int = 5, delay: float = 0.12)
+async def scroll_text(self, text: str, lines_per_frame: int = 5, delay: float = 0.12, color: PaletteColors = PaletteColors.WHITE)
 ```
 
 Example:
@@ -1229,16 +1357,38 @@ await frame.display.scroll_text("Never gonna give you up\nNever gonna let you do
 print("scrolling finished")
 
 print("scrolling slowly about to start")
-await frame.display.scroll_text("Never gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you\nNever gonna stop\nNever gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you", lines_per_frame=2)
+await frame.display.scroll_text("Never gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you\nNever gonna stop\nNever gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you", lines_per_frame=2, color=PaletteColors.YELLOW)
 print("scrolling slowly finished")
 ```
+
+</details>
+
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<void> scrollText(String text, {int linesPerFrame = 5, double delay = 0.12, PaletteColors? textColor}) async
+```
+
+Example:
+
+```dart
+print("scrolling about to start");
+await frame.display.scrollText("Never gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you\nNever gonna stop\nNever gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you");
+print("scrolling finished");
+
+print("scrolling slowly about to start");
+await frame.display.scrollText("Never gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you\nNever gonna stop\nNever gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you", linesPerFrame: 2, textColor: PaletteColors.yellow);
+print("scrolling slowly finished");
 
 </details>
 
 ### Draw Rectangle
 
 ```python
-frame.display.draw_rect(x: int, y: int, w: int, h: int, color: int = 1)
+frame.display.draw_rect(x: int, y: int, w: int, h: int, color: PaletteColors = PaletteColors.WHITE)
 ```
 
 Draws a filled rectangle specified `color` at `x`,`y` with `w` width and `h` height.
@@ -1251,7 +1401,7 @@ Currently, the `x`, `y`, `w`, and `h` parameters are rounded down to the closest
 * `y` *(int)*: The y position of the upper-left corner of the rectangle.
 * `w` *(int)*: The width of the rectangle.
 * `h` *(int)*: The height of the rectangle.
-* `color` *(int)*: The color of the rectangle.  Defaults to 1 (white).
+* `color` *(PaletteColors)*: The color of the rectangle.  Defaults to `PaletteColors.WHITE`.
 
 <details markdown="block">
 <summary>Python</summary>
@@ -1259,17 +1409,17 @@ Currently, the `x`, `y`, `w`, and `h` parameters are rounded down to the closest
 #### Python
 {: .no_toc }
 ```python
-async def draw_rect(self, x: int, y: int, w: int, h: int, color: int = 1)
+async def draw_rect(self, x: int, y: int, w: int, h: int, color: PaletteColors = PaletteColors.WHITE)
 ```
 
 Example:
 
 ```python
 # draws a white rectangle 200x200 pixels in the center of the screen
-await frame.display.draw_rect(220, 100, 200, 200)
+await frame.display.draw_rect(220, 100, 200, 200, PaletteColors.WHITE)
 
 # draws a red rectangle 16x16 pixels in the center of the screen
-await frame.display.draw_rect(320-8, 200-8, 16, 16, 3)
+await frame.display.draw_rect(320-8, 200-8, 16, 16, PaletteColors.RED)
 
 # show both rectangles
 await frame.display.show()
@@ -1277,10 +1427,34 @@ await frame.display.show()
 
 </details>
 
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<void> drawRect(int x, int y, int w, int h, PaletteColors color) async
+```
+
+Example:
+
+```dart
+// draws a white rectangle 200x200 pixels in the center of the screen
+await frame.display.drawRect(220, 100, 200, 200, PaletteColors.white);
+
+// draws a red rectangle 16x16 pixels in the center of the screen
+await frame.display.drawRect(320-8, 200-8, 16, 16, PaletteColors.red);
+
+// show both rectangles
+await frame.display.show();
+```
+
+</details>
+
 ### Draw Rectangle Filled
 
 ```python
-frame.display.draw_rect_filled(x: int, y: int, w: int, h: int, border_width: int, border_color: int, fill_color: int)
+frame.display.draw_rect_filled(x: int, y: int, w: int, h: int, border_width: int, border_color: PaletteColors, fill_color: PaletteColors)
 ```
 
 Draws a filled rectangle with a border and fill color at `x`,`y` with `w` width and `h` height, with an inset border `border_width` pixels wide.  The total size of the rectangle including the border is `w`x`h`.
@@ -1292,8 +1466,8 @@ Currently, the `x`, `y`, `w`, `h`, and `border_width` parameters are rounded dow
 * `w` *(int)*: The width of the rectangle.
 * `h` *(int)*: The height of the rectangle.
 * `border_width` *(int)*: The width of the border in pixels.
-* `border_color` *(int)*: The color of the border.
-* `fill_color` *(int)*: The color of the fill.
+* `border_color` *(PaletteColors)*: The color of the border.
+* `fill_color` *(PaletteColors)*: The color of the fill.
 
 <details markdown="block">
 <summary>Python</summary>
@@ -1301,16 +1475,36 @@ Currently, the `x`, `y`, `w`, `h`, and `border_width` parameters are rounded dow
 #### Python
 {: .no_toc }
 ```python
-async def draw_rect_filled(self, x: int, y: int, w: int, h: int, border_width: int, border_color: int, fill_color: int)
+async def draw_rect_filled(self, x: int, y: int, w: int, h: int, border_width: int, border_color: PaletteColors, fill_color: PaletteColors)
 ```
 
 Example:
 
 ```python
 # draws a dialog box with a border and text
-await frame.display.draw_rect_filled(x=100, y=100, w=200, h=200, border_width=8, border_color=1, fill_color=15)
+await frame.display.draw_rect_filled(x=100, y=100, w=200, h=200, border_width=8, border_color=PaletteColors.RED, fill_color=PaletteColors.CLOUDBLUE)
 await frame.display.write_text("Hello world!", x=110, y=110, w=180, h=180, align=Alignment.MIDDLE_CENTER)
 await frame.display.show()
+```
+
+</details>
+
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<void> drawRectFilled(int x, int y, int w, int h, int borderWidth, PaletteColors borderColor, PaletteColors fillColor) async
+```
+
+Example:
+
+```dart
+// draws a dialog box with a border and text
+await frame.display.drawRectFilled(100, 100, 200, 200, 8, PaletteColors.RED, PaletteColors.CLOUDBLUE);
+await frame.display.writeText("Hello world!", x: 110, y: 110, maxWidth: 180, maxHeight: 180, align: Alignment2D.middleCenter);
+await frame.display.show();
 ```
 
 </details>
@@ -1326,7 +1520,16 @@ While the above functions are the most common ones you'll use, there are a few o
 frame.display.line_height: int = 60
 ```
 
-The `line_height` property is used to get and set the height of each line of text in pixels.  It is 60 by default, however you may override that value to change the vertical spacing of the text in all text displaying functions.
+The `line_height` property (`lineHeight` in Flutter) is used to get and set the height of each line of text in pixels.  It is 60 by default, however you may override that value to change the vertical spacing of the text in all text displaying functions.  It must be greater than 0.
+
+#### Character Width
+{: .no_toc }
+
+```python
+frame.display.char_width: int = 4
+```
+
+The `char_width` property (`charWidth` in Flutter) is used to get and set the extra horizontal spacing after each character.  It is 4 by default, however you may override that value to change the horizontal spacing of the text in all text displaying functions.
 
 #### Get Text Width and Height
 {: .no_toc }
@@ -1336,13 +1539,22 @@ frame.display.get_text_width(text: str) -> int
 frame.display.get_text_height(text: str) -> int
 ```
 
-Gets the rendered width and height of text in pixels.  Text on Frame is variable width, so this is important for positioning text.  Note that these functions do not perform any text wrapping but do respect any manually-included line breaks, and you can use the outputs in your own word-wrapping or positioning logic.  The text height is affected by the `line_height` property.
+```dart
+int frame.display.getTextWidth(String text)
+int frame.display.getTextHeight(String text)
+```
+
+Gets the rendered width and height of text in pixels.  Text on Frame is variable width, so this is important for positioning text.  Note that these functions do not perform any text wrapping but do respect any manually-included line breaks, and you can use the outputs in your own word-wrapping or positioning logic.  The width is affected by the `char_width` property, and the height is affected by the `line_height` property (as well as `char_width` if word wrapping).
 
 #### Wrap Text
 {: .no_toc }
 
 ```python
 frame.display.wrap_text(text: str, max_width: int) -> str
+```
+
+```dart
+String frame.display.wrapText(String text, int maxWidth)
 ```
 
 Wraps text to fit within a specified width.  It does this by inserting line breaks at space characters, returning a string with extra '\n' characters where line wrapping is needed.
@@ -1382,6 +1594,27 @@ audio = await frame.microphone.record_audio(silence_cutoff_length_in_seconds=Non
 
 </details>
 
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<Uint8List> recordAudio({Duration? silenceCutoffLength = const Duration(seconds: 3), Duration maxLength = const Duration(seconds: 30)}) async
+```
+
+Examples:
+
+```dart
+// record audio for up to 30 seconds, or until 3 seconds of silence is detected
+Uint8List audio = await frame.microphone.recordAudio();
+
+// record audio for 5 seconds without silence detection
+Uint8List audio = await frame.microphone.recordAudio(silenceCutoffLength: null, maxLength: Duration(seconds: 5));
+```
+
+</details>
+
 ### Save Audio File
 ```python
 async frame.microphone.save_audio_file(filename: str, silence_cutoff_length_in_seconds: int = 3, max_length_in_seconds: int = 30) -> float
@@ -1414,13 +1647,39 @@ await frame.microphone.save_audio_file("audio.wav", silence_cutoff_length_in_sec
 
 </details>
 
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<double> saveAudioFile(String filename, {Duration? silenceCutoffLength = const Duration(seconds: 3), Duration maxLength = const Duration(seconds: 30)}) async
+```
+
+Examples:
+
+```dart
+// record audio for up to 30 seconds, or until 3 seconds of silence is detected
+await frame.microphone.saveAudioFile("audio.wav");
+
+// record audio for 5 seconds without silence detection
+await frame.microphone.saveAudioFile("audio.wav", silenceCutoffLength: null, maxLength: Duration(seconds: 5));
+```
+
+</details>
+
 ### Play Audio
 ```python
+frame.microphone.play_audio_background(audio_data: np.ndarray, sample_rate: Optional[int] = None, bit_depth: Optional[int] = None)
 frame.microphone.play_audio(audio_data: np.ndarray, sample_rate: Optional[int] = None, bit_depth: Optional[int] = None)
 async frame.microphone.play_audio_async(audio_data: np.ndarray, sample_rate: Optional[int] = None, bit_depth: Optional[int] = None)
 ```
 
-Helpers to play audio from `record_audio()` on your computer.  `play_audio` blocks until playback is complete, while `play_audio_async` plays the audio in a coroutine.
+```dart
+void playAudio(Uint8List audioData, {int? sampleRate, int? bitDepth})
+```
+
+Helpers to play audio from `record_audio()` on your computer.  `play_audio` blocks until playback is complete, while `play_audio_async` plays the audio in a coroutine.  Note that only `play_audio_background` works on Windows at the moment.
 
 * `audio_data` *(np.ndarray)*: The audio data to play, as returned from `record_audio()`.
 * `sample_rate` *(int)*: The sample rate of the audio data, in case it's different from the current `sample_rate`.
@@ -1433,9 +1692,14 @@ frame.microphone.sample_rate: int = 8000
 frame.microphone.bit_depth: int = 16
 ```
 
-The `sample_rate` property is used to get and set the sample rate of the microphone.  It is 8000 by default, however you may override that value to change the sample rate of the microphone.  Valid values are 8000 and 16000.
+```dart
+int frame.microphone.sampleRate = 8000;
+int frame.microphone.bitDepth = 16;
+```
 
-The `bit_depth` property is used to get and set the bit depth of the microphone.  It is 16 by default, however you may override that value to change the bit depth of the microphone.  Valid values are 8 and 16.
+The `sample_rate` property (`sampleRate` in Flutter) is used to get and set the sample rate of the microphone.  It is 8000 by default, however you may override that value to change the sample rate of the microphone.  Valid values are 8000 and 16000.
+
+The `bit_depth` property (`bitDepth` in Flutter) is used to get and set the bit depth of the microphone.  It is 16 by default, however you may override that value to change the bit depth of the microphone.  Valid values are 8 and 16.
 
 Transfers are limited by the Bluetooth bandwidth which is typically around 40kBps under good signal conditions. The audio bitrate for a given `sample_rate` and `bit_depth` is: `sample_rate * bit_depth / 8` bytes per second. An internal 32k buffer automatically compensates for additional tasks that might otherwise briefly block Bluetooth transfers. If this buffer limit is exceeded however, then discontinuities in audio might occur.
 
@@ -1445,7 +1709,11 @@ Transfers are limited by the Bluetooth bandwidth which is typically around 40kBp
 frame.microphone.silence_threshold: float = 0.02
 ```
 
-The `silence_threshold` property is used to get and set the threshold for detecting silence in the audio stream.  Valid values are between 0 and 1.  0.02 is the default, however you may adjust this value to be more or less sensitive to sound.
+```dart
+double frame.microphone.silenceThreshold = 0.02;
+```
+
+The `silence_threshold` property (`silenceThreshold` in Flutter) is used to get and set the threshold for detecting silence in the audio stream.  Valid values are between 0 and 1.  0.02 is the default, however you may adjust this value to be more or less sensitive to sound.
 
 
 ## Motion
@@ -1505,6 +1773,38 @@ await f.display.show_text(f"Intensity of motion: {intensity_of_motion}", align=A
 
 </details>
 
+
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+
+```dart
+Future<Direction> getDirection() async
+```
+
+Example:
+
+```dart
+// get the direction
+Direction direction = await frame.motion.getDirection();
+
+// track the intensity of motion
+double intensityOfMotion = 0;
+Direction prevDirection = await frame.motion.getDirection();
+for (int i = 0; i < 10; i++) {
+  await Future.delayed(Duration(milliseconds: 100));
+  direction = await frame.motion.getDirection();
+  intensityOfMotion = max(intensityOfMotion, (direction - prevDirection).amplitude());
+  prevDirection = direction;
+}
+print("Intensity of motion: $intensityOfMotion");
+await frame.display.showText("Intensity of motion: $intensityOfMotion", align: Alignment.middleCenter);
+```
+
+</details>
+
 ### Run On Tap
 
 ```python
@@ -1536,6 +1836,27 @@ await f.motion.run_on_tap(lua_script="frame.display.text('I was tapped!',1,1);fr
 
 </details>
 
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<void> runOnTap({String? luaScript, void Function()? callback}) async
+```
+
+Example:
+```dart
+void onTap() {
+  print("Frame was tapped!");
+}
+
+// assign both a local callback and a lua script. Or you could just do one or the other.
+await f.motion.runOnTap(luaScript: "frame.display.text('I was tapped!',1,1);frame.display.show();", callback: onTap);
+```
+
+</details>
+
 ### Wait For Tap
 ```python
 async frame.motion.wait_for_tap() -> None
@@ -1559,6 +1880,26 @@ await f.display.show_text("Tap me to continue", align=Alignment.MIDDLE_CENTER)
 await f.motion.wait_for_tap()
 print("Tap received!")
 await f.display.show_text("tap complete", align=Alignment.MIDDLE_CENTER)
+```
+
+</details>
+
+<details markdown="block">
+<summary>Flutter</summary>
+
+#### Flutter
+{: .no_toc }
+```dart
+Future<void> waitForTap() async
+```
+
+Example:
+```dart
+print("Waiting for tap...");
+await f.display.showText("Tap me to continue", align: Alignment.middleCenter);
+await f.motion.waitForTap();
+print("Tap received!");
+await f.display.showText("Tap complete", align: Alignment.middleCenter);
 ```
 
 </details>
@@ -1698,8 +2039,184 @@ async def main():
 
     print("disconnected")
 
-
-
 asyncio.run(main())
+
+```
+
+
+## Flutter
+
+```dart
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:frame_sdk/frame_sdk.dart';
+import 'package:frame_sdk/display.dart';
+import 'package:frame_sdk/motion.dart';
+import 'package:frame_sdk/camera.dart';
+import 'package:frame_sdk/microphone.dart';
+import 'package:frame_sdk/bluetooth.dart';
+import 'package:logging/logging.dart';
+import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:math';
+import 'package:path_provider/path_provider.dart';
+
+Future<void> runExample() async {
+  // Request bluetooth permission
+  await BrilliantBluetooth.requestPermission();
+
+
+  final frame = Frame();
+
+  // Connect to the frame
+  while (!frame.isConnected) {
+    print("Trying to connect...");
+    final didConnect = await frame.connect();
+    if (didConnect) {
+      print("Connected to device");
+    } else {
+      print("Failed to connect to device, will try again...");
+    }
+  }
+
+  // Get battery level
+  int batteryLevel = await frame.getBatteryLevel();
+  print("Frame battery: $batteryLevel%");
+
+  // Write file
+  await frame.files.writeFile("greeting.txt", utf8.encode("Hello world"));
+
+  // Read file
+  String fileContent = utf8.decode(await frame.files.readFile("greeting.txt"));
+  print(fileContent);
+
+  // Display text
+  await frame.runLua("frame.display.text('Hello world', 50, 100);frame.display.show()");
+
+  // Evaluate expression
+  print(await frame.evaluate("1+2"));
+
+  print("Tap the Frame to continue...");
+  await frame.display.showText("Tap the Frame to take a photo", align: Alignment2D.middleCenter);
+  await frame.motion.waitForTap();
+
+  // Take and save photo
+  await frame.display.showText("Taking photo...", align: Alignment2D.middleCenter);
+  await frame.camera.savePhoto("frame-test-photo.jpg");
+  await frame.display.showText("Photo saved!", align: Alignment2D.middleCenter);
+
+  // Take photo with more control
+  await frame.camera.savePhoto("frame-test-photo-2.jpg",
+      autofocusSeconds: 3,
+      quality: PhotoQuality.high,
+      autofocusType: AutoFocusType.centerWeighted);
+
+  // Get raw photo bytes
+  Uint8List photoBytes = await frame.camera.takePhoto(autofocusSeconds: 1);
+  print("Photo bytes: ${photoBytes.length}");
+
+  print("About to record until you stop talking");
+  await frame.display.showText("Say something...", align: Alignment2D.middleCenter);
+
+  // Record audio to file
+  double length = await frame.microphone.saveAudioFile("test-audio.wav");
+  print("Recorded ${length.toStringAsFixed(1)} seconds: \"./test-audio.wav\"");
+  await frame.display.showText("Recorded ${length.toStringAsFixed(1)} seconds", align: Alignment2D.middleCenter);
+  await Future.delayed(const Duration(seconds: 3));
+
+  // Record audio to memory
+  await frame.display.showText("Say something else...", align: Alignment2D.middleCenter);
+  Uint8List audioData = await frame.microphone.recordAudio(maxLength: const Duration(seconds: 10));
+  await frame.display.showText(
+      "Recorded ${(audioData.length / frame.microphone.sampleRate.toDouble()).toStringAsFixed(1)} seconds of audio",
+      align: Alignment2D.middleCenter);
+
+  print("Move around to track intensity of your motion");
+  await frame.display.showText("Move around to track intensity of your motion", align: Alignment2D.middleCenter);
+  double intensityOfMotion = 0;
+  Direction prevDirection = await frame.motion.getDirection();
+  for (int i = 0; i < 10; i++) {
+    await Future.delayed(const Duration(milliseconds: 100));
+    Direction direction = await frame.motion.getDirection();
+    intensityOfMotion = max(intensityOfMotion, (direction - prevDirection).amplitude());
+    prevDirection = direction;
+  }
+  print("Intensity of motion: ${intensityOfMotion.toStringAsFixed(2)}");
+  await frame.display.showText("Intensity of motion: ${intensityOfMotion.toStringAsFixed(2)}", align: Alignment2D.middleCenter);
+  print("Tap the Frame to continue...");
+  await frame.motion.waitForTap();
+
+  // Show the full palette
+  int width = 640 ~/ 4;
+  int height = 400 ~/ 4;
+  for (int color = 0; color < 16; color++) {
+    int tileX = (color % 4);
+    int tileY = (color ~/ 4);
+    await frame.display.drawRect(tileX * width + 1, tileY * height + 1, width, height, PaletteColors.fromIndex(color));
+    await frame.display.writeText("$color",
+        x: tileX * width + width ~/ 2 + 1,
+        y: tileY * height + height ~/ 2 + 1);
+  }
+  await frame.display.show();
+
+  print("Tap the Frame to continue...");
+  await frame.motion.waitForTap();
+
+  // Scroll some long text
+  await frame.display.scrollText(
+      "Never gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you");
+
+  // Display battery indicator and time as a home screen
+  batteryLevel = await frame.getBatteryLevel();
+  PaletteColors batteryFillColor = batteryLevel < 20
+      ? PaletteColors.red
+      : batteryLevel < 50
+          ? PaletteColors.yellow
+          : PaletteColors.green;
+  int batteryWidth = 150;
+  int batteryHeight = 75;
+  await frame.display.drawRect(
+      640 - 32, 40 + batteryHeight ~/ 2 - 8, 32, 16, PaletteColors.white);
+  await frame.display.drawRectFilled(
+      640 - 16 - batteryWidth,
+      40 - 8,
+      batteryWidth + 16,
+      batteryHeight + 16,
+      8,
+      PaletteColors.white,
+      PaletteColors.voidBlack);
+  await frame.display.drawRect(
+      640 - 8 - batteryWidth,
+      40,
+      (batteryWidth * 0.01 * batteryLevel).toInt(),
+      batteryHeight,
+      batteryFillColor);
+  await frame.display.writeText("$batteryLevel%",
+      x: 640 - 8 - batteryWidth,
+      y: 40,
+      maxWidth: batteryWidth,
+      maxHeight: batteryHeight,
+      align: Alignment2D.middleCenter);
+  await frame.display.writeText(DateTime.now().toString(), align: Alignment2D.middleCenter);
+  await frame.display.show();
+
+  // Set a wake screen via script
+  await frame.runOnWake(luaScript: """
+    frame.display.text('Battery: ' .. frame.battery_level() ..  '%', 10, 10);
+    if frame.time.utc() > 10000 then
+      local time_now = frame.time.date();
+      frame.display.text(time_now['hour'] .. ':' .. time_now['minute'], 300, 160);
+      frame.display.text(time_now['month'] .. '/' .. time_now['day'] .. '/' .. time_now['year'], 300, 220) 
+    end;
+    frame.display.show();
+    frame.sleep(10);
+    frame.display.text(' ',1,1);
+    frame.display.show();
+    frame.sleep()
+  """);
+
+  // Tell frame to sleep after 10 seconds then clear the screen and go to sleep
+  await frame.runLua("frame.sleep(10);frame.display.text(' ',1,1);frame.display.show();frame.sleep()");
+}
 
 ```
