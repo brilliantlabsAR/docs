@@ -22,7 +22,7 @@ The most common structure is to build an iOS or Android mobile app which uses ou
 - [x] Python from a Mac, Linux, or Windows computer
 - [ ] Swift from a Mac or iOS device
 - [ ] Kotlin from Android
-- [x] Flutter for mobile (iOS and Adnroid)
+- [x] Flutter for mobile (iOS and Android)
 - [ ] React Native for mobile (and computer?)
 
 For each section below, you may expand the platform you are targeting to see details specific to that platform, including function signatures and examples.
@@ -30,7 +30,7 @@ For each section below, you may expand the platform you are targeting to see det
 ### Status
 {: .no_toc }
 
-| Python            | Swift             | Kotlin            | Flutter           | React native      |
+| Python            | Swift             | Kotlin            | Flutter           | React Native      |
 |:------------------|:------------------|:------------------|:------------------|:------------------|
 | [![Available on PyPI](https://img.shields.io/pypi/v/frame_sdk)](https://pypi.org/project/frame-sdk/) | Coming soon | Coming soon | [![Available on Pub.dev](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2FOkGoDoIt%2Fframe-sdk-flutter%2Fmaster%2Fpubspec.yaml&query=version&prefix=v&label=pub.dev)](https://pub.dev/packages/frame_sdk) | Coming soon |
 
