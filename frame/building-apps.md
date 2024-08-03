@@ -57,18 +57,18 @@ Read on for a better understanding of the platform and the various ways to build
 # Ways to Develop for Frame
 Frame has several integration points you can use to create apps:
 
-1. [Use One of Our Platform SDKs to Use Frame from Your Own Mobile or Desktop Computer App](#use-one-of-our-platform-sdks-from-your-own-mobile-or-computer-app-recommended) **(recommended)**
+1. [Use One of Our Platform SDKs to Use Frame from Your Own Mobile or Desktop Computer App](/frame/building-apps-sdk) **(recommended)**
     * Build apps for one of our supported platforms:
         * Python from a Mac, Linux, or Windows computer
         * Swift, Kotlin, Flutter, and React Native for mobile *(coming soon)*
     * Common tasks are simplified and handled for you
     * Your app is in control and uses Frame as an accessory
     * Best way to get started
-2. [Talk to the Frame Over BTLE to Run Lua on the Device](#talk-to-the-frame-over-bluetooth-low-energy-to-run-lua-on-the-device)
+2. [Talk to the Frame Over BTLE to Run Lua on the Device](/frame/building-apps-bluetooth-specs)
     * Use any platform that can talk to Bluetooth
     * Gives you full control
     * Can be tedious to get started, best if you have experience developing with Bluetooth LE
-3. [Customize the Firmware](#customize-the-firmware) **(not recommended)**
+3. [Customize the Firmware](/frame/hardware#customizing-the-firmware) **(not recommended)**
     * Very advanced, requires experience with hardware development
     * Gives you complete control
 
