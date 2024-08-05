@@ -1069,7 +1069,7 @@ async def take_photo(self, autofocus_seconds: Optional[int] = 3, quality: Qualit
 Examples:
 
 ```python
-from frame.camera import Quality, AutofocusType
+from frame_sdk.camera import Quality, AutofocusType
 
 # take a photo
 photo_bytes = await frame.camera.take_photo()
@@ -1154,7 +1154,7 @@ async def save_photo(self, path: str, autofocus_seconds: Optional[int] = 3, qual
 Examples:
 
 ```python
-from frame.camera import Quality, AutofocusType
+from frame_sdk.camera import Quality, AutofocusType
 
 # take a photo and save to disk
 await f.camera.save_photo("frame-test-photo.jpg")
@@ -1382,6 +1382,7 @@ print("scrolling finished");
 print("scrolling slowly about to start");
 await frame.display.scrollText("Never gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you\nNever gonna stop\nNever gonna give you up\nNever gonna let you down\nNever gonna run around and desert you\nNever gonna make you cry\nNever gonna say goodbye\nNever gonna tell a lie and hurt you", linesPerFrame: 2, textColor: PaletteColors.yellow);
 print("scrolling slowly finished");
+```
 
 </details>
 
