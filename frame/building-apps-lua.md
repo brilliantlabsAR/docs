@@ -209,7 +209,7 @@ while true do
     if data == nil then
         break
     end
-    bluetooth.send(data)
+    frame.bluetooth.send(data)
 end
 ```
 
