@@ -120,7 +120,7 @@ The microphone is connected directly to the Bluetooth MCU which allows for low p
 
 ## Motion Sensor (IMU)
 
-The IMU on Frame is the 6 axis [MC6470](https://eu.mouser.com/datasheet/2/821/MC6470_Datasheet_APS_048_0033v1_7_1-3003085.pdf) sensor from MEMSIC. It features both an accelerometer and e-compress in a tiny package consuming very little power. Further processing on the Bluetooth MCU calculates the raw X, Y and Z values of both sensing elements into angular values for detecting head position. 
+The IMU on Frame is the 6 axis [MC6470](https://eu.mouser.com/datasheet/2/821/MC6470_Datasheet_APS_048_0033v1_7_1-3003085.pdf) sensor from MEMSIC. It features both an accelerometer and e-compass in a tiny package consuming very little power. Further processing on the Bluetooth MCU calculates the raw X, Y and Z values of both sensing elements into angular values for detecting head position. 
 
 An accelerator interrupt line from the IMU is also directly connected to the Bluetooth MCU. This allows for always on detections of taps that can be used to navigate and select UI elements within the user's apps.
 
