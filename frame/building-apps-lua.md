@@ -174,7 +174,7 @@ Here's the default palette, as names and indices:
 | `frame.display.assign_color(color, r, g, b)`         | Changes the rendered color in slot `color` with a new color given by the components `r`, `g,` and `b`. Valid options for `color` are: `VOID`, `WHITE` ,`GREY` ,`RED` ,`PINK` ,`DARKBROWN` ,`BROWN` ,`ORANGE` ,`YELLOW` ,`DARKGREEN` ,`GREEN` ,`LIGHTGREEN` ,`NIGHTBLUE` ,`SEABLUE` ,`SKYBLUE` or `CLOUDBLUE`. Note that changing the `VOID` color will change the rendered background color of the display. The RGB components are internally converted to a 10bit YCbCr value that represents the true colorspace of the display. There may therefore be rounding errors for certain RGB combinations
 | `frame.display.assign_color_ycbcr(color, y, cb, cr)` | Same as above, however the `y`, `cb`, and `cr` represent the true 10bit colorspace of the display. Each component has a range of 4, 3, and 3 bits respectively
 | `frame.display.set_brightness(brightness)`           | Sets the brightness of the display. Valid options for `brightness` are `-2`, `-1`, `0`, `1`, or `2`. Note that higher brightness levels increase the likelihood of burn-in if static pixels are shown for long periods of time on the display
-| `frame.display.set_register(register, value)`        | Allows hacking of the display registers. `register` and `value` should both be 8bit values
+| `frame.display.write_register(register, value)`      | Allows hacking of the display registers. `register` and `value` should both be 8bit values
 | `frame.display.power_save(enable)`                   | When `enable` is set to `true`, the display will enter power saving mode and turn off. This feature may be used to save battery life when the display is not needed. Graphics rendering commands may still be issued and will be shown as normal when `enable` is set back to false. Note that the display will sleep and wake up automatically when using `frame.sleep()` so this function isn't needed in most cases
 
 
@@ -221,12 +221,12 @@ end
 
 | Low&nbsp;level&nbsp;functions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
-| `frame.camera.set_exposure(shutter)`        | Sets the shutter value manually. Note that `camera.auto{}` will override this value. `shutter` can be a value between `4` and `16383`
-| `frame.camera.set_gain(gain)`               | Sets the gain value manually. Note that `camera.auto{}` will override this value. `gain` can be a value between `0` and `248`
-| `frame.camera.set_white_balance(r, g, b)`   | Sets the digital gains of the R, G and B channels for fine tuning white balance. `r`, `g` and `b` can be values between `0` and `1023`
-| `frame.camera.set_register(address, value)` | Allows for hacking the camera's internal registers. `address` can be any 16-bit register address of the camera, and `value` any 8-bit value to write to that address
-| `frame.camera.get_register(address, value)` | Reads back a value from the camera's internal registers. `address` can be any 16-bit register address of the camera. The 8bit value of the register will be returned
-| `frame.camera.power_save(enable)`           | When `enable` is set to `true`, the camera will enter power saving mode and turn off. This feature may be used to save battery life when the camera is not needed. When this mode is enabled, the only available camera functions will be `camera.read()` and `camera.read_raw()`. Note that the camera will sleep and wake up automatically when using `frame.sleep()` so this function isn't needed in most cases
+| `frame.camera.set_exposure(shutter)`          | Sets the shutter value manually. Note that `camera.auto{}` will override this value. `shutter` can be a value between `4` and `16383`
+| `frame.camera.set_gain(gain)`                 | Sets the gain value manually. Note that `camera.auto{}` will override this value. `gain` can be a value between `0` and `248`
+| `frame.camera.set_white_balance(r, g, b)`     | Sets the digital gains of the R, G and B channels for fine tuning white balance. `r`, `g` and `b` can be values between `0` and `1023`
+| `frame.camera.write_register(address, value)` | Allows for hacking the camera's internal registers. `address` can be any 16-bit register address of the camera, and `value` any 8-bit value to write to that address
+| `frame.camera.read_register(address, value)`  | Reads back a value from the camera's internal registers. `address` can be any 16-bit register address of the camera. The 8bit value of the register will be returned
+| `frame.camera.power_save(enable)`             | When `enable` is set to `true`, the camera will enter power saving mode and turn off. This feature may be used to save battery life when the camera is not needed. When this mode is enabled, the only available camera functions will be `camera.read()` and `camera.read_raw()`. Note that the camera will sleep and wake up automatically when using `frame.sleep()` so this function isn't needed in most cases
 
 ---
 
