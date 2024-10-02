@@ -225,7 +225,8 @@ end
 | `frame.camera.set_gain(gain)`               | Sets the gain value manually. Note that `camera.auto{}` will override this value. `gain` can be a value between `0` and `248`
 | `frame.camera.set_white_balance(r, g, b)`   | Sets the digital gains of the R, G and B channels for fine tuning white balance. `r`, `g` and `b` can be values between `0` and `1023`
 | `frame.camera.set_register(address, value)` | Allows for hacking the camera's internal registers. `address` can be any 16-bit register address of the camera, and `value` any 8-bit value to write to that address
-| `frame.camera.power_save(enable)`           | When `enable` is set to `true`, the camera will enter power saving mode and turn off. This feature may be used to save battery life when the camera is not needed. No camera operations are available when this mode is enabled. Note that the camera will sleep and wake up automatically when using `frame.sleep()` so this function isn't needed in most cases
+| `frame.camera.get_register(address, value)` | Reads back a value from the camera's internal registers. `address` can be any 16-bit register address of the camera. The 8bit value of the register will be returned
+| `frame.camera.power_save(enable)`           | When `enable` is set to `true`, the camera will enter power saving mode and turn off. This feature may be used to save battery life when the camera is not needed. When this mode is enabled, the only available camera functions will be `camera.read()` and `camera.read_raw()`. Note that the camera will sleep and wake up automatically when using `frame.sleep()` so this function isn't needed in most cases
 
 ---
 
