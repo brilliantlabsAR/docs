@@ -13,7 +13,7 @@ redirect_from:
 
 ---
 
-If you're using the [Brilliant AR Studio](/building-apps/#getting-started-with-ar-studio-for-vscode), firmware updates are automatic, and you will be prompted whenever a new update is available.
+If you're using the [Brilliant AR Studio](/monocle/building-apps/#getting-started-with-ar-studio-for-vscode), firmware updates are automatic, and you will be prompted whenever a new update is available.
 
 If you run into problems, you can update manually using the following steps:
 
