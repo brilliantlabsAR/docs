@@ -182,15 +182,15 @@ Here's the default palette, as names and indices:
 
 ### Camera
 
-The camera capability of Frame allows for capturing and downloading of single JPEG images over Bluetooth. The sensor's full resolution is 1280x720 pixels in portrait orientation, however only square images up to 720x720 pixels can be captured at a time. The user can select which portion of the sensor's window is captured using the `pan` control. Additionally, the resolution of the capture can be cropped to either 360x360, 240x240 or 180x180 by using the `zoom` function. Smaller resolutions will increase the image quality, however the `quality` factor can be reduced to decrease the image file size, and increase download speeds of the image over Bluetooth.
+The camera capability of Frame allows for capturing and downloading single JPEG images over Bluetooth. The sensor's full resolution is 1280x720 pixels in portrait orientation, however only square images up to 720x720 pixels can be captured at a time. The user can select which portion of the sensor's 1280 length is captured using the `pan` control. Additionally, the resolution of the capture can be cropped down to 100x100 pixels by using the `resolution` function. To control file size and download speed, the `quality` option can be used to adjust the JPEG compression quality.
 
 | API&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
-| `frame.camera.capture{quality_factor=50}`                                                                                                     | Captures a single image from the camera. The `quality_factor` option can help reduce file sizes by adjusting the JPEG quality. The four possible options are `10`, `25`, `50`, and `100`. Higher values represent higher quality, but also larger file sizes.
+| `frame.camera.capture{resolution=512, quality='VERY_HIGH', pan=0}`                                                                            | Captures a single image from the camera. The `resolution` option may be any even number between 100 and 720. The `pan` option can be any number between -140 and 140, where 0 represents a centered image. `quality` can be either `VERY_LOW`, `LOW`, `MEDIUM`, `HIGH`, or `VERY_HIGH`. Higher quality and resolution images will increase the image file size.
 | `frame.camera.image_ready()`                                                                                                                  | Following a capture, polling `image_ready()` will return `false` while the image is being captured. Once `image_ready()` returns true, the image can be safely read out
 | `frame.camera.read(num_bytes)`                                                                                                                | Reads out a number of bytes from the camera capture memory as a byte string. Once all bytes have been read, `nil` will be returned. Note that reading data out too quickly following a capture may return corrupted data. The `image_ready()` function should be used to ensure the image is ready before reading anything out
-| `frame.camera.read_raw(num_bytes)`                                                                                                                | The same as `camera.read()` however skips the JPEG header data and only returns the image data and final JPEG footer. This function can be used to speed up data transfer since the JPEG header doesn't change if the `quality_factor` or image size have not been changed. It's first recomended to read an image normally using `camera.read()` and then extract the JPEG header so that it can be used for subsequent `camera.read_raw()` operations
-| `frame.camera.auto{metering='AVERAGE', exposure=0.18, exposure_speed=0.5, shutter_limit=800, analog_gain_limit=248, white_balance_speed=0.5}` | Runs the automatic exposure, gain and white balance algorithm. This function must be called every 100ms for the best performance. `metering` can be one of three modes, `SPOT`, `CENTER_WEIGHTED`, or `AVERAGE`. `exposure` can be a value between `0.0` and `1.0` where lower values will return darker images, and higher values will return brighter images. `exposure_speed` and `white_balance_speed` control how aggressively the algorithm will attempt to correct for the exposure and white balance respectivly. Higher values will result in a faster convergence, but may create additional overshoot or oscillation of the image brightness or color balance. `shutter_limit` and `analog_gain_limit` will cap the maximum shutter and gain values. Reducing these vaules may be used to reduce motion blur and image noise respectivly. Shutter is always prioritied over gain. When going into darker scenes, the shutter will first increase, and once it has reached the `shutter_limit`, the gain will then begin to increase. Likewise, when going into brighter scenes, the gain will decrease to zero first, and only then will the shutter decrease. This function returns a table of statistics related to the scene and current algorithm state. Many aspects of shutter, gain and white balance may be monitored by reading the table.
+| `frame.camera.read_raw(num_bytes)`                                                                                                            | The same as `camera.read()` however skips the JPEG header data and only returns the image data and final JPEG footer. This function can be used to speed up data transfer since the JPEG header between images is the same if the `resolution` and `quality` values remain unchanged. It's first recommended to read an image normally using `camera.read()` and then extract the JPEG header (always the first 623 bytes) so that it can be used for subsequent `camera.read_raw()` operations
+| `frame.camera.auto{metering='AVERAGE', exposure=0.18, exposure_speed=0.5, shutter_limit=800, analog_gain_limit=248, white_balance_speed=0.5}` | Runs the automatic exposure, gain and white balance algorithm. This function must be called every 100ms for the best performance. `metering` can be one of three modes, `SPOT`, `CENTER_WEIGHTED`, or `AVERAGE`. `exposure` can be a value between `0.0` and `1.0` where lower values will return darker images, and higher values will return brighter images. `exposure_speed` and `white_balance_speed` control how aggressively the algorithm will attempt to correct for the exposure and white balance respectively. Higher values will result in a faster convergence, but may create additional overshoot or oscillation of the image brightness or color balance. `shutter_limit` and `analog_gain_limit` will cap the maximum shutter and gain values. Reducing these values may be used to reduce motion blur and image noise respectively. Shutter is always prioritized over gain. When going into darker scenes, the shutter will first increase, and once it has reached the `shutter_limit`, the gain will then begin to increase. Likewise, when going into brighter scenes, the gain will decrease to zero first, and only then will the shutter decrease. This function returns a table of statistics related to the scene and current algorithm state. Many aspects of shutter, gain and white balance may be monitored by reading the table.
 
 #### Example
 {: .no_toc }
@@ -205,7 +205,12 @@ for _=1, 30 do
 end
 
 -- Capture an image using default settings
-frame.camera.capture{} -- NOTE: for devices running firmware prior to v24.179.0818, the {} should be ()
+frame.camera.capture{}
+
+-- Wait for the image to be ready
+while frame.camera.image_ready() == false do
+    -- do nothing
+end
 
 while true do
     local data = frame.camera.read(mtu)
@@ -222,7 +227,7 @@ end
 | Low&nbsp;level&nbsp;functions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
 | `frame.camera.set_exposure(shutter)`          | Sets the shutter value manually. Note that `camera.auto{}` will override this value. `shutter` can be a value between `4` and `16383`
-| `frame.camera.set_gain(gain)`                 | Sets the gain value manually. Note that `camera.auto{}` will override this value. `gain` can be a value between `0` and `248`
+| `frame.camera.set_gain(gain)`                 | Sets the gain value manually. Note that `camera.auto{}` will override this value. `gain` can be a value between `1` and `248`
 | `frame.camera.set_white_balance(r, g, b)`     | Sets the digital gains of the R, G and B channels for fine tuning white balance. `r`, `g` and `b` can be values between `0` and `1023`
 | `frame.camera.write_register(address, value)` | Allows for hacking the camera's internal registers. `address` can be any 16-bit register address of the camera, and `value` any 8-bit value to write to that address
 | `frame.camera.read_register(address, value)`  | Reads back a value from the camera's internal registers. `address` can be any 16-bit register address of the camera. The 8bit value of the register will be returned
@@ -317,7 +322,7 @@ The Bluetooth API allows for sending and receiving raw byte data over Bluetooth.
 {: .no_toc }
 
 ```lua
-function get_data(data) -- Called everytime byte data arrives to Frame
+function get_data(data) -- Called every time byte data arrives to Frame
     print(data)
 end
 
@@ -432,6 +437,7 @@ The system API provides miscellaneous functions such as `sleep` and `update`. It
 
 | API | Description |
 |:---------|:------------|
+| `frame.HARDWARE_VERSION` | Returns the current hardware version as a string. E.g. `'Frame'`
 | `frame.FIRMWARE_VERSION` | Returns the current firmware version as a 12 character string. E.g. `'v24.046.1546'`
 | `frame.GIT_TAG`          | Returns the current firmware git tag as a 7 character string. E.g. `'4a6ea0b'`
 | `frame.battery_level()`  | Returns the battery level as a percentage between `1` and `100`
