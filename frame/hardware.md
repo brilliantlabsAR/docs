@@ -120,7 +120,7 @@ The microphone is connected directly to the Bluetooth MCU which allows for low p
 
 ## Motion Sensor (IMU)
 
-The IMU on Frame is the 6 axis [MC6470](https://eu.mouser.com/datasheet/2/821/MC6470_Datasheet_APS_048_0033v1_7_1-3003085.pdf) sensor from MEMSIC. It features both an accelerometer and e-compass in a tiny package consuming very little power. Further processing on the Bluetooth MCU calculates the raw X, Y and Z values of both sensing elements into angular values for detecting head position. 
+The IMU on Frame is the 6 axis [MC6470](https://eu.mouser.com/datasheet/2/821/MC6470_Datasheet_APS_048_0033v1_7_1-3003085.pdf) sensor from MEMSIC. It features both an accelerometer and e-compass in a tiny package consuming very little power. Further processing on the Bluetooth MCU calculates the raw X, Y and Z values of both sensing elements into angular values for detecting head position.
 
 An accelerator interrupt line from the IMU is also directly connected to the Bluetooth MCU. This allows for always on detections of taps that can be used to navigate and select UI elements within the user's apps.
 
@@ -201,6 +201,11 @@ It also contains a 140mAh rechargeable li-ion cell which allows for a top-up of 
     </a>
 </div> -->
 
+### Prescription (Rx) clip
+
+[Download the 3D Model in STL format](/frame/frame-rx-clip.stl)
+
+
 ---
 
 ## Device characteristics
@@ -259,7 +264,7 @@ The device has been evaluated to meet general RF exposure requirement. The devic
 
 ### Limitation of liability
 
-Brilliant Labs provides technical data, including design resources, examples, applications, design advice, tools, safety information and other resources "as is" and disclaims all warranties, express and implied, including without limitation any implied warranties or merchantability, fitness for a particular purpose or non-infringement of third party intellectual property rights. 
+Brilliant Labs provides technical data, including design resources, examples, applications, design advice, tools, safety information and other resources "as is" and disclaims all warranties, express and implied, including without limitation any implied warranties or merchantability, fitness for a particular purpose or non-infringement of third party intellectual property rights.
 
 These resources are intended for skilled developers. You are solely responsible for selecting the appropriate products for your application, designing, validating and testing your application, and ensuring your application meets applicable standards, and other safety, security, regulatory or other requirements.
 
