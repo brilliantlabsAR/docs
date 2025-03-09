@@ -262,7 +262,7 @@ while true do
         break
     end
 
-    -- If there's data to send then ... 
+    -- If there's data to send then ...
     if data ~= '' then
         -- Try to send the data as fast as possible
         while true do
@@ -285,7 +285,7 @@ The tap gesture will always wake up Frame from `frame.sleep()`.
 
 | API | Description |
 |:---------|:------------|
-| `frame.imu.direction()`           | Returns a table containing the `roll`, `pitch` and `heading` angles of the wearer's head position 
+| `frame.imu.direction()`           | Returns a table containing the `roll`, `pitch` and `heading` angles of the wearer's head position
 | `frame.imu.tap_callback(handler)` | Assigns a callback to the tap gesture. `handler` must be a function, or can be `nil` to deactivate the callback
 
 | Low&nbsp;level&nbsp;functions | Description |
@@ -425,7 +425,7 @@ end
 frame.compression.process_function(decomp_func)
 
 -- Function to handle the compressed data received from Bluetooth
-function ble_func(data)    
+function ble_func(data)
     frame.compression.decompress(data, 1024)
 end
 
@@ -468,7 +468,7 @@ async def main():
 
         frame.compression.process_function(decomp_func)
 
-        function ble_func(data)    
+        function ble_func(data)
             frame.compression.decompress(data, 1024)
         end
 
@@ -528,7 +528,7 @@ print(time_now['day'])
 
 ### System functions
 
-The system API provides miscellaneous functions such as `sleep` and `update`. It also contains some low level functions which are handy for developing apps and custom FPGA images. 
+The system API provides miscellaneous functions such as `sleep` and `update`. It also contains some low level functions which are handy for developing apps and custom FPGA images.
 
 | API | Description |
 |:---------|:------------|
@@ -568,13 +568,11 @@ Once you have AR Studio installed, you can try an example using the following st
 
     ```lua
     function change_text()
-        frame.display.clear()
         frame.display.text('Frame tapped!', 50, 100)
         frame.display.show()
     end
 
     frame.imu.tap_callback(change_text)
-    frame.display.clear()
     frame.display.text('Tap the side of Frame', 50, 100)
     frame.display.show()
     ```
