@@ -13,7 +13,7 @@ parent: Frame
 
 ![Frame exploded view](/frame/images/frame-exploded-view.png)
 
-Here you'll find all the details about how Frame works under the hood. For software related information, be sure to also check out the [Building Apps](/frame/building-apps) and [Lua API](/frame/building-apps-lua/) pages.
+Here you'll find all the details about how Frame works under the hood. For software related information, be sure to also check out the [Frame SDK](/frame/frame-sdk) including [Lua API](/frame/frame-sdk-lua/) pages.
 
 ## Key features
 {: .no_toc }
@@ -60,7 +60,7 @@ the Bluetooth MCU serves as the main processor for Frame. It handles all network
 
 As standard, Frame comes with a feature rich Lua based OS that allows for scripting and remote access fully over Bluetooth. No programming cables, or proprietary software is needed to use the device.
 
-The firmware is fully updatable over the air. If you're using a Frame compatible app, these updates should be automatic, however if you're developing your own apps, take a look at the [Building Apps](/frame/building-apps-bluetooth-specs/#firmware-updates) page to see how you can implement firmware update capability into your own apps.
+The firmware is fully updatable over the air. If you're using a Frame compatible app, these updates should be automatic, however if you're developing your own apps, take a look at the [Frame SDK Bluetooth Specs page](/frame/frame-sdk-bluetooth-specs/#firmware-updates) to see how you can implement firmware update capability into your own apps.
 
 ### Customizing the firmware
 

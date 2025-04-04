@@ -2,8 +2,8 @@
 title: Lua API Reference
 description: A reference of Lua functionality available on your Frame AR glasses.
 image: /images/frame/frame-splash.png
-nav_order: 2
-parent: Building Apps
+nav_order: 3
+parent: Frame SDK
 grand_parent: Frame
 redirect_from:
   - /frame/lua
@@ -19,7 +19,7 @@ Lua is a tiny and extensible scripting language that's designed to be power effi
 {: .note }
 Note that the Lua virtual machine on the Frame has a subset of the standard library, so some guides on the internet about Lua may contain code that won't work on Frame without modification.  Specifically, Lua's standard `io` and `os` libraries are not present on Frame.
 
-There's no special cables or setup needed. Lua on Frame is accessed solely over Bluetooth, such that any user created host app can easily execute scripts by simply pushing Lua strings to the device. To learn more how the underlying Bluetooth communication with Frame works, check out the [Talking to the Frame over Bluetooth](/frame/building-apps-bluetooth-specs) page.
+There's no special cables or setup needed. Lua on Frame is accessed solely over Bluetooth, such that any user created host app can easily execute scripts by simply pushing Lua strings to the device. To learn more how the underlying Bluetooth communication with Frame works, check out the [Talking to the Frame over Bluetooth](/frame/frame-sdk-bluetooth-specs) page.
 
 ---
 
@@ -309,7 +309,7 @@ frame.imu.tap_callback(tapped)
 
 ### Bluetooth
 
-The Bluetooth API allows for sending and receiving raw byte data over Bluetooth. For a full description of how this can be used, check out the [Talking to the Frame over Bluetooth](/frame/building-apps-bluetooth-specs) page.
+The Bluetooth API allows for sending and receiving raw byte data over Bluetooth. For a full description of how this can be used, check out the [Talking to the Frame over Bluetooth](/frame/frame-sdk-bluetooth-specs) page.
 
 | API | Description |
 |:---------|:------------|
@@ -537,7 +537,7 @@ The system API provides miscellaneous functions such as `sleep` and `update`. It
 | `frame.GIT_TAG`          | Returns the current firmware git tag as a 7 character string. E.g. `'4a6ea0b'`
 | `frame.battery_level()`  | Returns the battery level as a percentage between `1` and `100`
 | `frame.sleep(*seconds)`  | Sleeps for a given number of seconds. `seconds` can be a decimal number such as `1.25`. If no argument is given, Frame will go to sleep until a tap gesture wakes it up
-| `frame.update()`         | Reboots Frame into the firmware bootloader. Check the [firmware updates](/frame/building-apps#firmware-updates) section of the Building Apps page to see how this is used
+| `frame.update()`         | Reboots Frame into the firmware bootloader. Check the [firmware updates](/frame/frame-sdk#firmware-updates) section of the Building Apps page to see how this is used
 
 | Low&nbsp;level&nbsp;functions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Description |
 |:---------|:------------|
