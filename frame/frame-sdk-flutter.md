@@ -155,8 +155,8 @@ After the Frameside application reports that it has started, the hostside and Fr
       Uint8List pngBytes = await file.readAsBytes();
 
       // send the Sprite to Frame
-      var msg = TxSprite.fromPngBytes(msgCode: 0x20, pngBytes: pngBytes);
-      await frame!.sendMessage(msg.msgCode, msg.pack());
+      var msg = TxSprite.fromPngBytes(pngBytes: pngBytes);
+      await frame!.sendMessage(0x20, msg.pack());
     }
   }
   // ...
