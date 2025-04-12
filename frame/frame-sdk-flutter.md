@@ -82,7 +82,7 @@ Note: Frame SDK for Flutter is under active development and it is expected that 
     }
 
     // send the counter to Frame for display
-    if (await _frame?.connectionState.first == BrilliantConnectionState.connected) {
+    if (_frame?.state == BrilliantConnectionState.connected) {
       await _frame!.sendString(
         'frame.display.text("Hello, World! ($_counter)", 1, 1) frame.display.show()',
         awaitResponse: false
