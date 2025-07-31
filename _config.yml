@@ -29,7 +29,7 @@ aux_links:
     - https://www.brilliant.xyz
 
 # Footer
-footer_content: Copyright &copy; 2024 <a href="https://www.brilliant.xyz">Brilliant Labs</a>
+footer_content: Copyright &copy; 2025 <a href="https://www.brilliant.xyz">Brilliant Labs</a>
 last_edit_timestamp: true
 last_edit_time_format: "%b %e %Y"
 
@@ -37,7 +37,7 @@ last_edit_time_format: "%b %e %Y"
 mermaid:
   version: "9.2.2" # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
 
-# Call-outs 
+# Call-outs
 callouts:
   warning:
     title: Caution
