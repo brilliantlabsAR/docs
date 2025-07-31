@@ -11,6 +11,10 @@ Here you'll find everything you need to know about using your Brilliant AR devic
 
 ---
 
+[![Brilliant Halo](/images/halo-link.png)](/halo/halo)
+
+---
+
 [![Brilliant Frame](/images/frame-link.png)](/frame/frame)
 
 ---

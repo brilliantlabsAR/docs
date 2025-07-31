@@ -2,7 +2,7 @@
 title: Frame
 description: Technical documentation for the Brilliant Frame.
 image: /images/frame/frame-splash.png
-nav_order: 2
+nav_order: 3
 has_children: true
 ---
 
