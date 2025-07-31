@@ -8,6 +8,7 @@
 _site
 Gemfile.lock
 node_modules
+.jekyll-metadata
 
 # MacOS cache files
 .DS_Store
