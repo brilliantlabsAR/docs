@@ -5,6 +5,8 @@ source "https://rubygems.org"
 
 gem "github-pages", "~> 228", group: :jekyll_plugins
 
+gem "webrick", "~> 1.8.1"
+
 group :jekyll_plugins do
   gem 'jekyll-include-cache', "~> 0.2.1"
   gem "jekyll-redirect-from", "~> 0.16.0"
@@ -17,9 +19,6 @@ end
 platforms :mingw, :x64_mingw, :mswin, :jruby do
   gem "tzinfo", "~> 1.2"
   gem "tzinfo-data"
-
-  # this was required on a fresh install of Ruby on Windows (see https://github.com/jekyll/jekyll/issues/8523):
-  gem "webrick", "~> 1.8.1"
 end
 
 # Performance-booster for watching directories on Windows
