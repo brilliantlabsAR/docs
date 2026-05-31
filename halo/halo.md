@@ -30,7 +30,7 @@ Whenever firmware updates are available for your Halo, you'll be notified in you
 
 ## Where can I download Brilliant Noa?
 
-Brilliant Noa is available on both Apple App Store for iOS and Google Play Store for Android.
+Brilliant Noa is **coming soon** to both Apple App Store for iOS and Google Play Store for Android.
 
 <div style="text-align:center" markdown="1">
 [<img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Apple App Store badge" width="125"/>]()
