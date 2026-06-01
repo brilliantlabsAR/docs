@@ -16,6 +16,9 @@ redirect_from:
 # Building Apps with the Brilliant SDK
 {: .no_toc }
 
+{: .note }
+Migrating from the Frame SDK? See the Migration guides for [Python](https://github.com/brilliantlabsAR/brilliant_sdk/blob/main/python/MIGRATION.md), [Flutter](https://github.com/brilliantlabsAR/brilliant_sdk/blob/main/flutter/MIGRATION.md) and [Web Bluetooth](https://github.com/brilliantlabsAR/brilliant_sdk/blob/main/webbluetooth/MIGRATION.md).
+
 ---
 
 1. TOC
