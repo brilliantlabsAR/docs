@@ -17,7 +17,7 @@ Here you'll find all the details about how Halo works under the hood. For softwa
 
 ## Key features
 {: .no_toc }
-- 0.2" 640×480 color OLEDoS micro-display
+- 0.2" color OLEDoS micro-display (256x256px drawable area)
 - 640x480 global shutter color camera
 - Stereo microphones
 - Stereo bone conduction speakers
