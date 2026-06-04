@@ -15,7 +15,9 @@ grand_parent: Halo
 Lua is a tiny and extensible scripting language that's designed to be power efficient and quick to learn. Halo features a Lua virtual machine based on Lua 5.3, with dedicated hardware APIs that allow direct access to all of Halo's peripherals.
 
 {: .note }
-The Lua virtual machine on Halo has a subset of the standard library. Lua's standard `io` and `os` libraries are not present. The global `require()` function loads modules from the device filesystem (`/lfs/<module_name>.lua`) rather than using the standard Lua search path.
+The Lua virtual machine on Halo has a subset of the standard library. Lua's standard `io` and `os` libraries are not present. The global `require()` function loads modules from the device filesystem (e.g. `require("myapp")` runs `/myapp.lua`).\
+\
+On power-on and after a restart, if `/main.lua` is present, it is automatically `require`d (executed).
 
 There's no special cables or setup needed. Lua on Halo is accessed solely over Bluetooth, such that any user-created host app can easily execute scripts by pushing Lua strings to the device. To learn more about how the underlying Bluetooth communication with Halo works, check out the [Talking to Halo Over Bluetooth](/halo/halo-sdk-bluetooth-specs) page.
 
@@ -127,7 +129,7 @@ print(string.format("%04d-%02d-%02d %02d:%02d:%02d",
 
 ## File System
 
-File system APIs for reading and writing files on the device's LittleFS storage. All file paths are relative to the `/lfs/` mount point.
+File system APIs for reading and writing files on the device's LittleFS storage which presents a `/` mount point to the Lua environment.
 
 | API | Description |
 |:----|:------------|
@@ -141,7 +143,7 @@ File system APIs for reading and writing files on the device's LittleFS storage.
 | `f:write(data)` | Write string data to file |
 | `f:close()` | Close file (important to call after writing) |
 
-Use `require("modulename")` to load a Lua module from `/lfs/modulename.lua`. This replaces the standard Lua `require`.
+Use `require("modulename")` to load a Lua module from `/modulename.lua`. This replaces the standard Lua `require`.
 
 ```lua
 -- Write a file
