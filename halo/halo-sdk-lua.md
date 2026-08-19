@@ -593,7 +593,7 @@ All draw coordinates are in the range 1–256; values below 1 are clamped to 1.
 | `frame.display.text(text, x, y, color)` | Draw text at `x, y`. `color` is `0xRRGGBB` (default `0xFFFFFF`) |
 | `frame.display.char(codepoint, x, y, color)` | Draw a single Unicode character by codepoint |
 | `frame.display.set_font(font_id, size, scale)` | Set the current font for text rendering |
-| `frame.display.get_font_list()` | Returns a table of available fonts (`id`, `name`) |
+| `frame.display.get_font_list()` | Returns the available fonts as a table keyed by font id: `{[0]="Dogica", [1]="DogicaBold"}` |
 | `frame.display.bitmap(x, y, width, format, offset, data, [opts])` | Draw indexed or RGB bitmap |
 | `frame.display.set_pixel(x, y, color)` | Set a single pixel |
 | `frame.display.line(x0, y0, x1, y1, color)` | Draw a line |
@@ -640,22 +640,22 @@ frame.display.text("Bold text", 50, 50)
 <tbody><tr>
 <td style="background-color: #000000;"><font color="White">#0<br> VOID</font></td>
 <td style="background-color: #FFFFFF;"><font color="Black">#1<br> WHITE</font></td>
-<td style="background-color: #9D9D9D;"><font color="Black">#2<br> GREY</font></td>
-<td style="background-color: #BE2633;"><font color="Black">#3<br> RED</font></td>
-<td style="background-color: #E06F8B;"><font color="Black">#4<br> PINK</font></td>
-<td style="background-color: #493C2B;"><font color="White">#5<br> DARKBROWN</font></td>
-<td style="background-color: #A46422;"><font color="Black">#6<br> BROWN</font></td>
-<td style="background-color: #EB8931;"><font color="Black">#7<br> ORANGE</font></td>
+<td style="background-color: #808080;"><font color="Black">#2<br> GREY</font></td>
+<td style="background-color: #FF0000;"><font color="Black">#3<br> RED</font></td>
+<td style="background-color: #FFC0CB;"><font color="Black">#4<br> PINK</font></td>
+<td style="background-color: #654321;"><font color="White">#5<br> DARKBROWN</font></td>
+<td style="background-color: #964B00;"><font color="White">#6<br> BROWN</font></td>
+<td style="background-color: #FFA500;"><font color="Black">#7<br> ORANGE</font></td>
 </tr>
 <tr>
-<td style="background-color: #F7E26B;"><font color="Black">#8<br> YELLOW</font></td>
-<td style="background-color: #2F484E;"><font color="White">#9<br> DARKGREEN</font></td>
-<td style="background-color: #44891A;"><font color="Black">#10<br> GREEN</font></td>
-<td style="background-color: #A3CE27;"><font color="Black">#11<br> LIGHTGREEN</font></td>
-<td style="background-color: #1B2632;"><font color="White">#12<br> NIGHTBLUE</font></td>
-<td style="background-color: #005784;"><font color="White">#13<br> SEABLUE</font></td>
-<td style="background-color: #31A2F2;"><font color="Black">#14<br> SKYBLUE</font></td>
-<td style="background-color: #B2DCEF;"><font color="Black">#15<br> CLOUDBLUE</font></td>
+<td style="background-color: #FFFF00;"><font color="Black">#8<br> YELLOW</font></td>
+<td style="background-color: #006400;"><font color="White">#9<br> DARKGREEN</font></td>
+<td style="background-color: #00FF00;"><font color="Black">#10<br> GREEN</font></td>
+<td style="background-color: #90EE90;"><font color="Black">#11<br> LIGHTGREEN</font></td>
+<td style="background-color: #191970;"><font color="White">#12<br> NIGHTBLUE</font></td>
+<td style="background-color: #0000CD;"><font color="White">#13<br> SEABLUE</font></td>
+<td style="background-color: #87CEEB;"><font color="Black">#14<br> SKYBLUE</font></td>
+<td style="background-color: #F0F8FF;"><font color="Black">#15<br> CLOUDBLUE</font></td>
 </tr>
 </tbody></table>
 
