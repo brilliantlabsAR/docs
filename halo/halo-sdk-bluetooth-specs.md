@@ -25,14 +25,19 @@ Once you're communicating with Halo over Bluetooth, you can use the [Lua API Ref
 
 Halo uses BLE bonding and must pair with a host device before any communication can take place. When attempting to connect to Halo using an SDK, Halo will automatically initiate pairing, which the OS handles and the user will have to agree to.
 
+Halo stores up to **5 bonded devices**. Out of the box (or after a factory reset) it is always pairable. Once at least one device is bonded, unknown devices are refused — to pair an additional device, hold Halo's button for **5 seconds** (a chime plays and the LED starts flashing) to open a ~60-second **pairing window**; the next new device to connect is paired and bonded. If all 5 slots are in use, the least recently used bond is replaced.
+
 **Device Naming:** Halo devices are named as `Halo XX`, where `XX` is the 4th byte (in hex) of the device's EUI-48 MAC address.
 
 <details markdown="block">
 <summary>Full Bluetooth Connection Details</summary>
 
-### Un-Pairing
+### Connection Behavior
 
-If previously paired to another device, Halo must be put into pairing mode before it can be paired to a new host device. Press and hold Halo's button for 8 seconds until the white LED on the left arm flashes, indicating that Halo is in pairing mode. Host-side devices must also remove previous bonding before a new pairing can be accepted.
+- Halo accepts **one connection at a time**: connectable advertising stops while a device is connected and resumes on disconnect, so a second bonded device doesn't see Halo until the first releases it. A connection from a device Halo doesn't recognize is dropped without pairing unless the pairing window is open — if your connection appears to succeed and then immediately drops, this is why.
+- While the pairing window is open, already-bonded devices are refused so the new device can get in; they reconnect normally once the window closes (on a successful pairing, after ~60 seconds, or on reboot). Opening the window disconnects any current connection.
+- A host where you used "Forget This Device" can re-pair itself on its next connection — no button press needed.
+- To make Halo forget all paired devices, factory reset it (15-second button hold, charger disconnected).
 
 ### Bluetooth Connection Diagram
 
@@ -41,7 +46,7 @@ If previously paired to another device, Halo must be put into pairing mode befor
 
 ## Bluetooth Services & Characteristics
 
-Halo implements three BLE services:
+Halo implements four BLE services:
 
 ### Halo Lua Service
 
@@ -57,6 +62,8 @@ Characteristic names are from the **host's** perspective — TX means the host t
 
 The maximum packet size on each characteristic is the negotiated MTU (up to 512 bytes).
 
+The service also exposes two further characteristics — `7A230004` (Notify) and `7A230006` (Notify) — which you will see when enumerating the service but which the firmware does not use.
+
 {: .note }
 Camera images and microphone audio are **not** streamed on dedicated characteristics. Camera image chunks are sent from Halo to host over the regular **LUA RX** characteristic using `frame.bluetooth.send()`. Microphone audio is also sent back on the **LUA RX** characteristic in the same way.
 
@@ -67,6 +74,7 @@ Camera images and microphone audio are **not** streamed on dedicated characteris
 | Characteristic | UUID | Permissions | Description |
 |----------------|------|-------------|-------------|
 | Battery Level | `0x2A19` | Read, Notify | Battery level (0–100%) |
+| Battery Power State | `0x2A1A` | Read, Notify | Bitfield: battery presence, charging, and discharging state |
 
 ### OTA Service
 
@@ -77,6 +85,13 @@ Camera images and microphone audio are **not** streamed on dedicated characteris
 | SMP | `DA2E7828-FBCE-4E01-AE9E-261174997C48` | Write Without Response, Write, Notify | SMP firmware update control |
 
 Firmware updates use the **MCU-BOOT** scheme over BLE using the [Simple Management Protocol (SMP)](https://docs.zephyrproject.org/latest/services/device_mgmt/smp_svr.html). See [Firmware Updates](#firmware-updates) below.
+
+### LE Audio Service
+
+Halo is also a standard **LE Audio** device: a BAP Unicast Server with a speaker sink and a microphone source using the LC3 codec (8/16 kHz in both directions, with 32/48 kHz capture also available), plus volume control (VCS) and host-side microphone mute (MICS). Hosts with LE Audio support can stream audio to Halo's speaker and record from its microphone through these standard profiles, without using the custom characteristics at all.
+
+{: .note }
+An LE Audio stream established by the host takes priority over the custom channels. In particular, an active `frame.microphone` capture is preempted — `frame.microphone.status()` returns `"le_audio"` and `frame.microphone.start()` fails until the host releases the stream.
 
 ## Executing Lua Statements Over Bluetooth
 
@@ -165,13 +180,13 @@ Audio data for playback is written to the **AUDIO TX** characteristic (`7A230005
 
 There is no dedicated audio receive characteristic. Microphone audio is sent back to the host via `frame.bluetooth.send()` in Lua, which delivers it on the **LUA RX** characteristic. Start the microphone using `frame.microphone.start()`, then read chunks and send them in the main Lua loop.
 
-LC3 format: 10ms frames (750µs or 1000µs frame duration), e.g. 16kHz 16-bit mono at 16kbps.
+LC3 format: 7.5 ms or 10 ms frames, e.g. 16kHz 16-bit mono at 16kbps. (The `duration` values `750` and `1000` in the Lua API are in units of µs/10.)
 
 ## Firmware Updates
 
 Halo firmware updates use the **MCU-BOOT** bootloader scheme over BLE, using the [Simple Management Protocol (SMP)](https://docs.zephyrproject.org/latest/services/device_mgmt/smp_svr.html) on the OTA service.
 
-The latest official firmware release is available from the [frame-2-firmware releases page](https://github.com/brilliantlabsAR/frame-2-firmware/releases).
+The latest official firmware release is available from the [halo-firmware releases page](https://github.com/brilliantlabsAR/halo-firmware/releases).
 
 For reference implementations of MCU-BOOT DFU over BLE:
 - [mcuboot_alif port for Alif Semiconductor devices](https://github.com/alifsemi/mcuboot_alif)
