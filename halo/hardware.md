@@ -138,6 +138,16 @@ Halo uses a magnetic connector for convenient charging over USB Type-C.
 
 ---
 
+## Mechanical
+
+### Halo
+
+[Download the 3D Model in STL format](/halo/halo.stl)
+
+The model contains the full Halo assembly — the front, both lenses, and both temple arms in the open position.
+
+---
+
 ## Safety & limitation of liability
 
 ### Safety
