@@ -30,3 +30,13 @@ If you'd like to do some extensive editing, you can also fork/clone this reposit
     ```
 
 That's it! As you edit the pages. The website will automatically refresh. Be sure to keep an eye on your terminal to spot any error messages while you're developing.
+## LLM / AI-agent files
+
+The site serves [`/llms.txt`](llms.txt) (curated index with raw-Markdown
+links) and [`/llms-full.txt`](llms-full.txt) (the Halo and Frame sections
+concatenated into one file). `llms.txt` is hand-maintained; after editing any
+page under `halo/` or `frame/`, regenerate the full file:
+
+```bash
+python3 tools/generate_llms_full.py
+```

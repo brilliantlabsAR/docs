@@ -26,7 +26,7 @@ The Brilliant SDK for Python also supports **Frame** devices. `brilliant-ble` au
 
 ## `brilliant-ble` package: low-level connectivity
 
-| [![Available on PyPI](https://img.shields.io/pypi/v/brilliant-ble)](https://pypi.org/project/brilliant-ble/){:target="_blank"} | [Source](https://github.com/brilliantlabsAR/brilliant_sdk/tree/main/python/packages/brilliant_ble){:target="_blank"} |
+| [![Available on PyPI](https://img.shields.io/pypi/v/brilliant-ble)](https://pypi.org/project/brilliant-ble/){:target="_blank"} | [API Reference](https://brilliant-ble.readthedocs.io/){:target="_blank"} | [Source](https://github.com/brilliantlabsAR/brilliant_sdk/tree/main/python/packages/brilliant_ble){:target="_blank"} |
 
 The `BrilliantBle` class connects to Halo (or Frame), initiating pairing if required. Lua strings can be sent for execution, optionally returning their results. Transmitted strings must be shorter than `BrilliantBle.max_lua_payload()`.
 
@@ -78,7 +78,7 @@ if __name__ == "__main__":
 
 ## `brilliant-msg` package: application-level messaging
 
-| [![Available on PyPI](https://img.shields.io/pypi/v/brilliant-msg)](https://pypi.org/project/brilliant-msg/){:target="_blank"} | [Source](https://github.com/brilliantlabsAR/brilliant_sdk/tree/main/python/packages/brilliant_msg){:target="_blank"} |
+| [![Available on PyPI](https://img.shields.io/pypi/v/brilliant-msg)](https://pypi.org/project/brilliant-msg/){:target="_blank"} | [API Reference](https://brilliant-msg.readthedocs.io/){:target="_blank"} | [Source](https://github.com/brilliantlabsAR/brilliant_sdk/tree/main/python/packages/brilliant_msg){:target="_blank"} |
 
 `brilliant-msg` enables the host and Halo-side halves of an application to **communicate using richly typed messages** — for example transmitting sprites to Halo with width, height, palette data, and pixel data as a single object.
 

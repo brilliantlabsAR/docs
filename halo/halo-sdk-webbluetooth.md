@@ -30,7 +30,7 @@ Web Bluetooth is only available in Chromium-based browsers (Chrome, Edge, Opera)
 
 ## `brilliant-ble` package: low-level connectivity
 
-| [npm](https://www.npmjs.com/package/brilliant-ble){:target="_blank"} | [Source](https://github.com/brilliantlabsAR/brilliant_sdk/tree/main/webbluetooth/packages/brilliant-ble){:target="_blank"} |
+| [npm](https://www.npmjs.com/package/brilliant-ble){:target="_blank"} | [API Reference](https://brilliantlabsar.github.io/brilliant_sdk/brilliant-ble/api/){:target="_blank"} | [Source](https://github.com/brilliantlabsAR/brilliant_sdk/tree/main/webbluetooth/packages/brilliant-ble){:target="_blank"} |
 
 The `BrilliantBle` class connects to Halo (or Frame) via the browser's Web Bluetooth API. Device type is detected automatically at connection time.
 
@@ -81,7 +81,7 @@ await frame.disconnect();
 
 ## `brilliant-msg` package: application-level messaging
 
-| [npm](https://www.npmjs.com/package/brilliant-msg){:target="_blank"} | [Source](https://github.com/brilliantlabsAR/brilliant_sdk/tree/main/webbluetooth/packages/brilliant-msg){:target="_blank"} |
+| [npm](https://www.npmjs.com/package/brilliant-msg){:target="_blank"} | [API Reference](https://brilliantlabsar.github.io/brilliant_sdk/brilliant-msg/api/){:target="_blank"} | [Source](https://github.com/brilliantlabsAR/brilliant_sdk/tree/main/webbluetooth/packages/brilliant-msg){:target="_blank"} |
 
 `brilliant-msg` enables the host and Haloside halves of an application to **communicate using richly typed messages**.
 

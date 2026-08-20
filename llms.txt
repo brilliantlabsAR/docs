@@ -1,0 +1,48 @@
+# Brilliant Labs Documentation
+
+> Developer documentation for Brilliant Labs smart glasses — Halo and Frame — and the legacy Monocle. The glasses run user apps in an on-device Lua VM (`frame.*` API) and are driven by a host app over Bluetooth LE using the Brilliant SDK (Python, Flutter, WebBluetooth/TypeScript).
+
+Every page below is written in plain Markdown. The URLs point at the raw
+Markdown sources (token-efficient); replace the raw-source prefix
+`https://raw.githubusercontent.com/brilliantlabsAR/docs/main/` with
+`https://docs.brilliant.xyz/` and drop `.md` for the rendered pages.
+A concatenation of the Halo and Frame documentation is available at
+https://docs.brilliant.xyz/llms-full.txt
+
+The SDK source, examples, and an agent guide (AGENTS.md) live at
+https://github.com/brilliantlabsAR/brilliant_sdk
+
+## Halo
+
+- [Halo Lua API reference](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/halo/halo-sdk-lua.md): the on-device `frame.*` API — display, camera, IMU, button, speaker, microphone, files, Bluetooth — including a Halo-vs-Frame differences table
+- [Building apps for Halo](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/halo/halo-sdk.md): how apps run (host app + BLE + on-device Lua), development options
+- [Halo Python SDK](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/halo/halo-sdk-python.md): brilliant-ble / brilliant-msg packages, message types, examples, emulator
+- [Halo Flutter SDK](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/halo/halo-sdk-flutter.md): brilliant_ble / brilliant_msg / simple_brilliant_app packages
+- [Halo WebBluetooth SDK](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/halo/halo-sdk-webbluetooth.md): brilliant-ble / brilliant-msg npm packages for the browser
+- [Halo Bluetooth LE specs](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/halo/halo-sdk-bluetooth-specs.md): GATT services, Lua-over-BLE, control characters, camera/audio transport, firmware update — for talking to Halo without the SDK
+- [Halo hardware](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/halo/hardware.md): display, camera, IMU, speakers, microphone, battery, charging cradle
+- [Halo getting started](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/halo/halo.md): consumer FAQ, pairing, charging
+
+## Frame
+
+- [Frame Lua API reference](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/frame/frame-sdk-lua.md): the on-device `frame.*` API for Frame — display, camera, microphone, IMU, Bluetooth, files
+- [Building apps for Frame](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/frame/frame-sdk.md): how apps run, development options
+- [Frame Python SDK](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/frame/frame-sdk-python.md): frame-ble / frame-msg packages (predecessors of brilliant-ble / brilliant-msg, which support both devices)
+- [Frame Flutter SDK](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/frame/frame-sdk-flutter.md): frame_ble / frame_msg / simple_frame_app packages (predecessors of the brilliant_* packages)
+- [Frame Bluetooth LE specs](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/frame/frame-sdk-bluetooth-specs.md): GATT services, Lua-over-BLE, control characters, firmware update
+- [Frame hardware](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/frame/hardware.md): display, camera, FPGA, microphone, IMU, battery, charging, schematics
+
+## SDK packages
+
+- [Brilliant SDK monorepo](https://github.com/brilliantlabsAR/brilliant_sdk): Python (PyPI: brilliant-ble, brilliant-msg, brilliant-sdk, halo-emulator), Flutter (pub.dev: brilliant_ble, brilliant_msg, brilliant_sdk, simple_brilliant_app), WebBluetooth (npm: brilliant-ble, brilliant-msg, brilliant-sdk); ~110 examples with paired device-side Lua
+- [Python API reference (brilliant-ble)](https://brilliant-ble.readthedocs.io/)
+- [Python API reference (brilliant-msg)](https://brilliant-msg.readthedocs.io/)
+- [WebBluetooth live examples and TypeDoc](https://brilliantlabsar.github.io/brilliant_sdk/)
+- [Halo firmware source](https://github.com/brilliantlabsAR/halo-firmware): authoritative device behavior; BLE/SMP protocol in applications/halo/PROTOCOL.md
+- [Frame firmware source](https://github.com/brilliantlabsAR/frame-codebase)
+
+## Optional
+
+- [Monocle MicroPython API](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/monocle/micropython.md): legacy device (MicroPython, not Lua)
+- [Monocle hardware](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/monocle/hardware.md)
+- [Community projects](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/community.md)

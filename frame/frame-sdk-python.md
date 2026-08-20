@@ -14,6 +14,9 @@ nav_enabled: true
 
 ---
 
+The `frame-*` packages documented on this page still work, but active development has moved to their renamed successors in the [Brilliant SDK monorepo](https://github.com/brilliantlabsAR/brilliant_sdk){:target="_blank"}: [brilliant-ble](https://pypi.org/project/brilliant-ble/){:target="_blank"} and [brilliant-msg](https://pypi.org/project/brilliant-msg/){:target="_blank"} support **both Frame and Halo** with the same API (see the [migration guide](https://github.com/brilliantlabsAR/brilliant_sdk/blob/main/python/MIGRATION.md){:target="_blank"}). New projects should start there — the [Halo Python SDK page](/halo/halo-sdk-python) documents the current packages.
+{: .note }
+
 The Frame SDK for Python is available in a low-level library ([frame-ble](https://pypi.org/project/frame-ble/)) for Bluetooth LE connectivity using [Bleak](https://github.com/hbldh/bleak) with a limited Lua REPL, and an application-level library ([frame-msg](https://pypi.org/project/frame-msg/)) for passing rich objects between your host program and Frame, such as images, streamed audio, IMU data and rasterized text.
 
 ---
