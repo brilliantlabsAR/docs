@@ -209,10 +209,10 @@ app_loop()
 
 | [Source](https://github.com/brilliantlabsAR/brilliant_sdk/tree/halo/python/packages/halo_emulator){:target="_blank"} |
 
-The `halo-emulator` package embeds a full Lua 5.3 runtime and replaces all `frame.*` calls with Python stubs, rendering display output to a 256×256 pixel buffer. This lets you develop, test, and debug Halo Lua apps entirely in software — no hardware required.
+The `halo-emulator` package embeds a full Lua 5.4 runtime and replaces all `frame.*` calls with Python stubs, rendering display output to a 256×256 pixel buffer. This lets you develop, test, and debug Halo Lua apps entirely in software — no hardware required.
 
 **Key features:**
-- Full Lua 5.3 runtime via [lupa](https://github.com/scoder/lupa) — run unmodified Halo Lua scripts
+- Full Lua 5.4 runtime via [lupa](https://github.com/scoder/lupa) — run unmodified Halo Lua scripts
 - Virtual 256×256 display — all drawing primitives, palette, text, and bitmap rendering
 - Event injection — trigger BLE data, button presses, and IMU taps from Python
 - Test-friendly — inspect the framebuffer as a PIL `Image`, capture `bluetooth.send()` calls

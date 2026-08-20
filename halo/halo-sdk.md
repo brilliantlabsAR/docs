@@ -77,7 +77,7 @@ Check the [Python](/halo/halo-sdk-python), [Flutter](/halo/halo-sdk-flutter), or
 
 For developers comfortable with Bluetooth LE, this approach offers maximum flexibility and requires understanding how Bluetooth LE works.
 
-After establishing BLE communication, you'll use Lua to control Halo's functions. Halo provides a Lua 5.3 virtual machine where you can execute scripts or use the Lua REPL over the BLE interface.
+After establishing BLE communication, you'll use Lua to control Halo's functions. Halo provides a Lua 5.4 virtual machine where you can execute scripts or use the Lua REPL over the BLE interface.
 
 Refer to the [Bluetooth LE API documentation](/halo/halo-sdk-bluetooth-specs) and the [full Lua API reference](/halo/halo-sdk-lua) for details on Halo's capabilities.
 

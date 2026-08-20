@@ -12,7 +12,7 @@ grand_parent: Halo
 
 ---
 
-Lua is a tiny and extensible scripting language that's designed to be power efficient and quick to learn. Halo features a Lua virtual machine based on Lua 5.3, with dedicated hardware APIs that allow direct access to all of Halo's peripherals.
+Lua is a tiny and extensible scripting language that's designed to be power efficient and quick to learn. Halo features a Lua virtual machine based on Lua 5.4, with dedicated hardware APIs that allow direct access to all of Halo's peripherals.
 
 {: .note }
 The Lua virtual machine on Halo has a subset of the standard library. Lua's standard `io` and `os` libraries are not present. The global `require()` function loads modules from the device filesystem with standard Lua semantics: `require("myapp")` runs `/myapp.lua`, caches the result in `package.loaded`, and returns the module's return value.\
