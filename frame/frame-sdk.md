@@ -35,9 +35,10 @@ Frame doesn't have its own app launcher or traditional app installation system. 
 
 For the quickest start:
 
-* If you're using a supported platform, begin with our SDK documentation for [Python](/frame/frame-sdk-python) or [Flutter](/frame/frame-sdk-python), then explore the [Lua API](/frame/frame-sdk-lua) for advanced features.
+* If you're using a supported platform, begin with our SDK documentation for [Python](/frame/frame-sdk-python) or [Flutter](/frame/frame-sdk-flutter), then explore the [Lua API](/frame/frame-sdk-lua) for advanced features.
 * For other platforms, use the [Lua API](/frame/frame-sdk-lua) directly over Bluetooth with the [Bluetooth LE API documentation](/frame/frame-sdk-bluetooth-specs).
-* Note: Legacy SDKs ([frame-sdk-python](https://pypi.org/project/frame-sdk/), [frame-sdk-flutter](https://pub.dev/packages/frame_sdk), [frameutils-python](https://pypi.org/project/frameutils/)) remain functional, but new projects should use the updated SDK to access new features like image display and realtime streaming.
+* The current SDK packages live in the [Brilliant SDK monorepo](https://github.com/brilliantlabsAR/brilliant_sdk){:target="_blank"} (`brilliant-ble` / `brilliant-msg` / `brilliant-sdk` on PyPI, pub.dev and npm) and support **both Frame and Halo**. The `frame-*` packages on the platform pages are their direct predecessors and still work.
+* Note: Legacy SDKs ([frame-sdk-python](https://pypi.org/project/frame-sdk/){:target="_blank"}, [frame-sdk-flutter](https://pub.dev/packages/frame_sdk){:target="_blank"}, [frameutils-python](https://pypi.org/project/frameutils/){:target="_blank"}) remain functional, but new projects should use the current SDK to access new features like image display and realtime streaming.
 
 # Development Options for Frame
 

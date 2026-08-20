@@ -14,6 +14,9 @@ nav_enabled: true
 
 ---
 
+The `frame-*` packages documented on this page still work, but active development has moved to their renamed successors in the [Brilliant SDK monorepo](https://github.com/brilliantlabsAR/brilliant_sdk){:target="_blank"}: [brilliant_ble](https://pub.dev/packages/brilliant_ble){:target="_blank"}, [brilliant_msg](https://pub.dev/packages/brilliant_msg){:target="_blank"} and [simple_brilliant_app](https://pub.dev/packages/simple_brilliant_app){:target="_blank"} support **both Frame and Halo** with the same API (see the [migration guide](https://github.com/brilliantlabsAR/brilliant_sdk/blob/main/flutter/MIGRATION.md){:target="_blank"}). New projects should start there — the [Halo Flutter SDK page](/halo/halo-sdk-flutter) documents the current packages.
+{: .note }
+
 The Frame SDK for Flutter is available in a low-level library ([frame_ble](https://pub.dev/packages/frame_ble/)) for Bluetooth LE connectivity using [Flutter Blue Plus](https://pub.dev/packages/flutter_blue_plus) with a limited Lua REPL, and an application-level library ([frame_msg](https://pub.dev/packages/frame_msg/)) for passing rich objects between your host program and Frame, such as images, streamed audio, IMU data and rasterized text.
 
 Additionally for Flutter developers the community has contributed even higher-level options for getting started quickly with single-page demo Frame applications, including specific helpers for computer vision pipelines.
