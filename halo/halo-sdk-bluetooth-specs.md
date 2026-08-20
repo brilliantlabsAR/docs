@@ -116,7 +116,7 @@ To determine the MTU in use: `frame.bluetooth.max_length()` in Lua.
 
 ## Sending Data
 
-For binary payloads (e.g. image data, sprite data), prefix the payload with a byte of value `0x01` on the **LUA TX** characteristic. This triggers a callback if one was registered with `frame.bluetooth.receive_callback()`. The total payload length is therefore MTU − 4 bytes.
+For binary payloads (e.g. image data, sprite data), prefix the payload with a byte of value `0x01` on the **LUA TX** characteristic. This triggers a callback if one was registered with `frame.bluetooth.receive_callback()`. The maximum data payload per write is best obtained by calling `frame.bluetooth.max_length()` on the device (the usable ATT payload less the `0x01` marker byte, i.e. ATT MTU − 8).
 
 Raw byte data can be returned to the host using `frame.bluetooth.send()`. It is prefixed with `0x01` in the first byte of the **LUA RX** notification.
 
