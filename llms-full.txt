@@ -288,7 +288,7 @@ For the quickest start:
 3. **Customize Firmware** (Advanced)
     * Requires hardware development expertise
     * Provides complete control of Halo hardware
-    * Find the official firmware [on GitHub](https://github.com/brilliantlabsAR/frame-2-firmware)
+    * Find the official firmware [on GitHub](https://github.com/brilliantlabsAR/halo-firmware)
 
 The typical development pattern involves creating a Python desktop application or Flutter mobile app that uses the Brilliant SDK to communicate with Halo over Bluetooth Low Energy, abstracting away the Lua and BLE details.
 
