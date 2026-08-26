@@ -51,7 +51,7 @@ System-level APIs, including power management, battery, and device info.
 |:----|:------------|
 | `frame.HARDWARE_VERSION` | Hardware version string (constant). Returns `"halo"` |
 | `frame.FIRMWARE_VERSION` | Firmware version string (constant) |
-| `frame.GIT_TAG` | Build git tag (constant) |
+| `frame.GIT_TAG` | Build source git commit hash, 12 hex characters (constant). Empty on firmware builds before 0.8.9 |
 | `frame.SE_REVISION` | Secure Enclave firmware revision (constant) |
 | `frame.get_se_revision()` | Secure Enclave firmware revision (lazy-loaded) |
 | `frame.battery_level()` | Battery level as a percentage (0–100) |
@@ -84,7 +84,7 @@ After a `light_sleep()` wake nothing after the call executes — the Lua VM rest
 ```lua
 -- Print device info
 print(frame.HARDWARE_VERSION)  -- halo
-print(frame.FIRMWARE_VERSION)  -- e.g. 0.8.8
+print(frame.FIRMWARE_VERSION)  -- e.g. 0.8.9
 print(frame.battery_level())   -- e.g. 87
 
 -- Standby for 10 seconds (resumes after)
@@ -425,8 +425,15 @@ Audio playback from the host over Bluetooth. Supports PCM and LC3 encoded audio.
 | `duration` | number | 1000 | LC3 frame duration in µs/10: `750` = 7.5 ms, `1000` = 10 ms |
 | `bitrate` | number | 16000 | LC3 bitrate (multiple of 8000, ≤96000 bps) |
 | `volume` | number | 50 | Volume (0–100%) |
+| `gain` | number | 0 | Digital pre-gain in whole dB (0–12), applied before the protection limiter |
+| `budget` | number | — | Speaker energy-budget override (10–100). Omit for the firmware default |
 
 Calling `start()` while already running stops and restarts the speaker with the new configuration.
+
+**Loudness (`gain` and `budget`).** Both settings apply to the one stream being started and reset when the speaker is next started — they are not persisted like `volume`. `gain` boosts the signal *into* the speaker protection chain: a quiet source (for example un-normalized text-to-speech) is lifted toward the loudness ceiling, while an already-hot source is compressed by the limiter instead of getting louder, so the best results come from normalizing audio on the host and using `gain` for the remainder. `budget` raises (or lowers) the ceiling itself — the energy budget the speaker protection enforces — at the cost of higher peak battery current; values above the firmware's configured maximum are clamped. All speaker protection stays active regardless of these settings.
+
+{: .note }
+While the display is active, the firmware automatically reduces the speaker energy budget and restores it when the display returns to power save — so audio plays loudest while the display is asleep. The transition is ramped smoothly, even mid-stream.
 
 ```lua
 -- Start PCM speaker
@@ -444,6 +451,16 @@ frame.speaker.start({
     duration = 1000,
     bitrate = 32000,
     volume = 80
+})
+
+-- Loudest playback of a quiet TTS stream: pre-gain into the limiter
+-- and a raised energy budget (display off gives the full budget)
+frame.speaker.start({
+    encoder = "lc3",
+    sample_rate = 16000,
+    bitrate = 32000,
+    gain = 12,
+    budget = 100
 })
 
 -- Adjust volume
