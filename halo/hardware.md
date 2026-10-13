@@ -120,6 +120,8 @@ An accelerometer interrupt line is also directly connected to the Bluetooth MCU.
 
 Halo has a button placed under the left arm for convenient access for power on/off, pairing, and user-programmable functions.
 
+See [Button controls](/halo/using-halo#button-controls) for the default button functions.
+
 ![Button placement on Halo](/halo/images/halo-button.jpeg)
 
 ---

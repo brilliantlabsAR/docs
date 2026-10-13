@@ -19,13 +19,27 @@ Whether you're using Halo with Noa, or making your own apps, you'll find everyth
 
 Your Halo will automatically start charging whenever the magnetic charging connector is attached to the charging pins. The white LED on the left arm will pulse while charging and remain on when fully charged.
 
-## How do I put Halo into pairing mode?
-
-Press and hold Halo's button for approximately 10 seconds until the white LED starts flashing. Halo is now in pairing mode and ready to connect to a new device.
-
 ## How do I connect to my Halo for the first time?
 
-Ensure your Halo is charged and in pairing mode. Then from any Halo-compatible app, such as Noa, press **Scan for Halo** and follow the on-screen instructions to pair. Accept the pairing request on your phone (Android users may need to tap **Pair** twice).
+Attach the magnetic charger and Halo will automatically enter pairing mode — look for the flashing white LED. Then from any Halo-compatible app, such as Brilliant Noa, press **Scan for Halo** and follow the on-screen instructions to pair. Accept the pairing request on your phone (Android users may need to tap **Pair** twice).
+
+## How do I put Halo into pairing mode?
+
+Press and hold Halo's button for approximately 5 seconds until you hear a chime and the white LED starts flashing. Halo is now in pairing mode and ready to connect to a new device. Up to 5 devices can be paired with Halo.
+
+## How do I adjust the display?
+
+Slide the display mount left or right and tilt it up or down to line it up with your eye, then rotate the display lens to bring the image into focus. See [Fitting and focusing the display](/halo/using-halo#fitting-and-focusing-the-display) for more detail.
+
+## What does the button do?
+
+| Button action | What it does |
+|:--------------|:-------------|
+| Click | Wakes Halo from sleep.<br>When awake, clicks are handled by the app you're using. |
+| Hold for 2 seconds (beep) | Sleep |
+| Hold for 5 seconds (chime) | Pairing mode |
+
+See [Button controls](/halo/using-halo#button-controls) for the full list, including how to restart and factory reset Halo.
 
 ## How do I update my Halo?
 
@@ -51,6 +65,90 @@ Get started making your own apps today. Follow the links below to familiarize yo
 - [Web Bluetooth SDK](/halo/halo-sdk-webbluetooth)
 - [Lua API Reference](/halo/halo-sdk-lua)
 - [Bluetooth LE Specifications](/halo/halo-sdk-bluetooth-specs)
+
+
+========================================================================
+PAGE: Using Halo (https://docs.brilliant.xyz/halo/using-halo/)
+DESCRIPTION: How to fit and focus Halo's display, and how to use Halo's button.
+========================================================================
+
+# Using Halo
+{: .no_toc }
+
+---
+
+This page covers the day-to-day operation of your Halo. For setup, charging and pairing, see [Getting started with Halo](/halo/halo). For technical details, see the [Hardware](/halo/hardware) page.
+
+## Contents
+{: .no_toc }
+
+1. TOC
+{:toc}
+
+---
+
+## Fitting and focusing the display
+
+![Optical design and pathway of the display in Halo](/halo/images/halo-display.jpeg)
+
+### Aligning the display with your eye
+
+The display mount can be adjusted to align with your eye by sliding it left and right, and tilting it up and down. The display mount can be a little stiff when moving.
+
+{: .note }
+When the display mount is fully extended to the left it will stop moving. Do not try to extend it any further.
+
+### Focusing the display
+
+The display lens can be rotated to focus the display to your eyesight. The focus range covers +2 to −6 diopters.
+
+{: .note }
+Be careful not to keep rotating the display lens counter-clockwise — it will eventually come off the thread. If this happens, reattach it by placing the display lens onto the mount neck and rotating it clockwise, like a bottle top.
+
+---
+
+## Button controls
+
+![Button placement on Halo](/halo/images/halo-button.jpeg)
+
+Halo has a button under the left arm for power, pairing, and app-defined functions.
+
+| Button action | What it does |
+|:--------------|:-------------|
+| Click | Wakes Halo from sleep.<br>When Halo is awake, clicks are handled by the app you're using — for example, Brilliant Noa uses them to control assistant conversations and note taking. |
+| Hold for 2 seconds, until a beep | Sleep.<br>Click the button to wake Halo. |
+| Hold for 5 seconds, until a chime | Pairing mode.<br>The white LED flashes and Halo stays in pairing mode for about a minute. Existing paired devices are kept, and up to 5 devices can be paired with Halo. |
+| Hold the button, attach the magnetic charger, then release the button within 10 seconds | Restart |
+| Hold for 15 seconds | Factory reset (see below) |
+
+Releasing the button anywhere between 5 and 15 seconds just opens pairing mode — nothing is erased.
+
+Apps can also respond to double clicks and long presses (held for 1 second and released before 2 seconds). Developers can find the details in the [Lua API reference](/halo/halo-sdk-lua#button).
+
+### Factory reset
+
+{: .warning }
+Holding the button for 15 seconds wipes Halo's filesystem, removing all files including the list of paired devices and any installed app, and then places Halo into ship mode. Disconnect the charger before doing a factory reset.
+
+In ship mode Halo is fully powered off and will not wake from a button click. Attach the magnetic charger to wake it.
+
+A factory reset clears Halo's list of paired devices, but your phone or computer still remembers Halo. Before reconnecting, remove (forget) Halo in your phone's or computer's Bluetooth settings, otherwise pairing may fail with errors such as "Peer removed pairing information" or "Encryption is insufficient".
+
+<details markdown="block">
+<summary>Recovery mode</summary>
+
+If Halo won't start up or respond normally, recovery mode erases its storage and lets you reinstall firmware.
+
+1. Hold the button, then attach the magnetic charger while still holding it.
+1. Keep holding for 10 seconds after attaching the charger, then release.
+1. The white LED blinks slowly on and off (1 second on, 1 second off), instead of the gradual pulse it shows while charging. Halo is now in recovery mode. Only firmware updates are possible, using an SMP (MCUmgr) firmware update tool — see [Firmware updates](/halo/halo-sdk-bluetooth-specs/#firmware-updates).
+
+{: .warning }
+Entering recovery mode also performs a factory reset, erasing all files and paired devices. Forget Halo in your phone's or computer's Bluetooth settings before reconnecting.
+
+To leave recovery mode, click the button. Halo also restarts by itself after 2 minutes without a Bluetooth connection.
+
+</details>
 
 
 ========================================================================
@@ -171,6 +269,8 @@ An accelerometer interrupt line is also directly connected to the Bluetooth MCU.
 ## Button
 
 Halo has a button placed under the left arm for convenient access for power on/off, pairing, and user-programmable functions.
+
+See [Button controls](/halo/using-halo#button-controls) for the default button functions.
 
 ![Button placement on Halo](/halo/images/halo-button.jpeg)
 
@@ -1224,7 +1324,7 @@ System-level APIs, including power management, battery, and device info.
 |:----|:------------|
 | `frame.HARDWARE_VERSION` | Hardware version string (constant). Returns `"halo"` |
 | `frame.FIRMWARE_VERSION` | Firmware version string (constant) |
-| `frame.GIT_TAG` | Build git tag (constant) |
+| `frame.GIT_TAG` | Build source git commit hash, 12 hex characters (constant). Empty on firmware builds before 0.8.9 |
 | `frame.SE_REVISION` | Secure Enclave firmware revision (constant) |
 | `frame.get_se_revision()` | Secure Enclave firmware revision (lazy-loaded) |
 | `frame.battery_level()` | Battery level as a percentage (0–100) |
@@ -1257,7 +1357,7 @@ After a `light_sleep()` wake nothing after the call executes — the Lua VM rest
 ```lua
 -- Print device info
 print(frame.HARDWARE_VERSION)  -- halo
-print(frame.FIRMWARE_VERSION)  -- e.g. 0.8.8
+print(frame.FIRMWARE_VERSION)  -- e.g. 0.8.9
 print(frame.battery_level())   -- e.g. 87
 
 -- Standby for 10 seconds (resumes after)
@@ -1598,8 +1698,15 @@ Audio playback from the host over Bluetooth. Supports PCM and LC3 encoded audio.
 | `duration` | number | 1000 | LC3 frame duration in µs/10: `750` = 7.5 ms, `1000` = 10 ms |
 | `bitrate` | number | 16000 | LC3 bitrate (multiple of 8000, ≤96000 bps) |
 | `volume` | number | 50 | Volume (0–100%) |
+| `gain` | number | 0 | Digital pre-gain in whole dB (0–12), applied before the protection limiter |
+| `budget` | number | — | Speaker energy-budget override (10–100). Omit for the firmware default |
 
 Calling `start()` while already running stops and restarts the speaker with the new configuration.
+
+**Loudness (`gain` and `budget`).** Both settings apply to the one stream being started and reset when the speaker is next started — they are not persisted like `volume`. `gain` boosts the signal *into* the speaker protection chain: a quiet source (for example un-normalized text-to-speech) is lifted toward the loudness ceiling, while an already-hot source is compressed by the limiter instead of getting louder, so the best results come from normalizing audio on the host and using `gain` for the remainder. `budget` raises (or lowers) the ceiling itself — the energy budget the speaker protection enforces — at the cost of higher peak battery current; values above the firmware's configured maximum are clamped. All speaker protection stays active regardless of these settings.
+
+{: .note }
+While the display is active, the firmware automatically reduces the speaker energy budget and restores it when the display returns to power save — so audio plays loudest while the display is asleep. The transition is ramped smoothly, even mid-stream.
 
 ```lua
 -- Start PCM speaker
@@ -1617,6 +1724,16 @@ frame.speaker.start({
     duration = 1000,
     bitrate = 32000,
     volume = 80
+})
+
+-- Loudest playback of a quiet TTS stream: pre-gain into the limiter
+-- and a raised energy budget (display off gives the full budget)
+frame.speaker.start({
+    encoder = "lc3",
+    sample_rate = 16000,
+    bitrate = 32000,
+    gain = 12,
+    budget = 100
 })
 
 -- Adjust volume
