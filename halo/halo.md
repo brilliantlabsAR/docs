@@ -16,13 +16,27 @@ Whether you're using Halo with Noa, or making your own apps, you'll find everyth
 
 Your Halo will automatically start charging whenever the magnetic charging connector is attached to the charging pins. The white LED on the left arm will pulse while charging and remain on when fully charged.
 
-## How do I put Halo into pairing mode?
-
-Press and hold Halo's button for approximately 10 seconds until the white LED starts flashing. Halo is now in pairing mode and ready to connect to a new device.
-
 ## How do I connect to my Halo for the first time?
 
-Ensure your Halo is charged and in pairing mode. Then from any Halo-compatible app, such as Noa, press **Scan for Halo** and follow the on-screen instructions to pair. Accept the pairing request on your phone (Android users may need to tap **Pair** twice).
+Attach the magnetic charger and Halo will automatically enter pairing mode — look for the flashing white LED. Then from any Halo-compatible app, such as Brilliant Noa, press **Scan for Halo** and follow the on-screen instructions to pair. Accept the pairing request on your phone (Android users may need to tap **Pair** twice).
+
+## How do I put Halo into pairing mode?
+
+Press and hold Halo's button for approximately 5 seconds until you hear a chime and the white LED starts flashing. Halo is now in pairing mode and ready to connect to a new device. Up to 5 devices can be paired with Halo.
+
+## How do I adjust the display?
+
+Slide the display mount left or right and tilt it up or down to line it up with your eye, then rotate the display lens to bring the image into focus. See [Fitting and focusing the display](/halo/using-halo#fitting-and-focusing-the-display) for more detail.
+
+## What does the button do?
+
+| Button action | What it does |
+|:--------------|:-------------|
+| Click | Wakes Halo from sleep.<br>When awake, clicks are handled by the app you're using. |
+| Hold for 2 seconds (beep) | Sleep |
+| Hold for 5 seconds (chime) | Pairing mode |
+
+See [Button controls](/halo/using-halo#button-controls) for the full list, including how to restart and factory reset Halo.
 
 ## How do I update my Halo?
 

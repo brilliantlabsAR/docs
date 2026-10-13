@@ -20,6 +20,7 @@ https://github.com/brilliantlabsAR/brilliant_sdk
 - [Halo Flutter SDK](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/halo/halo-sdk-flutter.md): brilliant_ble / brilliant_msg / simple_brilliant_app packages
 - [Halo WebBluetooth SDK](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/halo/halo-sdk-webbluetooth.md): brilliant-ble / brilliant-msg npm packages for the browser
 - [Halo Bluetooth LE specs](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/halo/halo-sdk-bluetooth-specs.md): GATT services, Lua-over-BLE, control characters, camera/audio transport, firmware update — for talking to Halo without the SDK
+- [Using Halo](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/halo/using-halo.md): fitting and focusing the display, button controls, restart, factory reset, ship mode and recovery mode
 - [Halo hardware](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/halo/hardware.md): display, camera, IMU, speakers, microphone, battery, charging cradle
 - [Halo getting started](https://raw.githubusercontent.com/brilliantlabsAR/docs/main/halo/halo.md): consumer FAQ, pairing, charging
 
