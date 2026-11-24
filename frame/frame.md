@@ -40,16 +40,13 @@ Whenever software updates are available for your Frame, you'll be notified in yo
 
 ## Where can I download Noa?
 
-Noa is available on both Apple App Store for iOS and Google Play Store for Android. You can also download the [Android APK directly from our Github](https://github.com/brilliantlabsAR/noa-flutter/releases/latest).
+Noa for Frame is the original companion app for Frame. Its source code is available in the [noa-flutter repository on Github](https://github.com/brilliantlabsAR/noa-flutter), where you can also download the [latest Android APK](https://github.com/brilliantlabsAR/noa-flutter/releases/latest).
+
+{: .note }
+> **Getting started with Halo?** Noa for Frame is not the app for Halo. Head over to the [Getting started with Halo](/halo/halo) page instead.
 
 <div style="text-align:center" markdown="1">
-[<img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Apple App Store badge" width="125"/>](https://apps.apple.com/us/app/noa-for-frame/id6482980023)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[<img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play Store badge" width="125"/>](https://play.google.com/store/apps/details?id=xyz.brilliant.noaflutter)
-</div>
-
-<div style="text-align:center" markdown="1">
-**Check out the getting started with Noa playlist [here](https://www.youtube.com/watch?v=olNhbZTx6Lw&list=PLfbaC5GRVJJgSPdN-KWndTld35tihu1Ic)**
+**Using Frame (not Halo)? Check out the Getting Started with Frame playlist [here](https://www.youtube.com/watch?v=olNhbZTx6Lw&list=PLfbaC5GRVJJgSPdN-KWndTld35tihu1Ic)**
 </div>
 
 ## Developer?
