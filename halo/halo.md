@@ -10,6 +10,10 @@ has_children: true
 
 # Getting started with Halo
 
+<div style="text-align:center" markdown="1">
+**New to Halo? Watch the [Getting Started with Halo video playlist](https://www.youtube.com/watch?v=sdsWJoaBOBw&list=PLfbaC5GRVJJhUbszegByyJZztS-FM1v9I)**
+</div>
+
 Whether you're using Halo with Noa, or making your own apps, you'll find everything you need to know about your Halo hardware here.
 
 ## How do I charge my Halo?
